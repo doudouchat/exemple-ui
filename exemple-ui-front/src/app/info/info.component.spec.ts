@@ -39,7 +39,7 @@ describe('test', () => {
     it('home success', async(inject(
         [HttpTestingController], (http) => {
 
-            const req = http.expectOne('http://localhost:8080/ExempleService/ws/info');
+            const req = http.expectOne('http://localhost:8080/ExempleService/actuator/info');
             req.flush({
                 version: 'test',
                 buildTime: '1976-01-03'

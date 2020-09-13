@@ -11,7 +11,7 @@ export class InfoService {
 
     info(): Observable<Info> {
 
-        return this.http.get<Info>('http://localhost:8080/ExempleService/ws/info',
+        return this.http.get<Info>('http://localhost:8080/ExempleService/actuator/info',
             { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
     }
 
