@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
 
@@ -10,7 +10,7 @@ describe('AccountEditComponent', () => {
 
   let fixture: ComponentFixture<AccountEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
 
@@ -27,7 +27,7 @@ describe('AccountEditComponent', () => {
 
   });
 
-  it('account edit simple', async(() => {
+  it('account edit simple', waitForAsync(() => {
 
     fixture.detectChanges();
 

@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from 'chai';
@@ -11,7 +11,7 @@ describe('AuthLoginComponent', () => {
 
   let fixture: ComponentFixture<AuthLoginComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
 
@@ -28,7 +28,7 @@ describe('AuthLoginComponent', () => {
 
   });
 
-  it('auth check simple', async(() => {
+  it('auth check simple', waitForAsync(() => {
 
     fixture.detectChanges();
 

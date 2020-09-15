@@ -1,5 +1,5 @@
 import { Component, DebugElement } from '@angular/core';
-import { async, inject, TestBed, ComponentFixture } from '@angular/core/testing';
+import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -18,7 +18,7 @@ describe('AppComponent', () => {
     let fixture: ComponentFixture<AppComponent>;
     let mock: ComponentFixture<DummyComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
 
         fixture = TestBed.configureTestingModule({
 
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
 
     });
 
-    it('routing should have as template dummy', async(inject(
+    it('routing should have as template dummy', waitForAsync(inject(
         [HttpTestingController], (http) => {
 
             const req = http.expectOne({ method: 'POST', url: 'http://localhost:8080/ExempleAuthorization/oauth/token' });

@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -12,7 +12,7 @@ describe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
 
@@ -28,7 +28,7 @@ describe('HomeComponent', () => {
 
   });
 
-  it('home should have as title "exemple-ui"', async(() => {
+  it('home should have as title "exemple-ui"', waitForAsync(() => {
 
     fixture.detectChanges();
 

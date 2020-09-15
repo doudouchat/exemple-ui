@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, inject, TestBed, ComponentFixture } from '@angular/core/testing';
+import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
@@ -12,7 +12,7 @@ describe('AccountCreateComponent', () => {
   let fixture: ComponentFixture<AccountCreateComponent>;
   let debugElement: DebugElement;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
 
@@ -36,7 +36,7 @@ describe('AccountCreateComponent', () => {
 
   });
 
-  it('account check simple', async(inject(
+  it('account check simple', waitForAsync(inject(
     [HttpTestingController], (http) => {
 
       const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -53,7 +53,7 @@ describe('AccountCreateComponent', () => {
 
     })));
 
-  it('account check simple failure', async(inject(
+  it('account check simple failure', waitForAsync(inject(
     [HttpTestingController], (http) => {
 
       const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -70,7 +70,7 @@ describe('AccountCreateComponent', () => {
 
     })));
 
-  it.skip('account check simple error', async(inject(
+  it.skip('account check simple error', waitForAsync(inject(
     [HttpTestingController], (http) => {
 
       const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });

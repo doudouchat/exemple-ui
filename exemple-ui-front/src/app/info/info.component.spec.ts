@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, inject, TestBed, ComponentFixture } from '@angular/core/testing';
+import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
@@ -12,7 +12,7 @@ describe('test', () => {
     let fixture: ComponentFixture<InfoComponent>;
     let debugElement: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
 
         fixture = TestBed.configureTestingModule({
 
@@ -36,7 +36,7 @@ describe('test', () => {
 
     });
 
-    it('home success', async(inject(
+    it('home success', waitForAsync(inject(
         [HttpTestingController], (http) => {
 
             const req = http.expectOne('http://localhost:8080/ExempleService/actuator/info');
