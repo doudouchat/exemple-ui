@@ -36,7 +36,7 @@ module.exports = function (config) {
     reporters : [ 'progress', 'mocha', 'coverage-istanbul' ],
     port: 9876,
   	colors : true,
-		logLevel : config.LOG_DEBUG,
+		logLevel : config.LOG_INFO,
 		browserNoActivityTimeout : 20000,
     autoWatch: true,
     browsers: ['Chrome'],
