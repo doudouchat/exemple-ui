@@ -36,7 +36,7 @@
 					<configuration>
 						<nodeVersion>v10.15.3</nodeVersion>
 						<npmVersion>6.10.0</npmVersion>
-						<yarnVersion>v1.16.0</yarnVersion>
+						<yarnVersion>v1.22.0</yarnVersion>
 					</configuration>
 				</plugin>
 
@@ -110,7 +110,7 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<skip>${skip.yarn}</skip>
-							<arguments>install --frozen-lockfile</arguments>
+							<arguments>--frozen-lockfile</arguments>
 						</configuration>
 					</execution>
 					<execution>
