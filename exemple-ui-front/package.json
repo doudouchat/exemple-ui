@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test --watch=false --codeCoverage=true --progress --browsers=PhantomJS",
+    "build:dev": "ng build --aot=false",
+    "test": "ng test --watch=false --codeCoverage=true --browsers=PhantomJS",
+    "test:dev": "ng test --watch --codeCoverage=true --progress --browsers=PhantomJS",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
