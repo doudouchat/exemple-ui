@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
 
-import { AccountService } from '../shared/account.service';
+import { CreateAccount } from '../shared/account.action';
+import { PublishMessage } from '../../shared/message/message.action';
+import { LoginValidator } from '../../login/shared/login.validator';
+import { notBlank } from '../../shared/validator/not-blank.validator';
 
 @Component({
   selector: 'app-account-create',
@@ -11,14 +15,42 @@ import { AccountService } from '../shared/account.service';
 })
 export class AccountCreateComponent implements OnInit {
 
-  constructor(private readonly accountService: AccountService) { }
+  @Output()
+  id = new EventEmitter<string>();
 
-  check: Observable<any | boolean>;
+  accountForm: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private readonly loginValidator: LoginValidator) { }
 
   ngOnInit() {
 
-    this.check = this.accountService.checkLogin('jean.dupond@gmail.com').pipe(shareReplay());
+    this.accountForm = this.fb.group({
+      email: ['', Validators.compose([Validators.required, Validators.email]), this.loginValidator.usernameValidator()],
+      lastname: ['', notBlank()],
+      firstname: ['', notBlank()],
+      birthday: ['', Validators.required],
+      password: ['', notBlank()]
+    });
 
+  }
+
+  save() {
+    const account = Object.assign({}, this.accountForm.value);
+    delete account.password;
+    this.store.dispatch(new CreateAccount(account, this.accountForm.value.password)).subscribe(result => {
+      this.store.dispatch(new PublishMessage(
+        { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
+      this.store.dispatch(new Navigate(['/login']));
+      this.id.emit(result.account.id);
+    });
+
+  }
+
+  cancel() {
+    this.accountForm.reset();
   }
 
 }

@@ -1,31 +1,29 @@
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { Account } from './account';
 
 @Injectable()
 export class AccountService {
 
   constructor(private readonly http: HttpClient) { }
 
-  checkLogin(login: string): Observable<boolean> {
+  createAccount(account: Account): Observable<string> {
 
-    return this.http.head<boolean>(`http://localhost:8080/ExempleService/ws/v1/logins/${login}`,
-      {
-        headers: new HttpHeaders({
-          'Content-type': 'application/json',
-          app: 'test'
-        })
-      }).pipe(
-        map(_ => true),
-        catchError((error: HttpErrorResponse) => {
-
-          if (error.status === 404) {
-            return of(false);
-          }
-
-          return throwError(error);
-        })
-      );
+    return this.http.post<any>('/ExempleService/ws/v1/accounts',
+      JSON.stringify(account), {
+      headers: new HttpHeaders({
+        'Content-type': 'application/json',
+        app: 'test',
+        version: 'v1'
+      }),
+      observe: 'response'
+    }).pipe(
+      map(res => {
+        const location = res.headers.get('location');
+        return location.split('/').pop();
+      }));
   }
 }
