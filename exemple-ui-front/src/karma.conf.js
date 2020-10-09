@@ -7,7 +7,6 @@ module.exports = function (config) {
     frameworks: ['mocha', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-mocha'),
-      require('karma-chai'),
       require('karma-mocha-reporter'),
       require('karma-chrome-launcher'),
       require('karma-phantomjs-launcher'),

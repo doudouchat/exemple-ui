@@ -41,7 +41,7 @@ describe('AppComponent', () => {
     it('routing should have as template dummy', waitForAsync(inject(
         [HttpTestingController], (http) => {
 
-            const req = http.expectOne({ method: 'POST', url: 'http://localhost:8080/ExempleAuthorization/oauth/token' });
+            const req = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
             req.flush({
                 expires_in: 300
             });

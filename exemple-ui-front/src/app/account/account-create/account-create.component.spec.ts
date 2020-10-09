@@ -1,32 +1,35 @@
-import { DebugElement } from '@angular/core';
-import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxsModule, Store } from '@ngxs/store';
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
-import { AccountCreateComponent } from './account-create.component';
 import { AccountModule } from '../account.module';
+import { AccountState } from '../shared/account.state';
+import { AccountCreateComponent } from './account-create.component';
 
 describe('AccountCreateComponent', () => {
 
   let fixture: ComponentFixture<AccountCreateComponent>;
-  let debugElement: DebugElement;
+  let store: Store;
 
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, AccountModule]
+      imports: [HttpClientTestingModule, AccountModule, NoopAnimationsModule, NgxsModule.forRoot([AccountState])]
 
     }).createComponent(AccountCreateComponent);
 
+    store = TestBed.inject(Store);
 
   }));
 
   beforeEach(() => {
 
     fixture.detectChanges();
-    debugElement = fixture.debugElement;
 
   });
 
@@ -36,54 +39,154 @@ describe('AccountCreateComponent', () => {
 
   });
 
-  it('account check simple', waitForAsync(inject(
-    [HttpTestingController], (http) => {
+  it('create account success', waitForAsync(inject(
+    [HttpTestingController], (http: HttpTestingController) => {
 
-      const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      req.flush({});
+      const component: AccountCreateComponent = fixture.componentInstance;
+      component.accountForm.get('email').setValue('jean.dupond@gmail.com');
+      component.accountForm.get('firstname').setValue('jean');
+      component.accountForm.get('lastname').setValue('dupond');
+      component.accountForm.get('birthday').setValue('12/12/1976');
+      component.accountForm.get('password').setValue('D#az78&é');
 
+      const id = sinon.spy(component.id, 'emit');
+
+      fixture.detectChanges();
+
+      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 404, statusText: 'not found' });
       http.verify();
 
       fixture.detectChanges();
 
-      let de: DebugElement[];
-      de = debugElement.queryAll(By.css('p'));
+      fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.click();
 
-      expect(de[0].nativeElement.innerHTML).to.equal('account-create works!true');
+      fixture.detectChanges();
+
+      const postAccount = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+      postAccount.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/accounts/123' } });
+      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+      postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/logins/jean.dupond@gmail.com' } });
+      http.verify();
+
+      sinon.assert.calledOnce(id);
+      sinon.assert.calledWith(id, '123');
+
+      store.selectSnapshot(state => state.account.id);
+
+      expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
 
     })));
 
-  it('account check simple failure', waitForAsync(inject(
-    [HttpTestingController], (http) => {
+  const ACCOUNT_FAILURES = [
+    { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'input', expectedMessage: 'Email is required' },
+    { message: 'email is incorrect', selector: 'input[formControlName=email]', value: 'jean.dupond', event: 'input', expectedMessage: 'Email is incorrect' },
+    { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'lastname is not blank', selector: 'input[formControlName=lastname]', value: '  ', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'firstname is required', selector: 'input[formControlName=firstname]', value: '', event: 'input', expectedMessage: 'Firstname is required' },
+    { message: 'firstname is not blank', selector: 'input[formControlName=firstname]', value: '  ', event: 'input', expectedMessage: 'Firstname is required' },
+    { message: 'birthday is required', selector: 'p-inputMask[formControlName=birthday]>input', value: '', event: 'blur', expectedMessage: 'Birthday is required' },
+    { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
+    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' }
+  ];
 
-      const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      req.flush({}, { status: 404, statusText: 'not found' });
+  ACCOUNT_FAILURES.forEach(function (test) {
+    it('creation account failure: ' + test.message, waitForAsync(inject(
+      [HttpTestingController], (http: HttpTestingController) => {
 
+        const component: AccountCreateComponent = fixture.componentInstance;
+        const id = sinon.spy(component.id, 'emit');
+
+        fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
+        fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
+        expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+
+        http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+        http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+        http.verify();
+
+        sinon.assert.notCalled(id);
+
+        expect(store.selectSnapshot(state => state.account)).is.be.empty;
+
+      })));
+  });
+
+
+  it('creation account failure: email already exists', waitForAsync(inject(
+    [HttpTestingController], (http: HttpTestingController) => {
+
+      const component: AccountCreateComponent = fixture.componentInstance;
+      component.accountForm.get('firstname').setValue('jean');
+      component.accountForm.get('lastname').setValue('dupond');
+      component.accountForm.get('birthday').setValue('12/12/1976');
+      component.accountForm.get('password').setValue('D#az78&é');
+
+      const id = sinon.spy(component.id, 'emit');
+
+      fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value = 'jean.dupond@gmail.com';
+      fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.dispatchEvent(new Event('input'));
+
+      fixture.detectChanges();
+
+      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({ status: 200, statusText: 'found' });
       http.verify();
 
       fixture.detectChanges();
 
-      let de: DebugElement[];
-      de = debugElement.queryAll(By.css('p'));
+      expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains('Email already exists');
 
-      expect(de[0].nativeElement.innerHTML).to.equal('account-create works!false');
+      expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+
+      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+      http.verify();
+
+      sinon.assert.notCalled(id);
+
+      expect(store.selectSnapshot(state => state.account)).is.be.empty;
 
     })));
 
-  it.skip('account check simple error', waitForAsync(inject(
-    [HttpTestingController], (http) => {
+  it('reset account success', waitForAsync(inject(
+    [HttpTestingController], (http: HttpTestingController) => {
 
-      const req = http.expectOne({ method: 'HEAD', url: 'http://localhost:8080/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      req.flush({}, { status: 500, statusText: 'internal error' });
+      const component: AccountCreateComponent = fixture.componentInstance;
+      component.accountForm.get('email').setValue('jean.dupond@gmail.com');
+      component.accountForm.get('firstname').setValue('jean');
+      component.accountForm.get('lastname').setValue('dupond');
+      component.accountForm.get('birthday').setValue('12/12/1976');
+      component.accountForm.get('password').setValue('D#az78&é');
 
+      const id = sinon.spy(component.id, 'emit');
+
+      fixture.detectChanges();
+
+      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 404, statusText: 'not found' });
       http.verify();
 
       fixture.detectChanges();
 
-      let de: DebugElement[];
-      de = debugElement.queryAll(By.css('p'));
+      fixture.debugElement.query(By.css('button[label=Cancel]')).nativeElement.click();
 
-      expect(de[0].nativeElement.innerHTML).to.equal('account-create works!');
+      fixture.detectChanges();
+
+      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+      http.verify();
+
+      sinon.assert.notCalled(id);
+
+      expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.be.empty;
+      expect(fixture.debugElement.query(By.css('input[formControlName=firstname]')).nativeElement.value).to.be.empty;
+      expect(fixture.debugElement.query(By.css('input[formControlName=lastname]')).nativeElement.value).to.be.empty;
+      expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.be.empty;
+      expect(fixture.debugElement.query(By.css('input[formControlName=password]')).nativeElement.value).to.be.empty;
 
     })));
 

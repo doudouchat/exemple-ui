@@ -1,0 +1,11 @@
+button {
+    width: 100%
+}
+
+div.p-field:first-child {
+    margin-top: 25px;
+}
+
+div.p-field {
+    margin-bottom: 25px;
+}

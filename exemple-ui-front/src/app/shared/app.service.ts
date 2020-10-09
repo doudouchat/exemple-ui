@@ -15,7 +15,7 @@ export class AppService {
         const body = new HttpParams()
             .append('grant_type', 'client_credentials');
 
-        return this.http.post<Token>('http://localhost:8080/ExempleAuthorization/oauth/token',
+        return this.http.post<Token>('/ExempleAuthorization/oauth/token',
             body,
             {
                 headers: new HttpHeaders({
