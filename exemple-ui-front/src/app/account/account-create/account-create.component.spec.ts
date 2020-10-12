@@ -1,6 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
@@ -9,6 +8,7 @@ import * as sinon from 'sinon';
 import { AccountModule } from '../account.module';
 import { AccountState } from '../shared/account.state';
 import { AccountCreateComponent } from './account-create.component';
+import { MessageState } from '../../shared/message/message.state';
 
 describe('AccountCreateComponent', () => {
 
@@ -19,7 +19,7 @@ describe('AccountCreateComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, AccountModule, NoopAnimationsModule, NgxsModule.forRoot([AccountState])]
+      imports: [HttpClientTestingModule, AccountModule, NgxsModule.forRoot([AccountState, MessageState])]
 
     }).createComponent(AccountCreateComponent);
 
@@ -75,6 +75,7 @@ describe('AccountCreateComponent', () => {
       store.selectSnapshot(state => state.account.id);
 
       expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
+      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
 
     })));
 
