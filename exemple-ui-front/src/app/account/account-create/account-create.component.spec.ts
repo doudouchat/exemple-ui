@@ -153,6 +153,32 @@ describe('AccountCreateComponent', () => {
 
     })));
 
+  const ACCOUNT_EXCEPTIONS = [
+    { message: 'check login fails', head_login_status: 500, post_login_status: 201, post_account_status: 201 }
+  ];
+
+  it('creation account failure: request HEAD /ws/v1/logins fails', inject(
+    [HttpTestingController], (http: HttpTestingController) => {
+
+      const component: AccountCreateComponent = fixture.componentInstance;
+      component.accountForm.get('email').setValue('jean.dupond@gmail.com');
+      component.accountForm.get('firstname').setValue('jean');
+      component.accountForm.get('lastname').setValue('dupond');
+      component.accountForm.get('birthday').setValue('12/12/1976');
+      component.accountForm.get('password').setValue('D#az78&é');
+
+      fixture.detectChanges();
+
+      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 500, statusText: 'internal error' });
+      http.verify();
+
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+
+    }));
+
   it('reset account success', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
