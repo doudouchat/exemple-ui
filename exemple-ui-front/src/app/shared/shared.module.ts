@@ -12,7 +12,6 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { AppInterceptor } from './app.interceptor';
-import { AppService } from './app.service';
 
 @NgModule({
     exports: [
@@ -29,7 +28,6 @@ import { AppService } from './app.service';
         MessageModule
     ],
     providers: [
-        AppService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AppInterceptor,

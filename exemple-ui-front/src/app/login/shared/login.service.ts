@@ -47,4 +47,16 @@ export class LoginService {
         return location.split('/').pop();
       }));
   }
+
+  getLogin(username: string): Observable<Login> {
+
+    return this.http.get<Login>(`/ExempleService/ws/v1/logins/${username}`,
+      {
+        headers: new HttpHeaders({
+          'Content-type': 'application/json',
+          app: 'test',
+          version: 'v1'
+        })
+      });
+  }
 }
