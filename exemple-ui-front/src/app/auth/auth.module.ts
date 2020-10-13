@@ -15,8 +15,7 @@ import { AuthService } from './shared/auth.service';
     SharedModule
   ],
   providers: [
-    AuthService,
-    LoginService
+    AuthService
   ],
   bootstrap: [AuthLoginComponent]
 })

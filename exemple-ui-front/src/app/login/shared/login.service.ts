@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as jsonpatch from 'fast-json-patch';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -59,4 +60,16 @@ export class LoginService {
         })
       });
   }
+
+  updateLogin(login: Login, previousLogin: Login): Observable<any> {
+    return this.http.patch<any>('/ExempleService/ws/v1/logins/' + previousLogin.username,
+      JSON.stringify(jsonpatch.compare(previousLogin, login)), {
+      headers: new HttpHeaders({
+        'Content-type': 'application/json',
+        app: 'test',
+        version: 'v1'
+      })
+    });
+  }
+
 }
