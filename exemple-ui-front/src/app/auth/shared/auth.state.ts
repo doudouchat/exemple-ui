@@ -5,9 +5,14 @@ import { tap } from 'rxjs/operators';
 import { Authenticate, Logout } from './auth.action';
 import { AuthService } from './auth.service';
 
-@State<boolean>({
+export interface AuthStateModel {
+    authenticate: boolean;
+    username?: string;
+}
+
+@State<AuthStateModel>({
     name: 'authenticate',
-    defaults: false
+    defaults: { authenticate: false }
 })
 @Injectable()
 export class AuthState {
@@ -16,15 +21,15 @@ export class AuthState {
         private readonly authService: AuthService) { }
 
     @Action(Authenticate)
-    Authenticate(ctx: StateContext<boolean>, action: Authenticate) {
+    Authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {
         return this.authService.password('test_user', 'secret', action.username, action.password).pipe(
             tap(() => {
-                ctx.setState(true);
+                ctx.setState({ authenticate: true, username: action.username });
             }));
     }
 
     @Action(Logout)
-    Logout(ctx: StateContext<boolean>) {
-        ctx.setState(false);
+    Logout(ctx: StateContext<AuthStateModel>) {
+        ctx.setState({ authenticate: false });
     }
 }

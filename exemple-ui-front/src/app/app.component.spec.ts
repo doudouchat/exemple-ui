@@ -1,12 +1,13 @@
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
-import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Store } from '@ngxs/store';
 import { expect } from 'chai';
 
-import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
+import { AppModule } from './app.module';
 
 @Component({
     template: '<h6>dummy</h6>'
@@ -17,6 +18,9 @@ describe('AppComponent', () => {
 
     let fixture: ComponentFixture<AppComponent>;
     let mock: ComponentFixture<DummyComponent>;
+    let store: Store;
+
+    before(() => window.localStorage.clear());
 
     beforeEach(waitForAsync(() => {
 
@@ -29,6 +33,10 @@ describe('AppComponent', () => {
         }).createComponent(AppComponent);
 
         mock = TestBed.createComponent(DummyComponent);
+        store = TestBed.inject(Store);
+        store.reset({
+            authenticate: { authenticate: true, username: 'john.doe@gmail.com' }
+        });
 
     }));
 
@@ -45,10 +53,48 @@ describe('AppComponent', () => {
             req.flush({
                 expires_in: 300
             });
-
+            http.expectNone({ method: 'GET', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
             http.verify();
 
             fixture.detectChanges();
+
+            expect(store.selectSnapshot(state => state.application)).is.be.true;
+
+            mock.detectChanges();
+
+            mock.whenStable().then(() => {
+
+                mock.detectChanges();
+                let de: DebugElement[];
+                de = mock.debugElement.queryAll(By.css('h6'));
+
+                expect(de[0].nativeElement.innerHTML).to.equal('dummy');
+
+            });
+
+        })));
+
+    it('routing should have as template dummy refresh', waitForAsync(inject(
+        [HttpTestingController], (http) => {
+
+            http.expectNone({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
+            const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
+            getLogin.flush({
+                id: 99,
+                username: 'toto'
+            });
+            const getAccount = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
+            getAccount.flush({
+                firstname: 'john',
+                lastname: 'doe'
+            });
+            http.verify();
+
+            fixture.detectChanges();
+
+            expect(store.selectSnapshot(state => state.application)).is.be.undefined;
+            expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
+            expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('john.doe@gmail.com');
 
             mock.detectChanges();
 

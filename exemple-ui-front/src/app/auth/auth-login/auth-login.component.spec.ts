@@ -69,7 +69,8 @@ describe('AuthLoginComponent', () => {
       });
       http.verify();
 
-      expect(store.selectSnapshot(state => state.authenticate)).is.be.true;
+      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
+      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('jean.dupond@gmail.com');
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
       expect(store.selectSnapshot(state => state.account.firstname)).is.be.eq('john');
       expect(store.selectSnapshot(state => state.account.lastname)).is.be.eq('doe');
@@ -94,7 +95,8 @@ describe('AuthLoginComponent', () => {
       http.expectNone({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       http.verify();
 
-      expect(store.selectSnapshot(state => state.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('error');
 
     })));
@@ -116,7 +118,8 @@ describe('AuthLoginComponent', () => {
       postPassword.flush({}, { status: 500, statusText: 'internal error' });
       http.verify();
 
-      expect(store.selectSnapshot(state => state.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
       expect(store.selectSnapshot(state => state.messages)).is.empty;
 
       expect(component.login).to.throw();
