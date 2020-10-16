@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { throwError } from 'rxjs';
 
-import { Authenticate } from '../shared/auth.action';
+import { GetAccount } from 'src/app/account/shared/account.action';
+import { LoginService } from '../../login/shared/login.service';
 import { PublishMessage } from '../../shared/message/message.action';
 import { notBlank } from '../../shared/validator/not-blank.validator';
+import { Authenticate } from '../shared/auth.action';
 import { UnauthorizedError } from '../shared/auth.service';
-import { LoginService } from '../../login/shared/login.service';
 
 @Component({
   selector: 'app-auth-login',
@@ -39,7 +40,10 @@ export class AuthLoginComponent implements OnInit {
         this.store.dispatch(new PublishMessage(
           { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
         this.loginService.getLogin(this.authenticateForm.value.username)
-          .subscribe(login => this.store.dispatch(new Navigate(['/account', { id: login.id }])));
+          .subscribe(login => {
+            this.store.dispatch(new GetAccount(login.id)).subscribe(() =>
+              this.store.dispatch(new Navigate(['/account'], { id: login.id })));
+          });
       }, error => {
         if (error instanceof UnauthorizedError) {
           this.store.dispatch(new PublishMessage(

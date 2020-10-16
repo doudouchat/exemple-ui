@@ -1,8 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
 
-import { AccountService } from './account/shared/account.service';
 import { AccountState } from './account/shared/account.state';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +10,6 @@ import { AnonymousGuard, AuthenticatedGuard } from './auth/shared/auth.guard';
 import { AuthService } from './auth/shared/auth.service';
 import { AuthState } from './auth/shared/auth.state';
 import { CoreModule } from './core/core.module';
-import { LoginService } from './login/shared/login.service';
 import { MessageState } from './shared/message/message.state';
 import { SharedModule } from './shared/shared.module';
 
@@ -20,6 +19,9 @@ import { SharedModule } from './shared/shared.module';
     SharedModule,
     AppRoutingModule,
     NgxsModule.forRoot([AccountState, AuthState, MessageState]),
+    NgxsStoragePluginModule.forRoot({
+      key: [AuthState, AccountState]
+    }),
     NgxsRouterPluginModule.forRoot()
   ],
   declarations: [AppComponent],
@@ -32,8 +34,6 @@ import { SharedModule } from './shared/shared.module';
       deps: [AuthService],
       multi: true
     },
-    AccountService,
-    LoginService,
     AuthenticatedGuard,
     AnonymousGuard
   ]

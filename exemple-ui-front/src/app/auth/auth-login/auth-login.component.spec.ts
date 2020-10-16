@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 
+import { AccountState } from '../../account/shared/account.state';
 import { MessageState } from '../../shared/message/message.state';
 import { AuthModule } from '../auth.module';
 import { AuthState } from '../shared/auth.state';
@@ -20,7 +21,7 @@ describe('AuthLoginComponent', () => {
     fixture = TestBed.configureTestingModule({
 
       imports: [AuthModule, RouterTestingModule, HttpClientTestingModule,
-        NgxsModule.forRoot([AuthState, MessageState])]
+        NgxsModule.forRoot([AccountState, AuthState, MessageState])]
 
     }).createComponent(AuthLoginComponent);
 
@@ -61,10 +62,17 @@ describe('AuthLoginComponent', () => {
       getLogin.flush({
         id: 99
       });
+      const getAccount = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
+      getAccount.flush({
+        firstname: 'john',
+        lastname: 'doe'
+      });
       http.verify();
 
       expect(store.selectSnapshot(state => state.authenticate)).is.be.true;
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
+      expect(store.selectSnapshot(state => state.account.firstname)).is.be.eq('john');
+      expect(store.selectSnapshot(state => state.account.lastname)).is.be.eq('doe');
 
     })));
 

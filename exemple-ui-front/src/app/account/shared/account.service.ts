@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as jsonpatch from 'fast-json-patch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -26,4 +27,29 @@ export class AccountService {
         return location.split('/').pop();
       }));
   }
+
+  getAccount(id: string): Observable<Account> {
+
+    return this.http.get<Account>(`/ExempleService/ws/v1/accounts/${id}`,
+      {
+        headers: new HttpHeaders({
+          'Content-type': 'application/json',
+          app: 'test',
+          version: 'v1'
+        })
+      });
+  }
+
+  updateAccount(account: Account, previousAccount: Account): Observable<any> {
+    return this.http.patch<any>('/ExempleService/ws/v1/accounts/' + previousAccount.id,
+      JSON.stringify(jsonpatch.compare(previousAccount, account)), {
+      headers: new HttpHeaders({
+        'Content-type': 'application/json',
+        app: 'test',
+        version: 'v1'
+      })
+    });
+  }
+
+
 }

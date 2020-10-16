@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 
-import { Authenticate } from './auth.action';
+import { Authenticate, Logout } from './auth.action';
 import { AuthService } from './auth.service';
 
 @State<boolean>({
@@ -21,5 +21,10 @@ export class AuthState {
             tap(() => {
                 ctx.setState(true);
             }));
+    }
+
+    @Action(Logout)
+    Logout(ctx: StateContext<boolean>) {
+        ctx.setState(false);
     }
 }

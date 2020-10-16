@@ -1,1 +1,68 @@
-<p>account-edit works!</p>
+<form [formGroup]="accountForm" (ngSubmit)="save()" novalidate>
+    <div class="p-field">
+        <span class="p-float-label">
+            <input pInputText id="email" formControlName="email" />
+            <label for="email">Email</label>
+        </span>
+        <div *ngIf="accountForm.controls['email'].invalid && (accountForm.controls['email'].dirty || accountForm.controls['email'].touched)"
+            class="p-invalid">
+            <small *ngIf="accountForm.controls['email'].errors.required">
+                Email is required.
+            </small>
+            <small *ngIf="accountForm.controls['email'].errors.uniqueUsername">
+                Email already exists.
+            </small>
+            <small *ngIf="accountForm.controls['email'].errors.email">
+                Email is incorrect.
+            </small>
+        </div>
+    </div>
+    <div class="p-field">
+        <span class="p-float-label">
+            <input pInputText id="lastname" formControlName="lastname" />
+            <label for="lastname">Lastname</label>
+        </span>
+        <div *ngIf="accountForm.controls['lastname'].invalid && (accountForm.controls['lastname'].dirty || accountForm.controls['lastname'].touched)"
+            class="p-invalid">
+            <small *ngIf="accountForm.controls['lastname'].errors.notBlank">
+                Lastname is required.
+            </small>
+        </div>
+    </div>
+    <div class="p-field">
+        <span class="p-float-label">
+            <input pInputText id="firstname" formControlName="firstname" />
+            <label for="firstname">Firstname</label>
+        </span>
+        <div *ngIf="accountForm.controls['firstname'].invalid && (accountForm.controls['firstname'].dirty || accountForm.controls['firstname'].touched)"
+            class="p-invalid">
+            <small *ngIf="accountForm.controls['firstname'].errors.notBlank">
+                Firstname is required.
+            </small>
+        </div>
+    </div>
+    <div class="p-field">
+        <span class="p-float-label">
+            <p-inputMask formControlName="birthday" mask="99/99/9999" slotChar="dd/mm/yyyy">
+            </p-inputMask>
+            <label for="birthday">Birthday</label>
+        </span>
+        <div *ngIf="accountForm.controls['birthday'].invalid && (accountForm.controls['birthday'].dirty || accountForm.controls['birthday'].touched)"
+            class="p-invalid">
+            <small *ngIf="accountForm.controls['birthday'].errors.required">
+                Birthday is required.
+            </small>
+        </div>
+    </div>
+    <div class="p-d-flex p-flex-column p-flex-md-row">
+        <div class="p-mb-2 p-mr-2">
+            <button type="button" pButton icon="pi pi-times" (click)="cancel()" label="Cancel"></button>
+        </div>
+        <div class="p-mb-2 p-mr-2">
+            <button type="submit" pButton icon="pi pi-check" label="Save" [disabled]="!accountForm.valid"></button>
+        </div>
+    </div>
+    <input type="hidden" id="creation_date" formControlName="creation_date" />
+    <input type="hidden" id="update_date" formControlName="update_date" />
+    <input type="hidden" id="id" formControlName="id" />
+</form>
