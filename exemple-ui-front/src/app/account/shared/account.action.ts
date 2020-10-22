@@ -10,6 +10,11 @@ export class GetAccount {
     constructor(public id: string) { }
 }
 
+export class GetAccountByUsername {
+    static readonly type = '[Account] Get by username';
+    constructor(public username: string) { }
+}
+
 export class UpdateAccount {
     static readonly type = '[Account] Update';
     constructor(public account: Account, public previousAccount: Account) { }

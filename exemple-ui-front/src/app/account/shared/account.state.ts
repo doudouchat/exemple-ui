@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { Logout } from '../../auth/shared/auth.action';
 import { Login } from '../../login/shared/login';
 import { LoginService } from '../../login/shared/login.service';
 import { Account } from './account';
-import { CreateAccount, GetAccount, UpdateAccount } from './account.action';
+import { CreateAccount, GetAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
 
 @State<Account>({
@@ -19,7 +19,8 @@ export class AccountState {
 
     constructor(
         private readonly accountService: AccountService,
-        private readonly loginService: LoginService) { }
+        private readonly loginService: LoginService,
+        private readonly store: Store) { }
 
     @Action(CreateAccount)
     CreateAccount(ctx: StateContext<Account>, action: CreateAccount) {
@@ -77,6 +78,15 @@ export class AccountState {
                 return account;
             }),
             tap(account => ctx.setState(account)));
+    }
+
+    @Action(GetAccountByUsername)
+    GetAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
+
+        return  this.loginService.getLogin(action.username).pipe(
+            mergeMap((login: Login) => {
+            return this.store.dispatch(new GetAccount(login.id));
+          }));
     }
 
     private toDate(date: any) {

@@ -112,7 +112,8 @@ describe('AccountEditComponent', () => {
 
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
       expect(store.selectSnapshot(state => state.account.email)).is.be.eq('jean.dupond@gmail.com');
-      expect(store.selectSnapshot(state => state.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
+      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
 
     })));
 

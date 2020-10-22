@@ -3,7 +3,7 @@ import { CanActivate, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 
-import { AuthState } from './auth.state';
+import { AuthState, AuthStateModel } from './auth.state';
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
@@ -13,11 +13,11 @@ export class AuthenticatedGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
 
-    const isAuthenticated: boolean = this.store.selectSnapshot(AuthState);
-    if (!isAuthenticated) {
+    const authState: AuthStateModel = this.store.selectSnapshot(AuthState);
+    if (!authState.authenticate) {
       this.router.navigate(['/login']);
     }
-    return of(isAuthenticated);
+    return of(authState.authenticate);
   }
 }
 
@@ -28,7 +28,7 @@ export class AnonymousGuard implements CanActivate {
   }
 
   canActivate(): Observable<boolean> {
-
-    return of(!this.store.selectSnapshot(AuthState));
+    const authState: AuthStateModel = this.store.selectSnapshot(AuthState);
+    return of(!authState.authenticate);
   }
 }

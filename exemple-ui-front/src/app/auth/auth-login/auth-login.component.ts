@@ -4,8 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { throwError } from 'rxjs';
 
-import { GetAccount } from 'src/app/account/shared/account.action';
-import { LoginService } from '../../login/shared/login.service';
+import { GetAccountByUsername } from '../../account/shared/account.action';
 import { PublishMessage } from '../../shared/message/message.action';
 import { notBlank } from '../../shared/validator/not-blank.validator';
 import { Authenticate } from '../shared/auth.action';
@@ -22,8 +21,7 @@ export class AuthLoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
-    private readonly loginService: LoginService) { }
+    private store: Store) { }
 
   ngOnInit() {
 
@@ -39,20 +37,19 @@ export class AuthLoginComponent implements OnInit {
       .subscribe(() => {
         this.store.dispatch(new PublishMessage(
           { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
-        this.loginService.getLogin(this.authenticateForm.value.username)
-          .subscribe(login => {
-            this.store.dispatch(new GetAccount(login.id)).subscribe(() =>
-              this.store.dispatch(new Navigate(['/account'], { id: login.id })));
-          });
-      }, error => {
-        if (error instanceof UnauthorizedError) {
-          this.store.dispatch(new PublishMessage(
-            { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
-        } else {
-          return throwError(error);
-        }
+        this.store.dispatch(new GetAccountByUsername(this.authenticateForm.value.username))
+          .subscribe((account: Account) =>
+            this.store.dispatch(new Navigate(['/account'], { id: account.id })));
+      }
+        , error => {
+          if (error instanceof UnauthorizedError) {
+            this.store.dispatch(new PublishMessage(
+              { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
+          } else {
+            return throwError(error);
+          }
 
-      });
+        });
   }
 
 }
