@@ -5,6 +5,7 @@ import { NgxsModule, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
+import { environment } from '../environments/environment';
 import { GetAccountByUsername } from './account/shared/account.action';
 import { AccountState } from './account/shared/account.state';
 import { AppRoutingModule } from './app-routing.module';
@@ -23,7 +24,9 @@ import { SharedModule } from './shared/shared.module';
     CoreModule,
     SharedModule,
     AppRoutingModule,
-    NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState]),
+    NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState], {
+      developmentMode: !environment.production
+    }),
     NgxsStoragePluginModule.forRoot({
       key: [AppState, AuthState],
       storage: StorageOption.LocalStorage
