@@ -10,6 +10,7 @@ import { GetAccountByUsername } from './account/shared/account.action';
 import { AccountState } from './account/shared/account.state';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { Logout } from './auth/shared/auth.action';
 import { AnonymousGuard, AuthenticatedGuard } from './auth/shared/auth.guard';
 import { AuthService } from './auth/shared/auth.service';
 import { AuthState, AuthStateModel } from './auth/shared/auth.state';
@@ -28,7 +29,7 @@ import { SharedModule } from './shared/shared.module';
       developmentMode: !environment.production
     }),
     NgxsStoragePluginModule.forRoot({
-      key: [AppState, AuthState],
+      key: [AuthState],
       storage: StorageOption.LocalStorage
     }),
     NgxsRouterPluginModule.forRoot()
@@ -40,11 +41,13 @@ import { SharedModule } from './shared/shared.module';
     {
       provide: APP_INITIALIZER,
       useFactory: (store: Store) => () => {
-        const authenticated: boolean = store.selectSnapshot(AppState);
-        if (!authenticated) {
-          return store.dispatch(new Authenticate('test', 'secret')).toPromise();
+        const authState: AuthStateModel = store.selectSnapshot(AuthState);
+        if (authState.username) {
+          return store.dispatch(new GetAccountByUsername(authState.username)).pipe(
+            mergeMap(() => store.selectOnce(AccountState))).toPromise()
+            .catch(() => store.dispatch(new Logout()).toPromise());
         }
-        return of(authenticated).toPromise();
+        return of(authState).toPromise();
       },
       deps: [Store],
       multi: true
@@ -53,11 +56,10 @@ import { SharedModule } from './shared/shared.module';
       provide: APP_INITIALIZER,
       useFactory: (store: Store) => () => {
         const authState: AuthStateModel = store.selectSnapshot(AuthState);
-        if (authState.username) {
-          return store.dispatch(new GetAccountByUsername(authState.username)).pipe(
-            mergeMap(() => store.selectOnce(AccountState))).toPromise();
+        if (!authState.authenticate) {
+          return store.dispatch(new Authenticate('test', 'secret')).toPromise();
         }
-        return of(authState).toPromise();
+        return of(true).toPromise();
       },
       deps: [Store],
       multi: true

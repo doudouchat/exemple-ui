@@ -110,4 +110,33 @@ describe('AppComponent', () => {
 
         })));
 
+    it('routing should have as template dummy refresh exception', waitForAsync(inject(
+        [HttpTestingController], (http) => {
+
+            http.expectNone({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
+            const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
+            getLogin.flush({}, { status: 403, statusText: 'access is forbidden' });
+            http.expectNone({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
+            http.verify();
+
+            fixture.detectChanges();
+
+            expect(store.selectSnapshot(state => state.application)).is.be.undefined;
+            expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
+            expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('john.doe@gmail.com');
+
+            mock.detectChanges();
+
+            mock.whenStable().then(() => {
+
+                mock.detectChanges();
+                let de: DebugElement[];
+                de = mock.debugElement.queryAll(By.css('h6'));
+
+                expect(de[0].nativeElement.innerHTML).to.equal('dummy');
+
+            });
+
+        })));
+
 });
