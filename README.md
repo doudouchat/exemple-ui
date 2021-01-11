@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/doudouchat/exemple-ui.svg?branch=master)](https://travis-ci.com/doudouchat/exemple-ui)
+[![build](https://github.com/doudouchat/exemple-ui/workflows/build/badge.svg)](https://github.com/doudouchat/exemple-ui/actions)
 [![codecov](https://codecov.io/gh/doudouchat/exemple-ui/graph/badge.svg)](https://codecov.io/gh/doudouchat/exemple-ui) 
 
 # exemple-ui
