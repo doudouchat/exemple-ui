@@ -21,7 +21,7 @@ jobs:
          uses: actions/setup-node@v1
          with:
             node-version: 12.8
-      -  run: npm install -g @angular/cli
+      -  run: npm install -g @angular/cli@10.2.0
       -  uses: borales/actions-yarn@v2.0.0
          with:
             cmd: install
