@@ -94,7 +94,9 @@ describe('AccountEditComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 404, statusText: 'not found' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       http.verify();
 
@@ -105,9 +107,15 @@ describe('AccountEditComponent', () => {
       fixture.detectChanges();
 
       const accountPatch = http.expectOne({ method: 'PATCH', url: '/ExempleService/ws/v1/accounts/99' });
-      accountPatch.flush({}, { status: 200, statusText: 'ok' });
-      const loginPatch = http.expectOne({ method: 'PATCH', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
-      loginPatch.flush({}, { status: 200, statusText: 'ok' });
+      accountPatch.flush({}, { status: 204, statusText: 'ok' });
+      const loginServicePost = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+      loginServicePost.flush({}, { status: 201, statusText: 'ok' });
+      const loginAuthorizationCopy = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/ws/v1/logins/copy' });
+      loginAuthorizationCopy.flush({}, { status: 201, statusText: 'ok' });
+      const loginServiceDelete = http.expectOne({ method: 'DELETE', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
+      loginServiceDelete.flush({}, { status: 204, statusText: 'ok' });
+      const loginAuthorizationDelete = http.expectOne({ method: 'DELETE', url: '/ExempleAuthorization/ws/v1/logins/john.doe@gmail.com' });
+      loginAuthorizationDelete.flush({}, { status: 204, statusText: 'ok' });
       http.verify();
 
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
@@ -127,8 +135,9 @@ describe('AccountEditComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       http.verify();
 
       fixture.detectChanges();

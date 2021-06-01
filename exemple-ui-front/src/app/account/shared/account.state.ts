@@ -57,10 +57,12 @@ export class AccountState {
                 let operation: Observable<any> = of(account);
                 if (account.email !== previous.email) {
                     const login: Login = {
-                        username: account.email
+                        username: account.email,
+                        id: account.id
                     };
                     const previousLogin: Login = {
-                        username: previous.email
+                        username: previous.email,
+                        id: account.id
                     };
                     operation = this.loginService.updateLogin(login, previousLogin).pipe(
                         mergeMap(() => ctx.dispatch(new Logout())));
@@ -75,6 +77,7 @@ export class AccountState {
         return this.accountService.getAccount(action.id).pipe(
             map(account => {
                 account.birthday = this.fromDate(account.birthday);
+                account.id = action.id;
                 return account;
             }),
             tap(account => ctx.setState(account)));
