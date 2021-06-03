@@ -129,6 +129,9 @@
           "configurations": {
             "production": {
               "devServerTarget": "exemple-ui:serve:production"
+            },
+            "dev": {
+              "protractorConfig": "e2e/protractor.conf.chrome.js"
             }
           }
         },
