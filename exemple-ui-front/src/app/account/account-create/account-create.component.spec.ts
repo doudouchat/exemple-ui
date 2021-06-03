@@ -53,7 +53,9 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 404, statusText: 'not found' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       http.verify();
 
@@ -65,8 +67,10 @@ describe('AccountCreateComponent', () => {
 
       const postAccount = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
       postAccount.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/accounts/123' } });
-      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
+      let postLogin = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
       postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/logins/jean.dupond@gmail.com' } });
+      postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
+      postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' } });
       http.verify();
 
       sinon.assert.calledOnce(id);
@@ -133,8 +137,9 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       http.verify();
 
       fixture.detectChanges();
@@ -169,8 +174,9 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 500, statusText: 'internal error' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       http.verify();
 
       fixture.detectChanges();
@@ -193,7 +199,9 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
-      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      headLogin.flush({}, { status: 404, statusText: 'not found' });
+      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       http.verify();
 
