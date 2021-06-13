@@ -9,34 +9,36 @@ module.exports = function (config) {
       require('karma-mocha'),
       require('karma-mocha-reporter'),
       require('karma-chrome-launcher'),
-      require('karma-phantomjs-launcher'),
-      require('karma-coverage-istanbul-reporter'),
+      require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      mocha : {
-				timeout : 20000
-			}
+      mocha: {
+        timeout: 20000
+      }
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../coverage/exemple-ui'),
-      reports : [ 'html', 'text-summary', 'cobertura', 'lcovonly' ],
-      fixWebpackSourcePaths: true
+    coverageReporter: {
+      dir: require('path').join(__dirname, './coverage/testangular'),
+      subdir: '.',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ]
     },
-		mochaReporter : {
-			showDiff : true,
-			colors : {
-				success : 'green',
-				info : 'grey',
-				warning : 'yellow',
-				error : 'red'
-			}
-		},
-    reporters : [ 'progress', 'mocha', 'coverage-istanbul' ],
+    mochaReporter: {
+      showDiff: true,
+      colors: {
+        success: 'green',
+        info: 'grey',
+        warning: 'yellow',
+        error: 'red'
+      }
+    },
+    reporters: ['progress', 'mocha', 'coverage'],
     port: 9876,
-  	colors : true,
-		logLevel : config.LOG_INFO,
-		browserNoActivityTimeout : 20000,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    browserNoActivityTimeout: 20000,
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: true,

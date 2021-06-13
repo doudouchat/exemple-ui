@@ -17,11 +17,11 @@ jobs:
             key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
             restore-keys: |
                ${{ runner.os }}-yarn-
-      -  name: Use Node.js 12.8
+      -  name: Use Node.js 12.15.0
          uses: actions/setup-node@v1
          with:
             node-version: 12.8
-      -  run: npm install -g @angular/cli@10.2.0
+      -  run: npm install -g @angular/cli@11.2.14
       -  uses: borales/actions-yarn@v2.0.0
          with:
             cmd: install
@@ -33,5 +33,5 @@ jobs:
          run: ng build
       -  name: test
          working-directory: exemple-ui-front
-         run: ng test --codeCoverage=true --browsers=PhantomJS
+         run: ng test --codeCoverage=true --browsers=ChromeHeadless
       -  uses: codecov/codecov-action@v1
