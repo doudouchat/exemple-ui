@@ -18,11 +18,9 @@ module.exports = function (config) {
       }
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/testangular'),
-      subdir: '.',
+      dir: '../coverage/exemple-ui',
       reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
+        { type: 'lcov', subdir: '.' }
       ]
     },
     mochaReporter: {
