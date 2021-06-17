@@ -1,4 +1,4 @@
-import { Before, BeforeAll, Given, Then, When } from 'cucumber';
+import { Before, BeforeAll, Given, Then, When } from '@cucumber/cucumber';
 import { expect } from 'chai';
 import { by, element } from 'protractor';
 import * as cassandra from 'cassandra-driver';
