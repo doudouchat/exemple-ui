@@ -162,7 +162,7 @@ describe('AccountCreateComponent', () => {
     { message: 'check login fails', head_login_status: 500, post_login_status: 201, post_account_status: 201 }
   ];
 
-  it.skip('creation account failure: request HEAD /ws/v1/logins fails', inject(
+  xit('creation account failure: request HEAD /ws/v1/logins fails', inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
       const component: AccountCreateComponent = fixture.componentInstance;
