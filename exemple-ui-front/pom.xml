@@ -36,7 +36,7 @@
 					<configuration>
 						<nodeVersion>v14.17.3</nodeVersion>
 						<npmVersion>6.14.13</npmVersion>
-						<yarnVersion>v1.22.0</yarnVersion>
+						<yarnVersion>v1.22.10</yarnVersion>
 					</configuration>
 				</plugin>
 
@@ -110,7 +110,7 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<skip>${skip.yarn}</skip>
-							<arguments>--frozen-lockfile</arguments>
+							<arguments>--immutable</arguments>
 						</configuration>
 					</execution>
 					<execution>
