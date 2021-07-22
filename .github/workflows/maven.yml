@@ -21,7 +21,6 @@ jobs:
          uses: actions/setup-node@v1
          with:
             node-version: 14.17.3
-      -  run: npm install -g @angular/cli@12.0.4
       -  uses: borales/actions-yarn@v2.0.0
          with:
             cmd: install
@@ -30,8 +29,8 @@ jobs:
          run: yarn --frozen-lockfile
       -  name: build
          working-directory: exemple-ui-front
-         run: ng build
+         run: npm run-script build
       -  name: test
          working-directory: exemple-ui-front
-         run: ng test --codeCoverage=true --browsers=ChromeHeadless
+         run: npm run-script test
       -  uses: codecov/codecov-action@v1
