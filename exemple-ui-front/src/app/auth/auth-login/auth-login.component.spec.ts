@@ -59,9 +59,7 @@ describe('AuthLoginComponent', () => {
         expires_in: 300
       });
       const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      getLogin.flush({
-        id: 99
-      });
+      getLogin.flush(99);
       const getAccount = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
       getAccount.flush({
         firstname: 'john',

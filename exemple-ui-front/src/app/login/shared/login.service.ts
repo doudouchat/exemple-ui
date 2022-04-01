@@ -33,40 +33,19 @@ export class LoginService {
         ))).pipe(takeWhile(exist => !exist, true));
   }
 
-  createLogin(login: Login): Observable<string> {
-
-    return forkJoin({
-      createLoginService: this.http.post<any>('/ExempleService/ws/v1/logins',
-        JSON.stringify(
-          { username: login.username, id: login.id }), {
-        headers:
-          new HttpHeaders({
-            'Content-type': 'application/json',
-            app: 'test',
-            version: 'v1'
-          }),
-        observe: 'response'
-      }),
-      createLoginAuthorization: this.http.put<any>(`/ExempleAuthorization/ws/v1/logins/${login.username}`,
-        JSON.stringify(
-          { password: login.password }), {
-        headers:
-          new HttpHeaders({
-            'Content-type': 'application/json',
-            app: 'test'
-          }),
-        observe: 'response'
+  createLogin(login: Login): Observable<any> {
+    return this.http.put<any>(`/ExempleAuthorization/ws/v1/logins/${login.username}`,
+      JSON.stringify({ password: login.password }), {
+      headers: new HttpHeaders({
+        'Content-type': 'application/json',
+        app: 'test'
       })
-    }).pipe(
-      map(res => {
-        const location = res.createLoginService.headers.get('location');
-        return location.split('/').pop();
-      }));
+    });
   }
 
-  getLogin(username: string): Observable<Login> {
+  getLogin(username: string): Observable<string> {
 
-    return this.http.get<Login>(`/ExempleService/ws/v1/logins/${username}`,
+    return this.http.get<string>(`/ExempleService/ws/v1/logins/${username}`,
       {
         headers: new HttpHeaders({
           'Content-type': 'application/json',
@@ -78,43 +57,24 @@ export class LoginService {
 
   updateLogin(login: Login, previousLogin: Login): Observable<any> {
 
-    return forkJoin({
-      copyLoginAuthorization: this.http.post<any>(`/ExempleAuthorization/ws/v1/logins/copy`,
-        JSON.stringify(
-          {
-            fromUsername: previousLogin.username,
-            toUsername: login.username
-          }), {
-        headers:
-          new HttpHeaders({
-            'Content-type': 'application/json',
-            app: 'test'
-          }),
-        observe: 'response'
-      }),
-      createLoginService: this.http.post<any>('/ExempleService/ws/v1/logins',
-        JSON.stringify(
-          { username: login.username, id: login.id }), {
-        headers:
-          new HttpHeaders({
-            'Content-type': 'application/json',
-            app: 'test',
-            version: 'v1'
-          }),
-        observe: 'response'
-      })
-    }).pipe(
-      mergeMap(() =>
-        from([
-          `/ExempleAuthorization/ws/v1/logins/${previousLogin.username}`,
-          `/ExempleService/ws/v1/logins/${previousLogin.username}`
-        ])
-          .pipe(mergeMap(url => this.http.delete<boolean>(url,
-            {
-              headers: new HttpHeaders({
-                'Content-type': 'application/json',
-                app: 'test'
-              })
-            })))));
+    return this.http.post<any>(`/ExempleAuthorization/ws/v1/logins/copy`,
+      JSON.stringify(
+        {
+          fromUsername: previousLogin.username,
+          toUsername: login.username
+        }), {
+      headers:
+        new HttpHeaders({
+          'Content-type': 'application/json',
+          app: 'test'
+        }),
+      observe: 'response'
+    }).pipe(mergeMap(() => this.http.delete<boolean>(`/ExempleAuthorization/ws/v1/logins/${previousLogin.username}`,
+      {
+        headers: new HttpHeaders({
+          'Content-type': 'application/json',
+          app: 'test'
+        })
+      })));
   }
 }
