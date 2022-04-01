@@ -87,8 +87,8 @@ export class AccountState {
     GetAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
 
         return  this.loginService.getLogin(action.username).pipe(
-            mergeMap((login: Login) => {
-            return this.store.dispatch(new GetAccount(login.id));
+            mergeMap((id: string) => {
+            return this.store.dispatch(new GetAccount(id));
           }));
     }
 

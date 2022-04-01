@@ -38,8 +38,8 @@ export class AuthLoginComponent implements OnInit {
         this.store.dispatch(new PublishMessage(
           { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
         this.store.dispatch(new GetAccountByUsername(this.authenticateForm.value.username))
-          .subscribe((account: Account) =>
-            this.store.dispatch(new Navigate(['/account'], { id: account.id })));
+          .subscribe((id: string) =>
+            this.store.dispatch(new Navigate(['/account'], { id: id })));
       }
         , error => {
           if (error instanceof UnauthorizedError) {

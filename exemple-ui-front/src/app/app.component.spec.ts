@@ -79,10 +79,7 @@ describe('AppComponent', () => {
 
             http.expectNone({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
             const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/john.doe@gmail.com' });
-            getLogin.flush({
-                id: 99,
-                username: 'toto'
-            });
+            getLogin.flush(99);
             const getAccount = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
             getAccount.flush({
                 firstname: 'john',

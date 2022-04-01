@@ -67,9 +67,7 @@ describe('AccountCreateComponent', () => {
 
       const postAccount = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
       postAccount.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/accounts/123' } });
-      let postLogin = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
-      postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/logins/jean.dupond@gmail.com' } });
-      postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
+      let postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' } });
       http.verify();
 
@@ -110,7 +108,6 @@ describe('AccountCreateComponent', () => {
         expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
         http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
-        http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
         http.verify();
 
         sinon.assert.notCalled(id);
@@ -149,7 +146,6 @@ describe('AccountCreateComponent', () => {
       expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
       http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
-      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
       http.verify();
 
       sinon.assert.notCalled(id);
@@ -212,7 +208,6 @@ describe('AccountCreateComponent', () => {
       fixture.detectChanges();
 
       http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
-      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/logins' });
       http.verify();
 
       sinon.assert.notCalled(id);
