@@ -108,10 +108,8 @@ describe('AccountEditComponent', () => {
 
       const accountPatch = http.expectOne({ method: 'PATCH', url: '/ExempleService/ws/v1/accounts/99' });
       accountPatch.flush({}, { status: 204, statusText: 'ok' });
-      const loginAuthorizationCopy = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/ws/v1/logins/copy' });
+      const loginAuthorizationCopy = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/ws/v1/logins/move' });
       loginAuthorizationCopy.flush({}, { status: 201, statusText: 'ok' });
-      const loginAuthorizationDelete = http.expectOne({ method: 'DELETE', url: '/ExempleAuthorization/ws/v1/logins/john.doe@gmail.com' });
-      loginAuthorizationDelete.flush({}, { status: 204, statusText: 'ok' });
       http.verify();
 
       expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
