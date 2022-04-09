@@ -57,7 +57,7 @@ export class LoginService {
 
   updateLogin(login: Login, previousLogin: Login): Observable<any> {
 
-    return this.http.post<any>(`/ExempleAuthorization/ws/v1/logins/copy`,
+    return this.http.post<any>(`/ExempleAuthorization/ws/v1/logins/move`,
       JSON.stringify(
         {
           fromUsername: previousLogin.username,
@@ -69,12 +69,6 @@ export class LoginService {
           app: 'test'
         }),
       observe: 'response'
-    }).pipe(mergeMap(() => this.http.delete<boolean>(`/ExempleAuthorization/ws/v1/logins/${previousLogin.username}`,
-      {
-        headers: new HttpHeaders({
-          'Content-type': 'application/json',
-          app: 'test'
-        })
-      })));
+    });
   }
 }
