@@ -260,32 +260,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:9.0.0":
-  version: 9.0.0
-  resolution: "@angular/compiler@npm:9.0.0"
-  peerDependencies:
-    tslib: ^1.10.0
-  checksum: 95f6188eac71c7cd0c6bd58c667be899ed126763b4125b8d5a950b25b58e7f496ad4d15af66f7db1c8b87ca30f945b8ef6d88dda8511fd2ac30ef99a730d7c67
-  languageName: node
-  linkType: hard
-
 "@angular/compiler@npm:^13.3.11":
   version: 13.3.11
   resolution: "@angular/compiler@npm:13.3.11"
   dependencies:
     tslib: ^2.3.0
   checksum: c60ee22fa287956d947d2614ecd0cd6ae46b9fe61d7fd9fe4f132c124db0493add1d5c26006b66bbf24a950378e3be766efc5d21d880478ae4b37f304c6c3271
-  languageName: node
-  linkType: hard
-
-"@angular/core@npm:9.0.0":
-  version: 9.0.0
-  resolution: "@angular/core@npm:9.0.0"
-  peerDependencies:
-    rxjs: ^6.5.3
-    tslib: ^1.10.0
-    zone.js: ~0.10.2
-  checksum: 2bb890ad57372f06fcbcfff3895d2e97ef3ca33caafda092ba977f36c1d4bb8a37f047d968566f6ae569d82ea9cdb6c109282848d343d339e594bc7e800c8be1
   languageName: node
   linkType: hard
 
@@ -3065,13 +3045,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"app-root-path@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "app-root-path@npm:3.0.0"
-  checksum: ff91a24db2b55070f6b3e22e72ce8fe8ea847e19eb8a3cbb267f9e9ac2a8372db65114dd6798a4ed7897a6f475b90a49330b3e53bf199d47e6abb5c5279aa1d7
-  languageName: node
-  linkType: hard
-
 "aproba@npm:^1.0.3 || ^2.0.0":
   version: 2.0.0
   resolution: "aproba@npm:2.0.0"
@@ -3109,16 +3082,6 @@ __metadata:
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
   checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
-  languageName: node
-  linkType: hard
-
-"aria-query@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "aria-query@npm:3.0.0"
-  dependencies:
-    ast-types-flow: 0.0.7
-    commander: ^2.11.0
-  checksum: 52861d7d31321a23f27e5f95a437ddafd20e5eee03ff6e4319eeb1e98dce103f03ccaea34acb5bf2810580f71a9ac1658200fa3d49435279e99df2908f213f1b
   languageName: node
   linkType: hard
 
@@ -3207,13 +3170,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ast-types-flow@npm:0.0.7":
-  version: 0.0.7
-  resolution: "ast-types-flow@npm:0.0.7"
-  checksum: a26dcc2182ffee111cad7c471759b0bda22d3b7ebacf27c348b22c55f16896b18ab0a4d03b85b4020dce7f3e634b8f00b593888f622915096ea1927fa51866c4
-  languageName: node
-  linkType: hard
-
 "async@npm:^2.6.2":
   version: 2.6.4
   resolution: "async@npm:2.6.4"
@@ -3275,15 +3231,6 @@ __metadata:
   version: 1.11.0
   resolution: "aws4@npm:1.11.0"
   checksum: 5a00d045fd0385926d20ebebcfba5ec79d4482fe706f63c27b324d489a04c68edb0db99ed991e19eda09cb8c97dc2452059a34d97545cebf591d7a2b5a10999f
-  languageName: node
-  linkType: hard
-
-"axobject-query@npm:2.0.2":
-  version: 2.0.2
-  resolution: "axobject-query@npm:2.0.2"
-  dependencies:
-    ast-types-flow: 0.0.7
-  checksum: 0d3c64a8277711fe543624e0d114d661a2b3b451dd796116dc963893ac77f8dd7df42fdf5bbf37a1234adfa6f2196ee3bd0096407e133bce547c2a725f4288ee
   languageName: node
   linkType: hard
 
@@ -3920,32 +3867,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codelyzer@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "codelyzer@npm:6.0.2"
-  dependencies:
-    "@angular/compiler": 9.0.0
-    "@angular/core": 9.0.0
-    app-root-path: ^3.0.0
-    aria-query: ^3.0.0
-    axobject-query: 2.0.2
-    css-selector-tokenizer: ^0.7.1
-    cssauron: ^1.4.0
-    damerau-levenshtein: ^1.0.4
-    rxjs: ^6.5.3
-    semver-dsl: ^1.0.1
-    source-map: ^0.5.7
-    sprintf-js: ^1.1.2
-    tslib: ^1.10.0
-    zone.js: ~0.10.3
-  peerDependencies:
-    "@angular/compiler": ">=2.3.1 <13.0.0 || ^12.0.0-next || ^12.1.0-next || ^12.2.0-next"
-    "@angular/core": ">=2.3.1 <13.0.0 || ^12.0.0-next || ^12.1.0-next || ^12.2.0-next"
-    tslint: ^5.0.0 || ^6.0.0
-  checksum: 8f9f20f2196ccf6c0e549fd894c37ec707c54e01f9afc795c13452b4abc6f72890293a9ebff22f93241e3d9db4f982566fca4d12eca5b77e9cd4f9553767c5a4
-  languageName: node
-  linkType: hard
-
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -4017,7 +3938,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^2.11.0, commander@npm:^2.12.1, commander@npm:^2.20.0":
+"commander@npm:^2.12.1, commander@npm:^2.20.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
   checksum: ab8c07884e42c3a8dbc5dd9592c606176c7eb5c1ca5ff274bcf907039b2c41de3626f684ea75ccf4d361ba004bbaff1f577d5384c155f3871e456bdf27becf9e
@@ -4320,16 +4241,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-selector-tokenizer@npm:^0.7.1":
-  version: 0.7.3
-  resolution: "css-selector-tokenizer@npm:0.7.3"
-  dependencies:
-    cssesc: ^3.0.0
-    fastparse: ^1.1.2
-  checksum: 92560a9616a8bc073b88c678aa04f22c599ac23c5f8587e60f4861069e2d5aeb37b722af581ae3c5fbce453bed7a893d9c3e06830912e6d28badc3b8b99acd24
-  languageName: node
-  linkType: hard
-
 "css-what@npm:^6.0.1":
   version: 6.1.0
   resolution: "css-what@npm:6.1.0"
@@ -4345,15 +4256,6 @@ __metadata:
     source-map: ^0.6.1
     source-map-resolve: ^0.6.0
   checksum: 4273ac816ddf99b99acb9c1d1a27d86d266a533cc01118369d941d8e8a78277a83cad3315e267a398c509d930fbb86504e193ea1ebc620a4a4212e06fe76e8be
-  languageName: node
-  linkType: hard
-
-"cssauron@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "cssauron@npm:1.4.0"
-  dependencies:
-    through: X.X.X
-  checksum: bfb9cbf763f6fc560f807f2b9c4b91f5b338c066572f539cbd16decaa813c837ef40951526c3a07a1ba097fa89dfe3e43c4e8e80c1f26573d687b9d7be854279
   languageName: node
   linkType: hard
 
@@ -4394,13 +4296,6 @@ __metadata:
     es5-ext: ^0.10.50
     type: ^1.0.1
   checksum: 49ca0639c7b822db670de93d4fbce44b4aa072cd848c76292c9978a8cd0fff1028763020ff4b0f147bd77bfe29b4c7f82e0f71ade76b2a06100543cdfd948d19
-  languageName: node
-  linkType: hard
-
-"damerau-levenshtein@npm:^1.0.4":
-  version: 1.0.8
-  resolution: "damerau-levenshtein@npm:1.0.8"
-  checksum: d240b7757544460ae0586a341a53110ab0a61126570ef2d8c731e3eab3f0cb6e488e2609e6a69b46727635de49be20b071688698744417ff1b6c1d7ccd03e0de
   languageName: node
   linkType: hard
 
@@ -5362,7 +5257,6 @@ __metadata:
     "@types/sinon": ^10.0.2
     cassandra-driver: ^4.6.3
     chai: ^4.2.0
-    codelyzer: ^6.0.2
     fast-json-patch: ^3.0.0-1
     karma: ~6.3.3
     karma-chrome-launcher: ^3.1.0
@@ -5505,13 +5399,6 @@ __metadata:
   version: 2.1.0
   resolution: "fast-json-stable-stringify@npm:2.1.0"
   checksum: b191531e36c607977e5b1c47811158733c34ccb3bfde92c44798929e9b4154884378536d26ad90dfecd32e1ffc09c545d23535ad91b3161a27ddbb8ebe0cbecb
-  languageName: node
-  linkType: hard
-
-"fastparse@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "fastparse@npm:1.1.2"
-  checksum: c4d199809dc4e8acafeb786be49481cc9144de296e2d54df4540ccfd868d0df73afc649aba70a748925eb32bbc4208b723d6288adf92382275031a8c7e10c0aa
   languageName: node
   linkType: hard
 
@@ -9699,7 +9586,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"rxjs@npm:6.6.7, rxjs@npm:^6.5.3, rxjs@npm:~6.6.3":
+"rxjs@npm:6.6.7, rxjs@npm:~6.6.3":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:
@@ -9855,15 +9742,6 @@ fsevents@~2.3.2:
   dependencies:
     node-forge: ^1
   checksum: 864e65c2f31ca877bce3ccdaa3bdef5e1e992b63b2a03641e00c24cd305bf2acce093431d1fed2e5ae9f526558db4be5e90baa2b3474c0428fcf7e25cc86ac93
-  languageName: node
-  linkType: hard
-
-"semver-dsl@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "semver-dsl@npm:1.0.1"
-  dependencies:
-    semver: ^5.3.0
-  checksum: b7ca615cb51ce462c28f3f7152c235e4ef4548b82ada9d2d33409fd501c0f658a8cd445de646eb711cca1865505499d1adab3f0da764501c8e162ccd8fdaf5c9
   languageName: node
   linkType: hard
 
@@ -10234,7 +10112,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.5.0, source-map@npm:^0.5.6, source-map@npm:^0.5.7":
+"source-map@npm:^0.5.0, source-map@npm:^0.5.6":
   version: 0.5.7
   resolution: "source-map@npm:0.5.7"
   checksum: 5dc2043b93d2f194142c7f38f74a24670cd7a0063acdaf4bf01d2964b402257ae843c2a8fa822ad5b71013b5fcafa55af7421383da919752f22ff488bc553f4d
@@ -10272,13 +10150,6 @@ fsevents@~2.3.2:
     select-hose: ^2.0.0
     spdy-transport: ^3.0.0
   checksum: 2c739d0ff6f56ad36d2d754d0261d5ec358457bea7cbf77b1b05b0c6464f2ce65b85f196305f50b7bd9120723eb94bae9933466f28e67e5cd8cde4e27f1d75f8
-  languageName: node
-  linkType: hard
-
-"sprintf-js@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "sprintf-js@npm:1.1.2"
-  checksum: d4bb46464632b335e5faed381bd331157e0af64915a98ede833452663bc672823db49d7531c32d58798e85236581fb7342fd0270531ffc8f914e186187bf1c90
   languageName: node
   linkType: hard
 
@@ -10706,7 +10577,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"through@npm:X.X.X, through@npm:^2.3.6":
+"through@npm:^2.3.6":
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
@@ -10862,7 +10733,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.10.0, tslib@npm:^1.13.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0":
+"tslib@npm:^1.13.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
@@ -11711,13 +11582,6 @@ fsevents@~2.3.2:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"zone.js@npm:~0.10.3":
-  version: 0.10.3
-  resolution: "zone.js@npm:0.10.3"
-  checksum: 69e0194b377dff8eb5ce7fa202334a0e0bd0a530f3bbd61b5b2a53af29fd67f058d47aa1cdd8a340cdf9e59f3b7c0d01dbd87d5f1563bcfb5dd6b2c761b21590
   languageName: node
   linkType: hard
 
