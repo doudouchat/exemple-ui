@@ -11,7 +11,7 @@ import { PublishMessage } from './message.action';
 export class MessageState {
 
     @Action(PublishMessage)
-    publish(ctx: StateContext<Account>, action: PublishMessage) {
+    publish(ctx: StateContext<any>, action: PublishMessage) {
         ctx.patchState(action.message);
     }
 }
