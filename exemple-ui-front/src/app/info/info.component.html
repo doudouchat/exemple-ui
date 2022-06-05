@@ -1,4 +1,4 @@
-<div *ngIf="(info | async)?.version != null ;then info_success else info_failure"></div>
+<div *ngIf="(info | async)?.version !== null ;then info_success else info_failure"></div>
 
 <ng-template #info_success>
 	<h4>version:{{(info | async)?.version}}</h4>
