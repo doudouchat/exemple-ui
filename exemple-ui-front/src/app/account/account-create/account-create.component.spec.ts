@@ -67,14 +67,16 @@ describe('AccountCreateComponent', () => {
 
       const postAccount = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
       postAccount.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/accounts/123' } });
-      let postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
-      postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' } });
       http.verify();
       const expectedAccountBody = {
-        'email': 'jean.dupond@gmail.com',
-        'lastname': 'dupond',
-        'firstname': 'jean',
-        'birthday': '1976-12-12'
+        'account': {
+          'email': 'jean.dupond@gmail.com',
+          'lastname': 'dupond',
+          'firstname': 'jean',
+          'birthday': '1976-12-12'
+        },
+        'password': 'D#az78&é',
+        'logins': ['email']
       };
       expect(postAccount.request.body).is.be.eq(JSON.stringify(expectedAccountBody));
 

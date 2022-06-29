@@ -11,10 +11,14 @@ export class AccountService {
 
   constructor(private readonly http: HttpClient) { }
 
-  createAccount(account: Account): Observable<string> {
+  createAccount(account: Account, password: String): Observable<string> {
 
     return this.http.post<any>('/ExempleService/ws/v1/accounts',
-      JSON.stringify(account), {
+      JSON.stringify({
+        'account': account,
+        'password': password,
+        'logins': ['email']
+      }), {
       headers: new HttpHeaders({
         'Content-type': 'application/json',
         app: 'test',

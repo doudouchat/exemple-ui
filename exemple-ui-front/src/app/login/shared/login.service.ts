@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as jsonpatch from 'fast-json-patch';
-import { Observable, of, forkJoin, throwError, from } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
 import { catchError, map, mergeMap, takeWhile } from 'rxjs/operators';
 
 import { Login } from './login';
@@ -31,16 +30,6 @@ export class LoginService {
             return throwError(error);
           })
         ))).pipe(takeWhile(exist => !exist, true));
-  }
-
-  createLogin(login: Login): Observable<any> {
-    return this.http.put<any>(`/ExempleAuthorization/ws/v1/logins/${login.username}`,
-      JSON.stringify({ password: login.password }), {
-      headers: new HttpHeaders({
-        'Content-type': 'application/json',
-        app: 'test'
-      })
-    });
   }
 
   getLogin(username: string): Observable<string> {

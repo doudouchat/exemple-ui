@@ -27,18 +27,10 @@ export class AccountState {
 
         const account = action.account;
         account.birthday = this.toDate(account.birthday);
-        return this.accountService.createAccount(account).pipe(
-            mergeMap((accountId: string) => {
-                const login: Login = {
-                    username: account.email,
-                    password: action.password,
-                    id: accountId
-                };
-                return this.loginService.createLogin(login).pipe(tap(() => {
-                    ctx.setState(account);
-                    ctx.patchState({ id: accountId });
-                }));
-            }));
+        return this.accountService.createAccount(account, action.password).pipe(tap((accountId: string) => {
+            ctx.setState(account);
+            ctx.patchState({ id: accountId });
+        }));
     }
 
     @Action(UpdateAccount)
@@ -86,10 +78,10 @@ export class AccountState {
     @Action(GetAccountByUsername)
     GetAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
 
-        return  this.loginService.getLogin(action.username).pipe(
+        return this.loginService.getLogin(action.username).pipe(
             mergeMap((id: string) => {
-            return this.store.dispatch(new GetAccount(id));
-          }));
+                return this.store.dispatch(new GetAccount(id));
+            }));
     }
 
     private toDate(date: any) {
