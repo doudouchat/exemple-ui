@@ -70,6 +70,13 @@ describe('AccountCreateComponent', () => {
       let postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' } });
       http.verify();
+      const expectedAccountBody = {
+        'email': 'jean.dupond@gmail.com',
+        'lastname': 'dupond',
+        'firstname': 'jean',
+        'birthday': '1976-12-12'
+      };
+      expect(postAccount.request.body).is.be.eq(JSON.stringify(expectedAccountBody));
 
       sinon.assert.calledOnce(id);
       sinon.assert.calledWith(id, '123');
