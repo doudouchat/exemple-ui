@@ -168,6 +168,9 @@
               "config": {
                 "video": false
               }
+            },
+            "docker": {
+              "devServerTarget": ""
             }
           }
         }

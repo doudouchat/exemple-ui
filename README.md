@@ -9,3 +9,7 @@
 
 <p>execute sonar <code>node_modules/.bin/sonar-scanner -Dsonar.login=admin -Dsonar.password=admin123</code></p>
 
+## Docker
+
+<p>build image <code>docker build . -t exemple-ui --build-arg VERSION_NODE=16.18.0 --build-arg VERSION_NGINX=1.22.0</code></p>
+
