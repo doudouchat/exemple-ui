@@ -1,4 +1,4 @@
-import { Before, BeforeAll, Given, Then, When } from '@cucumber/cucumber';
+import { AfterAll, Before, BeforeAll, Given, Then, When } from '@cucumber/cucumber';
 import { by, element } from 'protractor';
 import * as cassandra from 'cassandra-driver';
 
@@ -11,12 +11,15 @@ const client = new cassandra.Client({
     localDataCenter: 'datacenter1'
 });
 
-BeforeAll(() => {
+BeforeAll( async () => {
 
-    client.execute('insert into test_authorization.login (username, password) values (?, ?)', ['jean.dupont@gmail.com',
+    await client.execute('insert into test_authorization.login (username, password) values (?, ?)', ['jean.dupont@gmail.com',
         '{bcrypt}$2a$10$Kd7BZwLmFIfoYDttqaJ6V.Lsp4xe31Qc9ha/gBYFGYgnAMvY758vm']);
 });
 
+AfterAll(async () => {
+    await client.shutdown();
+});
 
 Before(() => {
     page = new AppPage();

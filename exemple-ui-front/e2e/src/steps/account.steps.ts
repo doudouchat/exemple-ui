@@ -1,4 +1,4 @@
-import { Before, BeforeAll, Given, Then, When } from '@cucumber/cucumber';
+import { AfterAll, Before, BeforeAll, Given, Then, When } from '@cucumber/cucumber';
 import { expect } from 'chai';
 import { by, element } from 'protractor';
 import * as cassandra from 'cassandra-driver';
@@ -12,14 +12,18 @@ const client = new cassandra.Client({
     localDataCenter: 'datacenter1'
 });
 
-BeforeAll(() => {
+BeforeAll( async () => {
 
-    client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@gmail.com']);
-    client.execute('delete from test_service.login where username = ?', ['jean.dupond@gmail.com']);
-    client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@hotmail.com']);
-    client.execute('delete from test_service.login where username = ?', ['jean.dupond@hotmail.com']);
-    client.execute('insert into test_authorization.login (username) values (?)', ['jean.dupont@gmail.com']);
-    client.execute('delete from test_service.login where username = ?', ['jean.dupont@gmail.com']);
+    await client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@gmail.com']);
+    await client.execute('delete from test_service.login where username = ?', ['jean.dupond@gmail.com']);
+    await client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@hotmail.com']);
+    await client.execute('delete from test_service.login where username = ?', ['jean.dupond@hotmail.com']);
+    await client.execute('insert into test_authorization.login (username) values (?)', ['jean.dupont@gmail.com']);
+    await client.execute('delete from test_service.login where username = ?', ['jean.dupont@gmail.com']);
+});
+
+AfterAll(async () => {
+    await client.shutdown();
 });
 
 Before(() => {
