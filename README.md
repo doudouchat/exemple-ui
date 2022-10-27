@@ -3,7 +3,7 @@
 
 # exemple-ui
 
-## maven
-
-<p>execute <code>mvn clean install</code></p>
+<p>execute <code>yarn --immutable</code></p>
+<p>execute <code>npm run-script build</code></p>
+<p>execute <code>npm run-script test</code></p>
 
