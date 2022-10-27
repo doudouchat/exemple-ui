@@ -7,26 +7,24 @@ jobs:
       runs-on: ubuntu-latest
       steps:
       -  uses: actions/checkout@v2
-      -  name: Get yarn cache directory path
-         id: yarn-cache-dir-path
-         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      -  uses: actions/cache@v2
-         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      -  name: Get npm cache directory
+         id: npm-cache-dir
+         run: |
+           echo "::set-output name=dir::$(npm config get cache)"
+      -  uses: actions/cache@v3
+         id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
          with:
-            path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-            restore-keys: |
-               ${{ runner.os }}-yarn-
+           path: ${{ steps.npm-cache-dir.outputs.dir }}
+           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+           restore-keys: |
+            ${{ runner.os }}-node-
       -  name: Use Node.js 14.17.3
          uses: actions/setup-node@v1
          with:
             node-version: 14.17.3
-      -  uses: borales/actions-yarn@v3.0.0
-         with:
-            cmd: install
       -  name: install
          working-directory: exemple-ui-front
-         run: yarn --immutable
+         run: npm ci
       -  name: build
          working-directory: exemple-ui-front
          run: npm run-script build

@@ -3,7 +3,7 @@
 
 # exemple-ui
 
-<p>execute <code>yarn --immutable</code></p>
+<p>execute <code>npm ci</code></p>
 <p>execute <code>npm run-script build</code></p>
 <p>execute <code>npm run-script test</code></p>
 
