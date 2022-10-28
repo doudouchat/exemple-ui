@@ -7,3 +7,5 @@
 <p>execute <code>npm run-script build</code></p>
 <p>execute <code>npm run-script test</code></p>
 
+<p>execute sonar <code>node_modules/.bin/sonar-scanner -Dsonar.login=admin -Dsonar.password=admin123</code></p>
+
