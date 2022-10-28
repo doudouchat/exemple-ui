@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { throwError } from 'rxjs';
@@ -17,10 +17,10 @@ import { UnauthorizedError } from '../shared/auth.service';
 })
 export class AuthLoginComponent implements OnInit {
 
-  authenticateForm: FormGroup;
+  authenticateForm: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private store: Store) { }
 
   ngOnInit() {

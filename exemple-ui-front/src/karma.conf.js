@@ -20,7 +20,9 @@ module.exports = function (config) {
     coverageReporter: {
       dir: '../coverage/exemple-ui',
       reporters: [
-        { type: 'lcov', subdir: '.' }
+        { type: 'lcov', subdir: '.' },
+        { type: 'html', subdir: '.' },
+        { type: 'text-summary', subdir: '.' }
       ]
     },
     mochaReporter: {
