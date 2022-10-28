@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 
@@ -18,10 +18,10 @@ export class AccountEditComponent implements OnInit {
 
   account: Account;
 
-  accountForm: FormGroup;
+  accountForm: UntypedFormGroup;
 
   constructor(
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
     private store: Store,
     private readonly route: ActivatedRoute,
     private readonly loginValidator: LoginValidator) { }

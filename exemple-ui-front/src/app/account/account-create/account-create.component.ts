@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 
@@ -18,10 +18,10 @@ export class AccountCreateComponent implements OnInit {
   @Output()
   id = new EventEmitter<string>();
 
-  accountForm: FormGroup;
+  accountForm: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private store: Store,
     private readonly loginValidator: LoginValidator) { }
 
