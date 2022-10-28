@@ -18,10 +18,10 @@ jobs:
            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
            restore-keys: |
             ${{ runner.os }}-node-
-      -  name: Use Node.js 14.17.3
+      -  name: Use Node.js 16.18.0
          uses: actions/setup-node@v1
          with:
-            node-version: 14.17.3
+            node-version: 16.18.0
       -  name: install
          working-directory: exemple-ui-front
          run: npm ci
