@@ -22,7 +22,7 @@ export class AccountEditComponent implements OnInit {
 
   constructor(
     private readonly fb: UntypedFormBuilder,
-    private store: Store,
+    private readonly store: Store,
     private readonly route: ActivatedRoute,
     private readonly loginValidator: LoginValidator) { }
 

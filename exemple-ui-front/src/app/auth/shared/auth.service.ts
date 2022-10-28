@@ -1,5 +1,6 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpStatusCode, HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import moment from 'moment';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -16,7 +17,7 @@ export class AuthService {
 
     constructor(private readonly http: HttpClient) { }
 
-    client_credentials(clientId: string, secret: string): Observable<Token> {
+    clientCredentials(clientId: string, secret: string): Observable<Token> {
 
         const body = new HttpParams()
             .append('grant_type', 'client_credentials');
@@ -48,12 +49,12 @@ export class AuthService {
                 })
             }).pipe(
                 map((t: Token) => {
-                    t.expires_in = t.expires_in / 86400;
+                    t.expires_in = t.expires_in / moment.duration(1, 'days').asSeconds();
                     return t;
                 }),
                 catchError((error: HttpErrorResponse) => {
 
-                    if (error.status === 401) {
+                    if (error.status === HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedError();
                     }
 

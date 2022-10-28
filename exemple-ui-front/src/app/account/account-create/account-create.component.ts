@@ -21,8 +21,8 @@ export class AccountCreateComponent implements OnInit {
   accountForm: UntypedFormGroup;
 
   constructor(
-    private fb: UntypedFormBuilder,
-    private store: Store,
+    private readonly fb: UntypedFormBuilder,
+    private readonly store: Store,
     private readonly loginValidator: LoginValidator) { }
 
   ngOnInit() {
