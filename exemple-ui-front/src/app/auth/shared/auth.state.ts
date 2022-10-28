@@ -21,7 +21,7 @@ export class AuthState {
         private readonly authService: AuthService) { }
 
     @Action(Authenticate)
-    Authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {
+    authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {
         return this.authService.password('test_service_user', 'secret', action.username, action.password).pipe(
             tap(() => {
                 ctx.setState({ authenticate: true, username: action.username });
@@ -29,7 +29,7 @@ export class AuthState {
     }
 
     @Action(Logout)
-    Logout(ctx: StateContext<AuthStateModel>) {
+    logout(ctx: StateContext<AuthStateModel>) {
         ctx.setState({ authenticate: false });
     }
 }

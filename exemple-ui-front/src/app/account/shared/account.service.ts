@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as jsonpatch from 'fast-json-patch';
+import jsonpatch from 'fast-json-patch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ export class AccountService {
 
   createAccount(account: Account): Observable<string> {
 
-    return this.http.post<any>('/ExempleService/ws/v1/accounts',
+    return this.http.post<HttpResponse<void>>('/ExempleService/ws/v1/accounts',
       JSON.stringify(account), {
       headers: new HttpHeaders({
         'Content-type': 'application/json',
@@ -33,15 +33,14 @@ export class AccountService {
     return this.http.get<Account>(`/ExempleService/ws/v1/accounts/${id}`,
       {
         headers: new HttpHeaders({
-          'Content-type': 'application/json',
           app: 'test',
           version: 'v1'
         })
       });
   }
 
-  updateAccount(account: Account, previousAccount: Account): Observable<any> {
-    return this.http.patch<any>('/ExempleService/ws/v1/accounts/' + previousAccount.id,
+  updateAccount(account: Account, previousAccount: Account): Observable<HttpResponse<void>> {
+    return this.http.patch<HttpResponse<void>>('/ExempleService/ws/v1/accounts/' + previousAccount.id,
       JSON.stringify(jsonpatch.compare(previousAccount, account)), {
       headers: new HttpHeaders({
         'Content-type': 'application/json',

@@ -20,8 +20,8 @@ export class AuthLoginComponent implements OnInit {
   authenticateForm: UntypedFormGroup;
 
   constructor(
-    private fb: UntypedFormBuilder,
-    private store: Store) { }
+    private readonly fb: UntypedFormBuilder,
+    private readonly store: Store) { }
 
   ngOnInit() {
 
@@ -39,14 +39,14 @@ export class AuthLoginComponent implements OnInit {
           { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
         this.store.dispatch(new GetAccountByUsername(this.authenticateForm.value.username))
           .subscribe((id: string) =>
-            this.store.dispatch(new Navigate(['/account'], { id: id })));
+            this.store.dispatch(new Navigate(['/account'], { id })));
       }
         , error => {
           if (error instanceof UnauthorizedError) {
             this.store.dispatch(new PublishMessage(
               { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
           } else {
-            return throwError(error);
+            throwError(error);
           }
 
         });

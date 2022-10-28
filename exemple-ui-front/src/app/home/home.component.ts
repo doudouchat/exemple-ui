@@ -9,6 +9,4 @@ export class HomeComponent {
 
   title = 'exemple-ui';
 
-  constructor() { }
-
 }

@@ -1,7 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {HttpStatusCode, HttpClient,  HttpErrorResponse,  HttpHeaders,  HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as jsonpatch from 'fast-json-patch';
-import { Observable, of, forkJoin, throwError, from } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
 import { catchError, map, mergeMap, takeWhile } from 'rxjs/operators';
 
 import { Login } from './login';
@@ -17,14 +16,13 @@ export class LoginService {
       .pipe(mergeMap(url => this.http.head<boolean>(url,
         {
           headers: new HttpHeaders({
-            'Content-type': 'application/json',
             app: 'test'
           })
         }).pipe(
           map(_ => true),
           catchError((error: HttpErrorResponse) => {
 
-            if (error.status === 404) {
+            if (error.status === HttpStatusCode.NotFound) {
               return of(false);
             }
 
@@ -33,8 +31,8 @@ export class LoginService {
         ))).pipe(takeWhile(exist => !exist, true));
   }
 
-  createLogin(login: Login): Observable<any> {
-    return this.http.put<any>(`/ExempleAuthorization/ws/v1/logins/${login.username}`,
+  createLogin(login: Login): Observable<void> {
+    return this.http.put<void>(`/ExempleAuthorization/ws/v1/logins/${login.username}`,
       JSON.stringify({ password: login.password }), {
       headers: new HttpHeaders({
         'Content-type': 'application/json',
@@ -48,16 +46,15 @@ export class LoginService {
     return this.http.get<string>(`/ExempleService/ws/v1/logins/${username}`,
       {
         headers: new HttpHeaders({
-          'Content-type': 'application/json',
           app: 'test',
           version: 'v1'
         })
       });
   }
 
-  updateLogin(login: Login, previousLogin: Login): Observable<any> {
+  updateLogin(login: Login, previousLogin: Login): Observable<HttpResponse<void>> {
 
-    return this.http.post<any>(`/ExempleAuthorization/ws/v1/logins/move`,
+    return this.http.post<void>(`/ExempleAuthorization/ws/v1/logins/move`,
       JSON.stringify(
         {
           fromUsername: previousLogin.username,

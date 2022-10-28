@@ -16,8 +16,8 @@ export class AppState {
         private readonly authService: AuthService) { }
 
     @Action(Authenticate)
-    Authenticate(ctx: StateContext<boolean>, action: Authenticate) {
-        return this.authService.client_credentials(action.application, action.password).pipe(
+    authenticate(ctx: StateContext<boolean>, action: Authenticate) {
+        return this.authService.clientCredentials(action.application, action.password).pipe(
             tap(() => {
                 ctx.setState(true);
             }));

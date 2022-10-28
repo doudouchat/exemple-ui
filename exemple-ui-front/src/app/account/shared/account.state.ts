@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export class AccountState {
         private readonly store: Store) { }
 
     @Action(CreateAccount)
-    CreateAccount(ctx: StateContext<Account>, action: CreateAccount) {
+    createAccount(ctx: StateContext<Account>, action: CreateAccount) {
 
         const account = action.account;
         account.birthday = this.toDate(account.birthday);
@@ -42,7 +42,7 @@ export class AccountState {
     }
 
     @Action(UpdateAccount)
-    UpdateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
+    updateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
 
         const account = action.account;
         account.birthday = this.toDate(account.birthday);
@@ -54,7 +54,7 @@ export class AccountState {
 
         return this.accountService.updateAccount(account, previous).pipe(
             mergeMap(() => {
-                let operation: Observable<any> = of(account);
+                let operation: Observable<Account | void> = of(account);
                 if (account.email !== previous.email) {
                     const login: Login = {
                         username: account.email,
@@ -72,7 +72,7 @@ export class AccountState {
     }
 
     @Action(GetAccount)
-    GetAccount(ctx: StateContext<Account>, action: GetAccount) {
+    getAccount(ctx: StateContext<Account>, action: GetAccount) {
 
         return this.accountService.getAccount(action.id).pipe(
             map(account => {
@@ -84,19 +84,17 @@ export class AccountState {
     }
 
     @Action(GetAccountByUsername)
-    GetAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
+    getAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
 
-        return  this.loginService.getLogin(action.username).pipe(
-            mergeMap((id: string) => {
-            return this.store.dispatch(new GetAccount(id));
-          }));
+        return this.loginService.getLogin(action.username).pipe(
+            mergeMap((id: string) => this.store.dispatch(new GetAccount(id))));
     }
 
-    private toDate(date: any) {
+    private toDate(date: moment.Moment | string) {
         return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
     }
 
-    private fromDate(date: any) {
+    private fromDate(date: moment.Moment | string) {
         return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
     }
 }

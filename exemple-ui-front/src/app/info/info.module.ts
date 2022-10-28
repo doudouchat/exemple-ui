@@ -16,6 +16,6 @@ import { SharedModule } from '../shared/shared.module';
     ],
     exports: [
         InfoComponent
-    ],
+    ]
 })
 export class InfoModule { }

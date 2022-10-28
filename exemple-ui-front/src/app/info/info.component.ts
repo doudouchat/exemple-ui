@@ -12,7 +12,7 @@ import { InfoService } from './shared/info.service';
 
 export class InfoComponent implements OnInit {
 
-    info: Observable<any | Info>;
+    info: Observable<Info>;
 
     constructor(private readonly infoService: InfoService) { }
 
