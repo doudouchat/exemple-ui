@@ -2,14 +2,14 @@
   "name": "exemple-ui",
   "version": "0.0.0",
   "scripts": {
-    "ng": "node_modules/.bin/ng",
-    "start": "node_modules/.bin/ng serve",
-    "build": "node_modules/.bin/ng build",
-    "build:dev": "node_modules/.bin/ng build --aot=false",
-    "test": "node_modules/.bin/ng test --no-watch --code-coverage --browsers=ChromeHeadless",
-    "test:dev": "node_modules/.bin/ng test --watch --codeCoverage=true --progress --browsers=ChromeHeadless",
-    "lint": "node_modules/.bin/npx ng lint exemple-ui",
-    "e2e": "node_modules/.bin/ng e2e"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:dev": "ng build --aot=false",
+    "test": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
+    "test:dev": "ng test --watch --codeCoverage=true --progress --browsers=ChromeHeadless",
+    "lint": "npx ng lint exemple-ui",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
