@@ -3,7 +3,7 @@ Feature: Account creation
   Scenario: Go to home page
     Given Go to home page
     When I do nothing
-    Then Check version is '3.0.0-SNAPSHOT'
+    Then Check version is '4.0.0-SNAPSHOT'
 
   Scenario: Go to creation
     When Go to account page
