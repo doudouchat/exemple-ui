@@ -54,8 +54,12 @@ describe('AuthLoginComponent', () => {
 
       fixture.detectChanges();
 
-      const postPassword = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
-      postPassword.flush({
+      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
+      postLogin.flush({},{ headers: { 'x-auth-token': 'x token' } });
+      const getAuthorize = http.expectOne({ method: 'GET', url: '/ExempleAuthorization/oauth/authorize?response_type=code&client_id=test_service_user&scope=account:read%20account:update%20login:head%20login:read%20login:create%20login:update' });
+      getAuthorize.flush({},{ headers: { location: 'code=code123' } });
+      const postToken = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
+      postToken.flush({
         expires_in: 300
       });
       const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -88,8 +92,8 @@ describe('AuthLoginComponent', () => {
 
       fixture.detectChanges();
 
-      const postPassword = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
-      postPassword.flush({}, { status: 401, statusText: 'unauthorized' });
+      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
+      postLogin.flush({}, { status: 401, statusText: 'unauthorized' });
       http.expectNone({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       http.verify();
 
@@ -112,8 +116,8 @@ describe('AuthLoginComponent', () => {
 
       fixture.detectChanges();
 
-      const postPassword = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
-      postPassword.flush({}, { status: 500, statusText: 'internal error' });
+      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
+      postLogin.flush({}, { status: 500, statusText: 'internal error' });
       http.verify();
 
       expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
