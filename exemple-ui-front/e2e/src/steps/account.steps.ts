@@ -12,14 +12,30 @@ const client = new cassandra.Client({
     localDataCenter: 'datacenter1'
 });
 
-BeforeAll( async () => {
+BeforeAll(async () => {
 
-    await client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@gmail.com']);
-    await client.execute('delete from test_service.login where username = ?', ['jean.dupond@gmail.com']);
-    await client.execute('delete from test_authorization.login where username = ?', ['jean.dupond@hotmail.com']);
-    await client.execute('delete from test_service.login where username = ?', ['jean.dupond@hotmail.com']);
-    await client.execute('insert into test_authorization.login (username) values (?)', ['jean.dupont@gmail.com']);
-    await client.execute('delete from test_service.login where username = ?', ['jean.dupont@gmail.com']);
+    const deleteLogin = async (username: string) => {
+        await client.execute('delete from test_authorization.login where username = ?', [username]);
+    };
+
+    const insertLogin = async (username: string) => {
+        await client.execute('insert into test_authorization.login (username) values (?)', [username]);
+    };
+
+    const deleteAccountUsername = async (username: string) => {
+        const row = (await client.execute('select id from test_service.account where email = ?', [username])).first();
+        if (row) {
+            const id = row['id'];
+            await client.execute('delete from test_service.account where id = ?', [id]);
+        }
+    };
+
+    await deleteLogin('jean.dupond@gmail.com');
+    await deleteAccountUsername('jean.dupond@gmail.com');
+    await deleteLogin('jean.dupond@hotmail.com');
+    await deleteAccountUsername('jean.dupond@hotmail.com');
+    await insertLogin('jean.dupont@gmail.com');
+    await deleteAccountUsername('jean.dupont@gmail.com');
 });
 
 AfterAll(async () => {
