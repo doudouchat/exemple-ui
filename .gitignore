@@ -6,6 +6,9 @@
 target
 dist
 coverage
+downloads
+screenshots
+videos
 node_modules/
 .tscache/
 node/
