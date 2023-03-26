@@ -163,6 +163,11 @@
           "configurations": {
             "production": {
               "devServerTarget": "exemple-ui:serve:production"
+            },
+            "ci": {
+              "config": {
+                "video": false
+              }
             }
           }
         }
