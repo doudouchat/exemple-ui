@@ -34,7 +34,10 @@
             "customWebpackConfig": {
               "path": "./custom-webpack.config.js",
               "replaceDuplicatePlugins": true
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "moment"
+            ]
           },
           "configurations": {
             "production": {
