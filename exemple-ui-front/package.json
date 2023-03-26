@@ -11,6 +11,7 @@
     "lint": "npx ng lint exemple-ui",
     "e2e": "ng e2e",
     "e2e:dev": "ng e2e --watch=true --headless=false",
+    "e2e:ci": "ng e2e --configuration=ci",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
