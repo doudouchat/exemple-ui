@@ -1,14 +1,16 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { NgxsModule, Store } from '@ngxs/store';
 import { By } from '@angular/platform-browser';
+import { Navigate } from '@ngxs/router-plugin';
+import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
+import { PublishMessage } from '../../shared/message/message.action';
 import { AccountModule } from '../account.module';
-import { AccountState } from '../shared/account.state';
+import { CreateAccount } from '../shared/account.action';
 import { AccountCreateComponent } from './account-create.component';
-import { MessageState } from '../../shared/message/message.state';
 
 describe('AccountCreateComponent', () => {
 
@@ -19,7 +21,7 @@ describe('AccountCreateComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, AccountModule, NgxsModule.forRoot([AccountState, MessageState])]
+      imports: [HttpClientTestingModule, AccountModule, NgxsModule.forRoot([])]
 
     }).createComponent(AccountCreateComponent);
 
@@ -42,6 +44,7 @@ describe('AccountCreateComponent', () => {
   it('create account success', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      // setup form
       const component: AccountCreateComponent = fixture.componentInstance;
       component.accountForm.get('email').setValue('jean.dupond@gmail.com');
       component.accountForm.get('firstname').setValue('jean');
@@ -51,40 +54,52 @@ describe('AccountCreateComponent', () => {
 
       const id = sinon.spy(component.id, 'emit');
 
-      fixture.detectChanges();
+      // and mock store
+      const dispatch = sinon.stub(store, 'dispatch');
+      dispatch.withArgs(
+        new CreateAccount({
+          email: 'jean.dupond@gmail.com',
+          lastname: 'dupond',
+          firstname: 'jean',
+          birthday: '12/12/1976'
+        },
+          'D#az78&é'))
+        .returns(of({
+          account: {
+            email: 'jean.dupond@gmail.com',
+            lastname: 'dupond',
+            firstname: 'jean',
+            birthday: '12/12/1976',
+            id: '123'
+          }
+        }));
 
+      // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
-      http.verify();
 
       fixture.detectChanges();
 
+      // when click save
       fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.click();
 
       fixture.detectChanges();
 
-      const postAccount = http.expectOne({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
-      postAccount.flush({}, { headers: { location: 'http://127.0.0.1/ExempleService/ws/v1/accounts/123' } });
-      let postLogin = http.expectOne({ method: 'PUT', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
-      postLogin.flush({}, { headers: { location: 'http://127.0.0.1/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' } });
+      // Then check http
       http.verify();
-      const expectedAccountBody = {
-        'email': 'jean.dupond@gmail.com',
-        'lastname': 'dupond',
-        'firstname': 'jean',
-        'birthday': '1976-12-12'
-      };
-      expect(postAccount.request.body).is.be.eq(JSON.stringify(expectedAccountBody));
 
+      // And check id
       sinon.assert.calledOnce(id);
       sinon.assert.calledWith(id, '123');
 
-      store.selectSnapshot(state => state.account.id);
+      // And check dispatch
+      expect(dispatch.calledWith(new PublishMessage(
+        { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }))).is.be.true;
 
-      expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
-      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
+      // And check dispatch
+      expect(dispatch.calledWith(new Navigate(['/login']))).is.be.true;
 
     })));
 
@@ -104,22 +119,30 @@ describe('AccountCreateComponent', () => {
     it('creation account failure: ' + test.message, waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
+        // setup form
         const component: AccountCreateComponent = fixture.componentInstance;
         const id = sinon.spy(component.id, 'emit');
+        const dispatch = sinon.spy(store, 'dispatch');
 
         fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
         fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
+
         fixture.detectChanges();
 
+        // Then check message
         expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
+
+        // And check save button
         expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
-        http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+        // And check http
         http.verify();
 
+        // And check id
         sinon.assert.notCalled(id);
 
-        expect(store.selectSnapshot(state => state.account)).is.be.empty;
+        // And check dispatch
+        sinon.assert.notCalled(dispatch);
 
       })));
   });
@@ -128,6 +151,7 @@ describe('AccountCreateComponent', () => {
   it('creation account failure: email already exists', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      // setup form
       const component: AccountCreateComponent = fixture.componentInstance;
       component.accountForm.get('firstname').setValue('jean');
       component.accountForm.get('lastname').setValue('dupond');
@@ -135,29 +159,34 @@ describe('AccountCreateComponent', () => {
       component.accountForm.get('password').setValue('D#az78&é');
 
       const id = sinon.spy(component.id, 'emit');
+      const dispatch = sinon.spy(store, 'dispatch');
 
       fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value = 'jean.dupond@gmail.com';
       fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.dispatchEvent(new Event('input'));
 
       fixture.detectChanges();
 
+      // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
-      http.verify();
 
       fixture.detectChanges();
 
+      // Then check message
       expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains('Email already exists');
 
+      // And check save button
       expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
-      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+      // And check http
       http.verify();
 
+      // And check id
       sinon.assert.notCalled(id);
 
-      expect(store.selectSnapshot(state => state.account)).is.be.empty;
+      // And check dispatch
+      sinon.assert.notCalled(dispatch);
 
     })));
 
@@ -177,6 +206,7 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
+      // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 500, statusText: 'internal error' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
@@ -184,6 +214,7 @@ describe('AccountCreateComponent', () => {
 
       fixture.detectChanges();
 
+      // Then check save button
       expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
     }));
@@ -191,6 +222,7 @@ describe('AccountCreateComponent', () => {
   it('reset account success', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      // setup form
       const component: AccountCreateComponent = fixture.componentInstance;
       component.accountForm.get('email').setValue('jean.dupond@gmail.com');
       component.accountForm.get('firstname').setValue('jean');
@@ -199,26 +231,33 @@ describe('AccountCreateComponent', () => {
       component.accountForm.get('password').setValue('D#az78&é');
 
       const id = sinon.spy(component.id, 'emit');
+      const dispatch = sinon.spy(store, 'dispatch');
 
       fixture.detectChanges();
 
+      // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
-      http.verify();
 
       fixture.detectChanges();
 
+      // when click save
       fixture.debugElement.query(By.css('button[label=Cancel]')).nativeElement.click();
 
       fixture.detectChanges();
 
-      http.expectNone({ method: 'POST', url: '/ExempleService/ws/v1/accounts' });
+      // Then check http
       http.verify();
 
+      // And check id
       sinon.assert.notCalled(id);
 
+      // And check dispatch
+      sinon.assert.notCalled(dispatch);
+
+      // And check form
       expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.be.empty;
       expect(fixture.debugElement.query(By.css('input[formControlName=firstname]')).nativeElement.value).to.be.empty;
       expect(fixture.debugElement.query(By.css('input[formControlName=lastname]')).nativeElement.value).to.be.empty;
