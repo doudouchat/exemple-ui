@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import { of } from 'rxjs';
-import { AuthState } from 'src/app/auth/shared/auth.state';
+import * as sinon from 'sinon';
 
-import { MessageState } from '../../shared/message/message.state';
+import { PublishMessage } from '../../shared/message/message.action';
 import { AccountModule } from '../account.module';
-import { AccountState } from '../shared/account.state';
+import { UpdateAccount } from '../shared/account.action';
 import { AccountEditComponent } from './account-edit.component';
 
 describe('AccountEditComponent', () => {
@@ -22,7 +22,7 @@ describe('AccountEditComponent', () => {
     fixture = TestBed.configureTestingModule({
 
       imports: [AccountModule, HttpClientTestingModule,
-        NgxsModule.forRoot([AccountState, AuthState, MessageState])],
+        NgxsModule.forRoot([])],
       providers: [{
         provide: ActivatedRoute, useValue: {
           data: of({
@@ -67,8 +67,39 @@ describe('AccountEditComponent', () => {
   it('edit account success: birthday', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      // setup mock store
+      const dispatch = sinon.stub(store, 'dispatch');
+      dispatch.withArgs(
+        new UpdateAccount(
+          { 
+            id: '99', 
+            email: 'john.doe@gmail.com', 
+            firstname: 'john', 
+            lastname: 'doe', 
+            birthday: '12/07/1977', 
+            creation_date: null, 
+            update_date: null 
+          },
+          {
+            id: '99', 
+            email: 'john.doe@gmail.com',
+            firstname: 'john', 
+            lastname: 'doe',
+            birthday: '12/06/1976'
+          }
+        )).returns(of(
+          {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/07/1977'
+          }
+        ));
+
+      // when change form
       const component: AccountEditComponent = fixture.componentInstance;
-      component.accountForm.get('birthday').setValue('12/06/1977');
+      component.accountForm.get('birthday').setValue('12/07/1977');
 
       fixture.detectChanges();
 
@@ -76,19 +107,51 @@ describe('AccountEditComponent', () => {
 
       fixture.detectChanges();
 
-      const accountPatch = http.expectOne({ method: 'PATCH', url: '/ExempleService/ws/v1/accounts/99' });
-      accountPatch.flush({}, { status: 200, statusText: 'ok' });
+      // Then check http
       http.verify();
 
-      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
-      expect(store.selectSnapshot(state => state.account.email)).is.be.eq('john.doe@gmail.com');
-      expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('1977-06-12');
+      expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/07/1977');
+
+      // And check dispatch
+      expect(dispatch.calledWith(new PublishMessage(
+        { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
 
     })));
 
   it('edit account success: email', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      // setup mock store
+      const dispatch = sinon.stub(store, 'dispatch');
+      dispatch.withArgs(
+        new UpdateAccount(
+          { 
+            id: '99', 
+            email: 'jean.dupond@gmail.com',
+            firstname: 'john',  
+            lastname: 'doe', 
+            birthday: '12/06/1976', 
+            creation_date: null, 
+            update_date: null 
+          },
+          {
+            id: '99', 
+            email: 'john.doe@gmail.com',
+            firstname: 'john', 
+            lastname: 'doe',  
+            birthday: '12/06/1976'
+          }
+        )).returns(of(
+          {
+            id: '99',
+            email: 'jean.dupond@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1976'
+          }
+        ));
+
+      // When change email
       const component: AccountEditComponent = fixture.componentInstance;
       component.accountForm.get('email').setValue('jean.dupond@gmail.com');
 
@@ -98,7 +161,6 @@ describe('AccountEditComponent', () => {
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
-      http.verify();
 
       fixture.detectChanges();
 
@@ -106,24 +168,24 @@ describe('AccountEditComponent', () => {
 
       fixture.detectChanges();
 
-      const accountPatch = http.expectOne({ method: 'PATCH', url: '/ExempleService/ws/v1/accounts/99' });
-      accountPatch.flush({}, { status: 204, statusText: 'ok' });
-      const loginAuthorizationCopy = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/ws/v1/logins/move' });
-      loginAuthorizationCopy.flush({}, { status: 201, statusText: 'ok' });
+      // Then check http
       http.verify();
 
-      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
-      expect(store.selectSnapshot(state => state.account.email)).is.be.eq('jean.dupond@gmail.com');
-      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
-      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
+      expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.equal('jean.dupond@gmail.com');
+
+      // And check dispatch
+      expect(dispatch.calledWith(new PublishMessage(
+        { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
 
     })));
 
   it('edit account failure: email already exists', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
-      fixture.detectChanges();
+      // setup mock store
+      const dispatch = sinon.spy(store, 'dispatch');
 
+      // When change email
       fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value = 'jean.dupond@gmail.com';
       fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.dispatchEvent(new Event('input'));
 
@@ -132,32 +194,48 @@ describe('AccountEditComponent', () => {
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
-      http.verify();
 
       fixture.detectChanges();
 
+      // Then check message
       expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains('Email already exists');
+
+      // And check button save
       expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
 
-      http.expectNone({ method: 'PATCH', url: '/ExempleService/ws/v1/accounts/99' });
+      // And check http
       http.verify();
 
-      expect(store.selectSnapshot(state => state.account)).is.be.empty;
+      // And check dispatch
+      sinon.assert.notCalled(dispatch);
 
     })));
 
-  it('reset account', waitForAsync(() => {
+  it('reset account', waitForAsync(inject(
+    [HttpTestingController], (http: HttpTestingController) => {
 
-    const component: AccountEditComponent = fixture.componentInstance;
-    component.accountForm.get('email').setValue('jean.dupond@gmail.com');
+      // setup mock store
+      const dispatch = sinon.spy(store, 'dispatch');
 
-    fixture.detectChanges();
+      // And change form
+      const component: AccountEditComponent = fixture.componentInstance;
+      component.accountForm.get('birthday').setValue('12/07/1977');
 
-    fixture.debugElement.query(By.css('button[label=Cancel]')).nativeElement.click();
+      fixture.detectChanges();
 
-    fixture.detectChanges();
+      // When perform reset
+      fixture.debugElement.query(By.css('button[label=Cancel]')).nativeElement.click();
 
-    expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.equal('john.doe@gmail.com');
+      fixture.detectChanges();
 
-  }));
+      // Then check form
+      expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/06/1976');
+
+      // And check http
+      http.verify();
+
+      // And check dispatch
+      sinon.assert.notCalled(dispatch);
+
+    })));
 });

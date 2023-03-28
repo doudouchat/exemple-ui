@@ -1,14 +1,17 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import { of, throwError } from 'rxjs';
+import * as sinon from 'sinon';
 
-import { AccountState } from '../../account/shared/account.state';
-import { MessageState } from '../../shared/message/message.state';
+import { GetAccountByUsername } from '../../account/shared/account.action';
+import { PublishMessage } from '../../shared/message/message.action';
 import { AuthModule } from '../auth.module';
-import { AuthState } from '../shared/auth.state';
+import { Authenticate } from '../shared/auth.action';
+import { UnauthorizedError } from '../shared/auth.service';
 import { AuthLoginComponent } from './auth-login.component';
 
 describe('AuthLoginComponent', () => {
@@ -20,8 +23,8 @@ describe('AuthLoginComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [AuthModule, RouterTestingModule, HttpClientTestingModule,
-        NgxsModule.forRoot([AccountState, AuthState, MessageState])]
+      imports: [AuthModule, RouterTestingModule,
+        NgxsModule.forRoot([])]
 
     }).createComponent(AuthLoginComponent);
 
@@ -41,92 +44,78 @@ describe('AuthLoginComponent', () => {
 
   });
 
-  it('authenticate success', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
+  it('authenticate success', waitForAsync(() => {
 
-      const component: AuthLoginComponent = fixture.componentInstance;
-      component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-      component.authenticateForm.get('password').setValue('D#az78&é');
+    // setup mock store
+    const id = '123';
+    const dispatch = sinon.stub(store, 'dispatch');
+    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(of(true));
+    dispatch.withArgs(new GetAccountByUsername('jean.dupond@gmail.com')).returns(of(id));
 
-      fixture.detectChanges();
+    // when change form
+    const component: AuthLoginComponent = fixture.componentInstance;
+    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
+    component.authenticateForm.get('password').setValue('D#az78&é');
 
-      fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
+    fixture.detectChanges();
 
-      fixture.detectChanges();
+    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
 
-      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
-      postLogin.flush({},{ headers: { 'x-auth-token': 'x token' } });
-      const getAuthorize = http.expectOne({ method: 'GET', url: '/ExempleAuthorization/oauth/authorize?response_type=code&client_id=test_service_user&scope=account:read%20account:update%20login:head%20login:read%20login:create%20login:update' });
-      getAuthorize.flush({},{ headers: { location: 'code=code123' } });
-      const postToken = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
-      postToken.flush({
-        expires_in: 300
-      });
-      const getLogin = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      getLogin.flush(99);
-      const getAccount = http.expectOne({ method: 'GET', url: '/ExempleService/ws/v1/accounts/99' });
-      getAccount.flush({
-        firstname: 'john',
-        lastname: 'doe'
-      });
-      http.verify();
+    fixture.detectChanges();
 
-      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
-      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('jean.dupond@gmail.com');
-      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('success');
-      expect(store.selectSnapshot(state => state.account.firstname)).is.be.eq('john');
-      expect(store.selectSnapshot(state => state.account.lastname)).is.be.eq('doe');
+    // Then check message
+    expect(dispatch.calledWith(new PublishMessage(
+      { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }))).is.be.true;
 
-    })));
+    // And check navigate
+    expect(dispatch.calledWith(new Navigate(['/account'], { id }))).is.be.true;
 
-  it('authenticate failure', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
+  }));
 
-      const component: AuthLoginComponent = fixture.componentInstance;
-      component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-      component.authenticateForm.get('password').setValue('D#az78&é');
+  it('authenticate failure', waitForAsync(() => {
 
-      fixture.detectChanges();
+    // setup mock store
+    const dispatch = sinon.stub(store, 'dispatch');
+    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(throwError(new UnauthorizedError()));
 
-      fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
+    // when change form
+    const component: AuthLoginComponent = fixture.componentInstance;
+    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
+    component.authenticateForm.get('password').setValue('D#az78&é');
 
-      fixture.detectChanges();
+    fixture.detectChanges();
 
-      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
-      postLogin.flush({}, { status: 401, statusText: 'unauthorized' });
-      http.expectNone({ method: 'GET', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
-      http.verify();
+    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
 
-      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
-      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
-      expect(store.selectSnapshot(state => state.messages.severity)).is.be.eq('error');
+    fixture.detectChanges();
 
-    })));
+    // Then check message
+    expect(dispatch.calledWith(new PublishMessage(
+      { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }))).is.be.true;
 
-  it('authenticate exception', inject(
-    [HttpTestingController], (http: HttpTestingController) => {
+  }));
 
-      const component: AuthLoginComponent = fixture.componentInstance;
-      component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-      component.authenticateForm.get('password').setValue('D#az78&é');
+  it('authenticate exception', () => {
 
-      fixture.detectChanges();
+    // setup mock store
+    const dispatch = sinon.stub(store, 'dispatch');
+    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(throwError(new Error()));
 
-      fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
+    // when change form
+    const component: AuthLoginComponent = fixture.componentInstance;
+    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
+    component.authenticateForm.get('password').setValue('D#az78&é');
 
-      fixture.detectChanges();
+    fixture.detectChanges();
 
-      const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
-      postLogin.flush({}, { status: 500, statusText: 'internal error' });
-      http.verify();
+    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
 
-      expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
-      expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
-      expect(store.selectSnapshot(state => state.messages)).is.empty;
+    fixture.detectChanges();
 
-      expect(component.login).to.throw();
+    // Then check message
+    expect(component.login).to.throw();
 
-    }));
+  });
 
   const AUTHENTICATE_FAILURES = [
     { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'input', expectedMessage: 'Username is required' },
@@ -136,18 +125,21 @@ describe('AuthLoginComponent', () => {
   ];
 
   AUTHENTICATE_FAILURES.forEach(function (test) {
-    it('authenticate failure: ' + test.message, waitForAsync(inject(
-      [HttpTestingController], (http: HttpTestingController) => {
+    it('authenticate failure: ' + test.message, () => {
 
-        fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
-        fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
-        fixture.detectChanges();
+      // setup form
+      fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
+      fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
+      fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
-        expect(fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.disabled).to.be.true;
+      // Then check message
+      expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
+
+      // And check save login
+      expect(fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.disabled).to.be.true;
 
 
-      })));
+    });
   });
 
 });
