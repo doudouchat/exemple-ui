@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 
 import { AuthState, AuthStateModel } from './auth.state';
 
 @Injectable()
-export class AuthenticatedGuard implements CanActivate {
+export class AuthenticatedGuard {
 
   constructor(private readonly router: Router, private readonly store: Store) {
   }
@@ -22,7 +22,7 @@ export class AuthenticatedGuard implements CanActivate {
 }
 
 @Injectable()
-export class AnonymousGuard implements CanActivate {
+export class AnonymousGuard {
 
   constructor(private readonly store: Store) {
   }
