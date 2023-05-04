@@ -2,8 +2,8 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
-import { of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { of, catchError } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { environment } from '../environments/environment';
 import { GetAccountByUsername } from './account/shared/account.action';
@@ -44,10 +44,11 @@ import { SharedModule } from './shared/shared.module';
         const authState: AuthStateModel = store.selectSnapshot(AuthState);
         if (authState.username) {
           return store.dispatch(new GetAccountByUsername(authState.username)).pipe(
-            mergeMap(() => store.selectOnce(AccountState))).toPromise()
-            .catch(() => store.dispatch(new Logout()).toPromise());
+            tap(() => store.selectOnce(AccountState)),
+            catchError(() => store.dispatch(new Logout()))
+          );
         }
-        return of(authState).toPromise();
+        return of(authState);
       },
       deps: [Store],
       multi: true
@@ -57,9 +58,9 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (store: Store) => () => {
         const authState: AuthStateModel = store.selectSnapshot(AuthState);
         if (!authState.authenticate) {
-          return store.dispatch(new Authenticate('test_service', 'secret')).toPromise();
+          return store.dispatch(new Authenticate('test_service', 'secret'));
         }
-        return of(true).toPromise();
+        return of(true);
       },
       deps: [Store],
       multi: true

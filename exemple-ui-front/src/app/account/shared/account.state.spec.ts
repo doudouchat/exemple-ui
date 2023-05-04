@@ -139,7 +139,7 @@ describe('AccountState', () => {
         const expectedAccountBody = [{ op: 'replace', path: '/email', value: 'jean.dupond@gmail.com' }];
         expect(accountPatch.request.body).is.be.eq(JSON.stringify(expectedAccountBody));
 
-        const expectedLoginBody = { fromUsername: 'john.doe@gmail.com', toUsername: 'jean.dupond@gmail.com' };;
+        const expectedLoginBody = { fromUsername: 'john.doe@gmail.com', toUsername: 'jean.dupond@gmail.com' };
         expect(loginAuthorizationCopy.request.body).is.be.eq(JSON.stringify(expectedLoginBody));
 
         // And check store
