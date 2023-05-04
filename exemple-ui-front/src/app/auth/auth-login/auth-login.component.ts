@@ -34,22 +34,23 @@ export class AuthLoginComponent implements OnInit {
 
   login() {
     this.store.dispatch(new Authenticate(this.authenticateForm.value.username, this.authenticateForm.value.password))
-      .subscribe(() => {
-        this.store.dispatch(new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
-        this.store.dispatch(new GetAccountByUsername(this.authenticateForm.value.username))
-          .subscribe((id: string) =>
-            this.store.dispatch(new Navigate(['/account'], { id })));
-      }
-        , error => {
+      .subscribe({
+        next: () => {
+          this.store.dispatch(new PublishMessage(
+            { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
+          this.store.dispatch(new GetAccountByUsername(this.authenticateForm.value.username))
+            .subscribe((id: string) =>
+              this.store.dispatch(new Navigate(['/account'], { id })));
+        },
+        error: error => {
           if (error instanceof UnauthorizedError) {
             this.store.dispatch(new PublishMessage(
               { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
           } else {
-            throwError(error);
+            throwError(() => error);
           }
-
-        });
+        }
+      });
   }
 
 }

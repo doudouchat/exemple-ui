@@ -117,14 +117,12 @@ describe('AuthLoginComponent', () => {
 
   });
 
-  const AUTHENTICATE_FAILURES = [
+  [
     { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'input', expectedMessage: 'Username is required' },
     { message: 'username is not blank', selector: 'input[formControlName=username]', value: '  ', event: 'input', expectedMessage: 'Username is required' },
     { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
     { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' }
-  ];
-
-  AUTHENTICATE_FAILURES.forEach(function (test) {
+  ].forEach(function (test) {
     it('authenticate failure: ' + test.message, () => {
 
       // setup form

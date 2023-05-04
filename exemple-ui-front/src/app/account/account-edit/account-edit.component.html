@@ -54,11 +54,11 @@
             </small>
         </div>
     </div>
-    <div class="p-d-flex p-flex-column p-flex-md-row">
-        <div class="p-mb-2 p-mr-2">
+    <div class="flex flex-column md:flex-row">
+        <div class="mb-2 mr-2">
             <button type="button" pButton icon="pi pi-times" (click)="cancel()" label="Cancel"></button>
         </div>
-        <div class="p-mb-2 p-mr-2">
+        <div class="mb-2 mr-2">
             <button type="submit" pButton icon="pi pi-check" label="Save" [disabled]="!accountForm.valid"></button>
         </div>
     </div>

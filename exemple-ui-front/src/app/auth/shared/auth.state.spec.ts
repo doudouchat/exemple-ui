@@ -3,7 +3,6 @@ import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
-import { AccountState } from 'src/app/account/shared/account.state';
 
 import { AuthModule } from '../auth.module';
 import { Authenticate } from './auth.action';

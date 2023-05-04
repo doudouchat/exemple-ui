@@ -1,4 +1,4 @@
-import {HttpStatusCode, HttpClient,  HttpErrorResponse,  HttpHeaders,  HttpResponse} from '@angular/common/http';
+import { HttpStatusCode, HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, from } from 'rxjs';
 import { catchError, map, mergeMap, takeWhile } from 'rxjs/operators';
@@ -19,14 +19,14 @@ export class LoginService {
             app: 'test'
           })
         }).pipe(
-          map(_ => true),
+          map(() => true),
           catchError((error: HttpErrorResponse) => {
 
             if (error.status === HttpStatusCode.NotFound) {
               return of(false);
             }
 
-            return throwError(error);
+            return throwError(() => error);
           })
         ))).pipe(takeWhile(exist => !exist, true));
   }
