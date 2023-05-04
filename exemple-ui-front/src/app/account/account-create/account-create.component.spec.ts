@@ -103,7 +103,7 @@ describe('AccountCreateComponent', () => {
 
     })));
 
-  const ACCOUNT_FAILURES = [
+  [
     { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'input', expectedMessage: 'Email is required' },
     { message: 'email is incorrect', selector: 'input[formControlName=email]', value: 'jean.dupond', event: 'input', expectedMessage: 'Email is incorrect' },
     { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'input', expectedMessage: 'Lastname is required' },
@@ -113,9 +113,7 @@ describe('AccountCreateComponent', () => {
     { message: 'birthday is required', selector: 'p-inputMask[formControlName=birthday]>input', value: '', event: 'blur', expectedMessage: 'Birthday is required' },
     { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
     { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' }
-  ];
-
-  ACCOUNT_FAILURES.forEach(function (test) {
+  ].forEach(function (test) {
     it('creation account failure: ' + test.message, waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
@@ -189,10 +187,6 @@ describe('AccountCreateComponent', () => {
       sinon.assert.notCalled(dispatch);
 
     })));
-
-  const ACCOUNT_EXCEPTIONS = [
-    { message: 'check login fails', head_login_status: 500, post_login_status: 201, post_account_status: 201 }
-  ];
 
   xit('creation account failure: request HEAD /ws/v1/logins fails', inject(
     [HttpTestingController], (http: HttpTestingController) => {

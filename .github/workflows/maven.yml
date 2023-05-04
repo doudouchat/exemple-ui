@@ -33,4 +33,7 @@ jobs:
       -  name: test
          working-directory: exemple-ui-front
          run: npm run-script test
+      -  name: lint
+         working-directory: exemple-ui-front
+         run: npm run-script lint
       -  uses: codecov/codecov-action@v3

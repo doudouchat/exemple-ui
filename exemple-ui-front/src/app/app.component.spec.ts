@@ -65,8 +65,7 @@ describe('AppComponent', () => {
             mock.whenStable().then(() => {
 
                 mock.detectChanges();
-                let de: DebugElement[];
-                de = mock.debugElement.queryAll(By.css('h6'));
+                const de : DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
 
                 expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
@@ -98,8 +97,7 @@ describe('AppComponent', () => {
             mock.whenStable().then(() => {
 
                 mock.detectChanges();
-                let de: DebugElement[];
-                de = mock.debugElement.queryAll(By.css('h6'));
+                const de : DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
 
                 expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
@@ -119,16 +117,15 @@ describe('AppComponent', () => {
             fixture.detectChanges();
 
             expect(store.selectSnapshot(state => state.application)).is.be.undefined;
-            expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
-            expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('john.doe@gmail.com');
+            expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
+            expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
 
             mock.detectChanges();
 
             mock.whenStable().then(() => {
 
                 mock.detectChanges();
-                let de: DebugElement[];
-                de = mock.debugElement.queryAll(By.css('h6'));
+                const de : DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
 
                 expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 

@@ -32,8 +32,7 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges();
 
-    let de: DebugElement[];
-    de = fixture.debugElement.queryAll(By.css('h1'));
+    const de : DebugElement[] = fixture.debugElement.queryAll(By.css('h1'));
 
     expect(de[0].nativeElement.innerHTML).to.equal(' Welcome to exemple-ui! ');
 
