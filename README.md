@@ -1,3 +1,4 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=doudouchat_exemple-ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=doudouchat_exemple-ui)
 [![build](https://github.com/doudouchat/exemple-ui/workflows/build/badge.svg)](https://github.com/doudouchat/exemple-ui/actions)
 [![codecov](https://codecov.io/gh/doudouchat/exemple-ui/graph/badge.svg)](https://codecov.io/gh/doudouchat/exemple-ui) 
 
