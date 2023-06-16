@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 
@@ -11,13 +11,13 @@ export class AuthenticatedGuard {
   constructor(private readonly router: Router, private readonly store: Store) {
   }
 
-  canActivate(): Observable<boolean> {
+  canActivate(): Observable<boolean | UrlTree> {
 
     const authState: AuthStateModel = this.store.selectSnapshot(AuthState);
     if (!authState.authenticate) {
-      this.router.navigate(['/login']);
+      return of(this.router.parseUrl('/login'));
     }
-    return of(authState.authenticate);
+    return of(true);
   }
 }
 
