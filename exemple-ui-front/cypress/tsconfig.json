@@ -3,6 +3,10 @@
   "include": ["support/*.ts"],
   "compilerOptions": {
     "sourceMap": false,
-    "types": ["cypress"]
+    "types": ["cypress"],
+    "typeRoots": [
+      "../node_modules",
+      "../node_modules/@types"
+    ]
   }
 }
