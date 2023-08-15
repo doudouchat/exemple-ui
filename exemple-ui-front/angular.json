@@ -167,9 +167,9 @@
             "production": {
               "devServerTarget": "exemple-ui:serve:production"
             },
-            "ci": {
+            "dev": {
               "config": {
-                "video": false
+                "video": true
               }
             },
             "docker": {
