@@ -22,7 +22,7 @@ export class AuthState {
 
     @Action(Authenticate)
     authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {
-        return this.authService.password('test_service_user', 'secret', action.username, action.password).pipe(
+        return this.authService.password(action.username, action.password).pipe(
             tap(() => {
                 ctx.setState({ authenticate: true, username: action.username });
             }));

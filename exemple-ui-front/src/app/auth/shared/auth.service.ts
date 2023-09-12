@@ -1,8 +1,11 @@
 import { HttpStatusCode, HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import sha256 from 'crypto-js/sha256';
+import Base64url from 'crypto-js/enc-base64url';
 import moment from 'moment';
 import { Observable } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Token } from '../../shared/token';
 
@@ -25,14 +28,17 @@ export class AuthService {
             .append('grant_type', 'client_credentials')
             .append('scope', 'account:create login:head login:create ROLE_APP');
 
-        return this.token(clientId, secret, body);
+        return this.token(body, clientId, secret);
     }
 
-    password(clientId: string, secret: string, username: string, password: string): Observable<Token> {
+    password(username: string, password: string): Observable<Token> {
 
         const loginData = new HttpParams()
             .append('username', username)
             .append('password', password);
+
+        const codeVerifier = uuidv4();
+        const codeChallenge = Base64url.stringify(sha256(codeVerifier));
 
         return this.http.post<Token>('/ExempleAuthorization/login',
             loginData,
@@ -46,6 +52,8 @@ export class AuthService {
                     const authorizationData = new HttpParams()
                         .append('response_type', 'code')
                         .append('client_id', 'test_service_user')
+                        .append('code_challenge', codeChallenge)
+                        .append('code_challenge_method', 'S256')
                         .append('scope', 'account:read account:update login:head login:read login:create login:update');
                     const xAuthToken = loginResponse.headers.get('x-auth-token');
                     return this.http.get<void>('/ExempleAuthorization/oauth/authorize',
@@ -64,9 +72,10 @@ export class AuthService {
                         const authorization = new HttpParams()
                             .append('grant_type', 'authorization_code')
                             .append('code', code)
+                            .append('code_verifier', codeVerifier)
                             .append('client_id', 'test_service_user');
 
-                        return this.token(clientId, secret, authorization);
+                        return this.token(authorization);
                     }));
                 }),
                 catchError((error: HttpErrorResponse) => {
@@ -80,20 +89,22 @@ export class AuthService {
 
     }
 
-    private token(clientId: string, secret: string, body: HttpParams): Observable<Token> {
+    private token(body: HttpParams, clientId?: string, secret?: string): Observable<Token> {
 
-        return this.http.post<Token>('/ExempleAuthorization/oauth/token',
-            body,
-            {
-                headers: new HttpHeaders({
-                    'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                    Authorization: 'Basic ' + btoa(`${clientId}:${secret}`)
-                })
-            }).pipe(
-                map((t: Token) => {
-                    t.expires_in = t.expires_in / moment.duration(1, 'days').asSeconds();
-                    return t;
-                })
-            );
-    }
+      let httpHeaders;
+      if (clientId) {
+        httpHeaders = new HttpHeaders({
+          'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+          Authorization: 'Basic ' + btoa(`${clientId}:${secret}`)
+        })
+      }
+
+      return this.http.post<Token>('/ExempleAuthorization/oauth/token', body, { headers: httpHeaders })
+        .pipe(
+          map((t: Token) => {
+            t.expires_in = t.expires_in / moment.duration(1, 'days').asSeconds();
+            return t;
+          })
+      );
+  }
 }

@@ -1,3 +1,5 @@
+
+import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -25,6 +27,7 @@ describe('AuthState', () => {
 
   }));
 
+
   afterEach(() => {
 
     TestBed.resetTestingModule();
@@ -40,7 +43,13 @@ describe('AuthState', () => {
       // Then check http
       const postLogin = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/login' });
       postLogin.flush({}, { headers: { 'x-auth-token': 'x token' } });
-      const getAuthorize = http.expectOne({ method: 'GET', url: '/ExempleAuthorization/oauth/authorize?response_type=code&client_id=test_service_user&scope=account:read%20account:update%20login:head%20login:read%20login:create%20login:update' });
+      const getAuthorize = http.expectOne((req: HttpRequest<void>) =>
+        req.method === 'GET' &&
+        req.url === '/ExempleAuthorization/oauth/authorize' &&
+        req.params.get('response_type') === 'code' &&
+        req.params.get('client_id') === 'test_service_user' &&
+        req.params.get('scope') === 'account:read account:update login:head login:read login:create login:update' &&
+        req.params.get('code_challenge_method') === 'S256');
       getAuthorize.flush({}, { headers: { location: 'code=code123' } });
       const postToken = http.expectOne({ method: 'POST', url: '/ExempleAuthorization/oauth/token' });
       postToken.flush({

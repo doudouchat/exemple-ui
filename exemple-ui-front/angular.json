@@ -39,7 +39,8 @@
               "replaceDuplicatePlugins": true
             },
             "allowedCommonJsDependencies": [
-              "moment"
+              "moment",
+              "crypto-js"
             ]
           },
           "configurations": {
