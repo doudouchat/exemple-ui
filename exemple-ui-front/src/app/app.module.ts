@@ -58,7 +58,7 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (store: Store) => () => {
         const authState: AuthStateModel = store.selectSnapshot(AuthState);
         if (!authState.authenticate) {
-          return store.dispatch(new Authenticate('test_service', 'secret'));
+          return store.dispatch(new Authenticate());
         }
         return of(true);
       },

@@ -6,20 +6,20 @@ import { Authenticate } from './app.action';
 import { AuthService } from '../auth/shared/auth.service';
 
 @State<boolean>({
-    name: 'application',
-    defaults: false
+  name: 'application',
+  defaults: false
 })
 @Injectable()
 export class AppState {
 
-    constructor(
-        private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService) { }
 
-    @Action(Authenticate)
-    authenticate(ctx: StateContext<boolean>, action: Authenticate) {
-        return this.authService.clientCredentials(action.application, action.password).pipe(
-            tap(() => {
-                ctx.setState(true);
-            }));
-    }
+  @Action(Authenticate)
+  authenticate(ctx: StateContext<boolean>) {
+    return this.authService.authenticateApplication().pipe(
+      tap(() => {
+        ctx.setState(true);
+      }));
+  }
 }
