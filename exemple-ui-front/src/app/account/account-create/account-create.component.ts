@@ -38,7 +38,7 @@ export class AccountCreateComponent implements OnInit {
   }
 
   save() {
-    const account = Object.assign({}, this.accountForm.value);
+    const account = {...this.accountForm.value};
     delete account.password;
     this.store.dispatch(new CreateAccount(account, this.accountForm.value.password)).subscribe(result => {
       this.store.dispatch(new PublishMessage(

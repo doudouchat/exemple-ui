@@ -48,7 +48,7 @@ export class AccountState {
         account.birthday = this.toDate(account.birthday);
 
         const previousAccount = action.previousAccount;
-        const previous = Object.assign({}, previousAccount);
+        const previous = {...previousAccount};
         previous.birthday = this.toDate(previous.birthday);
         previous.update_date = account.update_date;
 
