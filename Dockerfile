@@ -5,6 +5,8 @@ WORKDIR exemple-ui
 COPY exemple-ui-front/package.json ./
 COPY exemple-ui-front/package-lock.json .
 RUN npm ci
+RUN rm -rf node_modules/@types/long
+RUN  echo $(ls)
 COPY exemple-ui-front/src ./src
 COPY exemple-ui-front/*.json ./
 COPY exemple-ui-front/*.js ./
