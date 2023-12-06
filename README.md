@@ -13,5 +13,5 @@
 
 ## Docker
 
-<p>build image <code>docker build . -t exemple-ui --build-arg VERSION_NODE=20.5.0 --build-arg VERSION_NGINX=1.24.0</code></p>
+<p>build image <code>docker build . -t exemple-ui --build-arg VERSION_NODE=20.9.0 --build-arg VERSION_NGINX=1.24.0</code></p>
 
