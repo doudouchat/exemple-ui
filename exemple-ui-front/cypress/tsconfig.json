@@ -5,7 +5,6 @@
     "sourceMap": false,
     "types": ["cypress"],
     "typeRoots": [
-      "../node_modules",
       "../node_modules/@types"
     ]
   }
