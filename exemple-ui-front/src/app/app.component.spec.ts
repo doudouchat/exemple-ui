@@ -20,7 +20,7 @@ describe('AppComponent', () => {
     let mock: ComponentFixture<DummyComponent>;
     let store: Store;
 
-    before(() => window.localStorage.clear());
+    beforeAll(() => window.localStorage.clear());
 
     beforeEach(waitForAsync(() => {
 

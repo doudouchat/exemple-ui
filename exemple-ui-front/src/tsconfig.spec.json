@@ -3,9 +3,11 @@
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
     "types": [
-      "mocha",
+      "jest",
       "node"
-    ]
+    ],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
   ],
