@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@web/test-runner": "^0.20.2"
+  }
+}
