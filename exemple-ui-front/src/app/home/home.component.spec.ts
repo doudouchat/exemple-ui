@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from 'chai';
 
-import { HomeModule } from './home.module';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
@@ -16,7 +15,7 @@ describe('HomeComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, RouterTestingModule, HomeModule]
+      imports: [HttpClientTestingModule, RouterTestingModule]
 
     }).createComponent(HomeComponent);
 

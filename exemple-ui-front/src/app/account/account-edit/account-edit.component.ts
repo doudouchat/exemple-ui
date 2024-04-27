@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { ButtonModule } from 'primeng/button';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { LoginValidator } from '../../login/shared/login.validator';
 import { PublishMessage } from '../../shared/message/message.action';
@@ -12,7 +16,16 @@ import { UpdateAccount } from '../shared/account.action';
 @Component({
   selector: 'app-account-edit',
   templateUrl: './account-edit.component.html',
-  styleUrls: ['./account-edit.component.css']
+  styleUrls: ['./account-edit.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputMaskModule,
+    InputTextModule
+  ]
 })
 export class AccountEditComponent implements OnInit {
 

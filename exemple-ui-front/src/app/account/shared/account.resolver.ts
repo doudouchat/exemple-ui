@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Account } from './account';
 import { AccountState } from './account.state';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AccountResolver {
 
     constructor(

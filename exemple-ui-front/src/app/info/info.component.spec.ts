@@ -4,7 +4,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { By } from '@angular/platform-browser';
 import { expect } from 'chai';
 
-import { InfoModule } from './info.module';
 import { InfoComponent } from './info.component';
 
 describe('test', () => {
@@ -16,7 +15,7 @@ describe('test', () => {
 
         fixture = TestBed.configureTestingModule({
 
-            imports: [HttpClientTestingModule, InfoModule]
+            imports: [HttpClientTestingModule]
 
         }).createComponent(InfoComponent);
 

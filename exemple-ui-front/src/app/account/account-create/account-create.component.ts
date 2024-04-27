@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { ButtonModule } from 'primeng/button';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { CreateAccount } from '../shared/account.action';
 import { PublishMessage } from '../../shared/message/message.action';
@@ -11,7 +15,16 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
 @Component({
   selector: 'app-account-create',
   templateUrl: './account-create.component.html',
-  styleUrls: ['./account-create.component.css']
+  styleUrls: ['./account-create.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputMaskModule,
+    InputTextModule
+  ]
 })
 export class AccountCreateComponent implements OnInit {
 
@@ -38,7 +51,7 @@ export class AccountCreateComponent implements OnInit {
   }
 
   save() {
-    const account = {...this.accountForm.value};
+    const account = { ...this.accountForm.value };
     delete account.password;
     this.store.dispatch(new CreateAccount(account, this.accountForm.value.password)).subscribe(result => {
       this.store.dispatch(new PublishMessage(

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Info } from './info';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class InfoService {
 
     constructor(private readonly http: HttpClient) { }

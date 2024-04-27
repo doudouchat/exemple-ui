@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { LoginService } from './login.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class LoginValidator {
 
   constructor(private readonly loginService: LoginService) { }
