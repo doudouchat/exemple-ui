@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
 import { PublishMessage } from '../../shared/message/message.action';
-import { AccountModule } from '../account.module';
 import { CreateAccount } from '../shared/account.action';
 import { AccountCreateComponent } from './account-create.component';
 
@@ -21,8 +20,10 @@ describe('AccountCreateComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, AccountModule, NgxsModule.forRoot([])]
-
+      imports: [
+        HttpClientTestingModule,
+        NgxsModule.forRoot([])
+      ]
     }).createComponent(AccountCreateComponent);
 
     store = TestBed.inject(Store);

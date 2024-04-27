@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { Account } from './account';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AccountService {
 
   constructor(private readonly http: HttpClient) { }

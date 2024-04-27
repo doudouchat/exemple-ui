@@ -3,8 +3,9 @@ import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 
-import { AccountModule } from '../account.module';
+import { LoginService } from '../../login/shared/login.service';
 import { CreateAccount, GetAccountByUsername, UpdateAccount } from './account.action';
+import { AccountService } from './account.service';
 import { AccountState } from './account.state';
 
 
@@ -16,7 +17,14 @@ describe('AccountState', () => {
 
     TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, AccountModule, NgxsModule.forRoot([AccountState])]
+      imports: [
+        HttpClientTestingModule,
+        NgxsModule.forRoot([AccountState])
+      ],
+      providers: [
+        AccountService,
+        LoginService
+      ]
 
     }).compileComponents();
 

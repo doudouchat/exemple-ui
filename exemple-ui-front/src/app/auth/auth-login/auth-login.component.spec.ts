@@ -9,7 +9,6 @@ import * as sinon from 'sinon';
 
 import { GetAccountByUsername } from '../../account/shared/account.action';
 import { PublishMessage } from '../../shared/message/message.action';
-import { AuthModule } from '../auth.module';
 import { Authenticate } from '../shared/auth.action';
 import { UnauthorizedError } from '../shared/auth.service';
 import { AuthLoginComponent } from './auth-login.component';
@@ -23,8 +22,10 @@ describe('AuthLoginComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [AuthModule, RouterTestingModule,
-        NgxsModule.forRoot([])]
+      imports: [
+        RouterTestingModule,
+        NgxsModule.forRoot([])
+      ]
 
     }).createComponent(AuthLoginComponent);
 

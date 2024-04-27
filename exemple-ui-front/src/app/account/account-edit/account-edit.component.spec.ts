@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
 import { PublishMessage } from '../../shared/message/message.action';
-import { AccountModule } from '../account.module';
 import { UpdateAccount } from '../shared/account.action';
 import { AccountEditComponent } from './account-edit.component';
 
@@ -21,8 +20,10 @@ describe('AccountEditComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [AccountModule, HttpClientTestingModule,
-        NgxsModule.forRoot([])],
+      imports: [
+        HttpClientTestingModule,
+        NgxsModule.forRoot([])
+      ],
       providers: [{
         provide: ActivatedRoute, useValue: {
           data: of({
@@ -71,19 +72,19 @@ describe('AccountEditComponent', () => {
       const dispatch = sinon.stub(store, 'dispatch');
       dispatch.withArgs(
         new UpdateAccount(
-          { 
-            id: '99', 
-            email: 'john.doe@gmail.com', 
-            firstname: 'john', 
-            lastname: 'doe', 
-            birthday: '12/07/1977', 
-            creation_date: null, 
-            update_date: null 
+          {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/07/1977',
+            creation_date: null,
+            update_date: null
           },
           {
-            id: '99', 
+            id: '99',
             email: 'john.doe@gmail.com',
-            firstname: 'john', 
+            firstname: 'john',
             lastname: 'doe',
             birthday: '12/06/1976'
           }
@@ -125,20 +126,20 @@ describe('AccountEditComponent', () => {
       const dispatch = sinon.stub(store, 'dispatch');
       dispatch.withArgs(
         new UpdateAccount(
-          { 
-            id: '99', 
+          {
+            id: '99',
             email: 'jean.dupond@gmail.com',
-            firstname: 'john',  
-            lastname: 'doe', 
-            birthday: '12/06/1976', 
-            creation_date: null, 
-            update_date: null 
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1976',
+            creation_date: null,
+            update_date: null
           },
           {
-            id: '99', 
+            id: '99',
             email: 'john.doe@gmail.com',
-            firstname: 'john', 
-            lastname: 'doe',  
+            firstname: 'john',
+            lastname: 'doe',
             birthday: '12/06/1976'
           }
         )).returns(of(

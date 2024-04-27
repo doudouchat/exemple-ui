@@ -18,12 +18,20 @@ import { CoreModule } from './core/core.module';
 import { Authenticate } from './shared/app.action';
 import { AppState } from './shared/app.state';
 import { MessageState } from './shared/message/message.state';
-import { SharedModule } from './shared/shared.module';
+import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AppInterceptor } from './shared/app.interceptor';
 
 @NgModule({
   imports: [
+    HttpClientModule,
     CoreModule,
-    SharedModule,
+    MessageModule,
+    ToastModule,
+    MessagesModule,
     AppRoutingModule,
     NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState], {
       developmentMode: !environment.production
@@ -38,6 +46,7 @@ import { SharedModule } from './shared/shared.module';
   bootstrap: [AppComponent],
   providers: [
     AuthService,
+    MessageService,
     {
       provide: APP_INITIALIZER,
       useFactory: (store: Store) => () => {
@@ -63,6 +72,11 @@ import { SharedModule } from './shared/shared.module';
         return of(true);
       },
       deps: [Store],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AppInterceptor,
       multi: true
     },
     AuthenticatedGuard,
