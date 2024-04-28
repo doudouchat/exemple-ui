@@ -1,12 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AnonymousGuard, AuthenticatedGuard } from '../auth/shared/auth.guard';
 import { AccountCreateComponent } from './account-create/account-create.component';
 import { AccountEditComponent } from './account-edit/account-edit.component';
 import { AccountResolver } from './shared/account.resolver';
 
-const accountRoutes: Routes = [
+export const ACCOUNT_ROUTES: Routes = [
     {
         path: '',
         component: AccountEditComponent,
@@ -25,12 +24,3 @@ const accountRoutes: Routes = [
         ]
     }
 ];
-@NgModule({
-    imports: [
-        RouterModule.forChild(accountRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
-})
-export class AccountRoutingModule { }

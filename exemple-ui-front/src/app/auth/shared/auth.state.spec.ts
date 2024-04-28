@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 
-import { AuthModule } from '../auth.module';
 import { Authenticate } from './auth.action';
 import { AuthState } from './auth.state';
 
@@ -18,8 +17,11 @@ describe('AuthState', () => {
 
     TestBed.configureTestingModule({
 
-      imports: [AuthModule, RouterTestingModule, HttpClientTestingModule,
-        NgxsModule.forRoot([AuthState])]
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        NgxsModule.forRoot([AuthState])
+      ]
 
     }).compileComponents();
 
