@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AnonymousGuard } from '../auth/shared/auth.guard';
 import { AuthLoginComponent } from './auth-login/auth-login.component';
 
-const authRoutes: Routes = [
+export const AUTH_ROUTES: Routes = [
     {
         path: '',
         component: AuthLoginComponent,
@@ -13,12 +12,3 @@ const authRoutes: Routes = [
         ]
     }
 ];
-@NgModule({
-    imports: [
-        RouterModule.forChild(authRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
-})
-export class AuthRoutingModule { }
