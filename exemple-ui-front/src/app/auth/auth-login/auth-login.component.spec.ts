@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -12,6 +11,7 @@ import { PublishMessage } from '../../shared/message/message.action';
 import { Authenticate } from '../shared/auth.action';
 import { UnauthorizedError } from '../shared/auth.service';
 import { AuthLoginComponent } from './auth-login.component';
+import { RouterModule } from '@angular/router';
 
 describe('AuthLoginComponent', () => {
 
@@ -23,7 +23,7 @@ describe('AuthLoginComponent', () => {
     fixture = TestBed.configureTestingModule({
 
       imports: [
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         NgxsModule.forRoot([])
       ]
 

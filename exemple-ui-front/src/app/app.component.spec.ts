@@ -2,7 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { expect } from 'chai';
 
@@ -26,8 +26,12 @@ describe('AppComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [AppModule, HttpClientTestingModule, RouterTestingModule.withRoutes(
-        [{ path: '', component: DummyComponent }])],
+      imports: [
+        AppModule,
+        HttpClientTestingModule,
+        RouterModule.forRoot(
+          [{ path: '', component: DummyComponent }])
+      ],
       declarations: [DummyComponent]
 
     }).createComponent(AppComponent);
