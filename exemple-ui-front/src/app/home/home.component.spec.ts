@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { expect } from 'chai';
 
 import { HomeComponent } from './home.component';
@@ -15,7 +15,10 @@ describe('HomeComponent', () => {
 
     fixture = TestBed.configureTestingModule({
 
-      imports: [HttpClientTestingModule, RouterTestingModule]
+      imports: [
+        HttpClientTestingModule,
+        RouterModule.forRoot([])
+      ]
 
     }).createComponent(HomeComponent);
 

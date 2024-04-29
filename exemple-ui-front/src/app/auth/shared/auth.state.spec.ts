@@ -2,7 +2,6 @@
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 
@@ -18,7 +17,6 @@ describe('AuthState', () => {
     TestBed.configureTestingModule({
 
       imports: [
-        RouterTestingModule,
         HttpClientTestingModule,
         NgxsModule.forRoot([AuthState])
       ]
