@@ -1,34 +1,41 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 import { AuthState, AuthStateModel } from './auth.state';
 
 @Injectable()
 export class AuthenticatedGuard {
 
-  constructor(private readonly router: Router, private readonly store: Store) {
+  @Select(AuthState) authState$: Observable<AuthStateModel>;
+
+  constructor(private readonly router: Router) {
   }
 
   canActivate(): Observable<boolean | UrlTree> {
 
-    const authState: AuthStateModel = this.store.selectSnapshot(AuthState);
-    if (!authState.authenticate) {
-      return of(this.router.parseUrl('/login'));
-    }
-    return of(true);
+    return this.authState$.pipe(
+      map((authState: AuthStateModel) => {
+        if (!authState.authenticate) {
+          return this.router.parseUrl('/login');
+        }
+        return true;
+      })
+    );
   }
 }
 
 @Injectable()
 export class AnonymousGuard {
 
-  constructor(private readonly store: Store) {
-  }
+  @Select(AuthState) authState$: Observable<AuthStateModel>;
 
   canActivate(): Observable<boolean> {
-    const authState: AuthStateModel = this.store.selectSnapshot(AuthState);
-    return of(!authState.authenticate);
+    return this.authState$.pipe(
+      map((authState: AuthStateModel) => !authState.authenticate)
+    );
   }
 }
