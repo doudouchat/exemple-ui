@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 
 import { Account } from './account';
 import { AccountState } from './account.state';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AccountResolver {
 
-    constructor(
-        private readonly store: Store) { }
+  @Select(AccountState) accountState$: Observable<Account>;
 
-    resolve(): Observable<Account> {
+  resolve(): Observable<Account> {
 
-        return this.store.selectSnapshot(AccountState);
-    }
+    return this.accountState$;
+  }
 }

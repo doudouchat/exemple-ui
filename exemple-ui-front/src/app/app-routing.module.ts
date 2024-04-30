@@ -4,16 +4,16 @@ import { Routes, RouterModule } from '@angular/router';
 const appRoutes: Routes = [
     {
         path: '',
-        loadChildren: () => import('./home/home-routing.module').then(m => m.HOME_ROUTES),
+        loadChildren: () => import('./home/home-routing').then(m => m.HOME_ROUTES),
         pathMatch: 'full'
     },
     {
         path: 'account',
-        loadChildren: () => import('./account/account-routing.module').then(m => m.ACCOUNT_ROUTES)
+        loadChildren: () => import('./account/account-routing').then(m => m.ACCOUNT_ROUTES)
     },
     {
         path: 'login',
-        loadChildren: () => import('./auth/auth-routing.module').then(m => m.AUTH_ROUTES)
+        loadChildren: () => import('./auth/auth-routing').then(m => m.AUTH_ROUTES)
     }
 
 ];
