@@ -6,7 +6,7 @@ import { expect } from 'chai';
 
 import { InfoComponent } from './info.component';
 
-describe('test', () => {
+describe('InfoComponent', () => {
 
     let fixture: ComponentFixture<InfoComponent>;
     let debugElement: DebugElement;
@@ -35,7 +35,7 @@ describe('test', () => {
 
     });
 
-    it('home success', waitForAsync(inject(
+    it('display info', waitForAsync(inject(
         [HttpTestingController], (http) => {
 
             const req = http.expectOne('/ExempleService/actuator/info');
