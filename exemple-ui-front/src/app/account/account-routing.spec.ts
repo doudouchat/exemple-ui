@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Router, RouterModule, provideRouter } from '@angular/router';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Router, RouterModule, provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { expect } from 'chai';
 import { MockComponents, MockComponent } from 'ng-mocks';
@@ -8,6 +9,7 @@ import { of } from 'rxjs';
 
 import { AnonymousGuard, AuthenticatedGuard } from '../auth/shared/auth.guard';
 import { AuthLoginComponent } from '../auth/auth-login/auth-login.component';
+import { AccountResolver } from './shared/account.resolver';
 import { ACCOUNT_ROUTES } from './account-routing';
 import { AccountEditComponent } from './account-edit/account-edit.component';
 import { AccountCreateComponent } from './account-create/account-create.component';
@@ -15,18 +17,15 @@ import { AccountCreateComponent } from './account-create/account-create.componen
 describe('AccountRouting', () => {
 
   let router: Router;
+  let accountResolver: AccountResolver;
   let authenticatedGuard: AuthenticatedGuard;
   let anonymousGuard: AnonymousGuard;
-  let accountEditComponentFixture: ComponentFixture<AccountEditComponent>;
-  let accountEditComponent: AccountEditComponent;
 
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
-      declarations: [
-        MockComponents(AccountEditComponent, AccountCreateComponent)
-      ],
       imports: [
+        MockComponents(AccountEditComponent, AccountCreateComponent),
         RouterModule,
         HttpClientTestingModule,
         NgxsModule.forRoot([])
@@ -37,14 +36,13 @@ describe('AccountRouting', () => {
         provideRouter(ACCOUNT_ROUTES.concat({
           path: 'login',
           component: MockComponent(AuthLoginComponent)
-        }))
+        }), withComponentInputBinding())
       ]
     }).compileComponents();
 
-    accountEditComponentFixture = TestBed.createComponent(AccountEditComponent);
-    accountEditComponent = accountEditComponentFixture.componentInstance;
-
     router = TestBed.inject(Router);
+    accountResolver = TestBed.inject(AccountResolver);
+    Object.defineProperty(accountResolver, 'accountState$', { writable: true });
     authenticatedGuard = TestBed.inject(AuthenticatedGuard);
     Object.defineProperty(authenticatedGuard, 'authState$', { writable: true });
     anonymousGuard = TestBed.inject(AnonymousGuard);
@@ -60,14 +58,22 @@ describe('AccountRouting', () => {
         authenticate: true
       });
 
+      // And resolver
+      accountResolver.accountState$ = of({
+        id: '123'
+      });
+
       // When forward
-      await router.navigate(['']);
+      const routerHarness = await RouterTestingHarness.create();
+      const activatedComponent = await routerHarness.navigateByUrl('', AccountEditComponent);
 
       // Then check router
       expect(router.url).to.equal('/');
 
       // And check account
-      expect(accountEditComponent.account).to.undefined;
+      expect(activatedComponent.account).to.eql({
+        id: '123'
+      })
 
     });
 
@@ -98,8 +104,8 @@ describe('AccountRouting', () => {
       //When forward
       await router.navigate(['create']);
 
-       // Then check router
-       expect(router.url).to.equal('/create');
+      // Then check router
+      expect(router.url).to.equal('/create');
 
     });
 
