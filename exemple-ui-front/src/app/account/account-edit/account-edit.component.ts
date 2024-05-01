@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -29,14 +28,13 @@ import { UpdateAccount } from '../shared/account.action';
 })
 export class AccountEditComponent implements OnInit {
 
-  account: Account;
+  @Input() account: Account;
 
   accountForm: UntypedFormGroup;
 
   constructor(
     private readonly fb: UntypedFormBuilder,
     private readonly store: Store,
-    private readonly route: ActivatedRoute,
     private readonly loginValidator: LoginValidator) { }
 
   ngOnInit() {
@@ -51,20 +49,17 @@ export class AccountEditComponent implements OnInit {
       update_date: []
     });
 
-    this.route.data.subscribe(data => {
-      this.account = data.account;
-      this.accountForm.markAllAsTouched();
-      this.accountForm.patchValue(this.account);
-      this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account.email));
+    this.accountForm.markAllAsTouched();
+    this.accountForm.patchValue(this.account);
+    this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account.email));
 
-      this.store.dispatch(new PublishMessage(
-        { severity: 'info', summary: 'Success', detail: 'Account access successfull' }));
-    });
+    this.store.dispatch(new PublishMessage(
+      { severity: 'info', summary: 'Success', detail: 'Account access successfull' }));
   }
 
   save() {
 
-    const account = {...this.accountForm.value};
+    const account = { ...this.accountForm.value };
     this.store.dispatch(new UpdateAccount(account, this.account)).subscribe(() => {
       this.store.dispatch(new PublishMessage(
         { severity: 'success', summary: 'Success', detail: 'Account update successfull' }));

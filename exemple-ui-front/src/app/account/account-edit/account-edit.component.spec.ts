@@ -1,7 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import { of } from 'rxjs';
@@ -14,6 +13,7 @@ import { AccountEditComponent } from './account-edit.component';
 describe('AccountEditComponent', () => {
 
   let fixture: ComponentFixture<AccountEditComponent>;
+  let accountEditComponent: AccountEditComponent;
   let store: Store;
 
   beforeEach(waitForAsync(() => {
@@ -23,23 +23,18 @@ describe('AccountEditComponent', () => {
       imports: [
         HttpClientTestingModule,
         NgxsModule.forRoot([])
-      ],
-      providers: [{
-        provide: ActivatedRoute, useValue: {
-          data: of({
-            account: {
-              id: '99',
-              email: 'john.doe@gmail.com',
-              firstname: 'john',
-              lastname: 'doe',
-              birthday: '12/06/1976'
-            }
-          })
-        }
-      }]
+      ]
 
     }).createComponent(AccountEditComponent);
 
+    accountEditComponent = fixture.componentInstance;
+    accountEditComponent.account = {
+      id: '99',
+      email: 'john.doe@gmail.com',
+      firstname: 'john',
+      lastname: 'doe',
+      birthday: '12/06/1976'
+    };
     store = TestBed.inject(Store);
 
   }));
