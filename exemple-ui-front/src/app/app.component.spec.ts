@@ -8,6 +8,7 @@ import { expect } from 'chai';
 
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
+import { PublishMessage } from './shared/message/message.action';
 
 @Component({
   template: '<h6>dummy</h6>'
@@ -41,6 +42,8 @@ describe('AppComponent', () => {
     store.reset({
       authenticate: { authenticate: true, username: 'john.doe@gmail.com' }
     });
+
+    fixture.detectChanges();
 
   }));
 
@@ -129,6 +132,22 @@ describe('AppComponent', () => {
         expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
       })));
+
+  });
+
+  describe('Display message', () => {
+
+    it('should display one message', () => {
+
+      // when dispatch
+      store.dispatch(new PublishMessage({ detail: 'message summary' }));
+
+      fixture.detectChanges();
+
+      // Then check message
+      expect(fixture.debugElement.query(By.css('div.p-toast-detail')).nativeElement.innerHTML).contains('message summary');
+
+    });
 
   });
 
