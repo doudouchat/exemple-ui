@@ -1,15 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
-import { of, throwError } from 'rxjs';
 import * as sinon from 'sinon';
 
-import { GetAccountByUsername } from '../../account/shared/account.action';
-import { PublishMessage } from '../../shared/message/message.action';
 import { Authenticate } from '../shared/auth.action';
-import { UnauthorizedError } from '../shared/auth.service';
 import { AuthLoginComponent } from './auth-login.component';
 import { RouterModule } from '@angular/router';
 
@@ -48,10 +43,7 @@ describe('AuthLoginComponent', () => {
   it('authenticate success', waitForAsync(() => {
 
     // setup mock store
-    const id = '123';
     const dispatch = sinon.stub(store, 'dispatch');
-    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(of(true));
-    dispatch.withArgs(new GetAccountByUsername('jean.dupond@gmail.com')).returns(of(id));
 
     // when change form
     const component: AuthLoginComponent = fixture.componentInstance;
@@ -64,59 +56,10 @@ describe('AuthLoginComponent', () => {
 
     fixture.detectChanges();
 
-    // Then check message
-    expect(dispatch.calledWith(new PublishMessage(
-      { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }))).is.be.true;
-
-    // And check navigate
-    expect(dispatch.calledWith(new Navigate(['/account'], { id }))).is.be.true;
+    // Then check dispatch
+    sinon.assert.calledWith(dispatch, new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
 
   }));
-
-  it('authenticate failure', waitForAsync(() => {
-
-    // setup mock store
-    const dispatch = sinon.stub(store, 'dispatch');
-    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(throwError(new UnauthorizedError()));
-
-    // when change form
-    const component: AuthLoginComponent = fixture.componentInstance;
-    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-    component.authenticateForm.get('password').setValue('D#az78&é');
-
-    fixture.detectChanges();
-
-    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
-
-    fixture.detectChanges();
-
-    // Then check message
-    expect(dispatch.calledWith(new PublishMessage(
-      { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }))).is.be.true;
-
-  }));
-
-  it('authenticate exception', () => {
-
-    // setup mock store
-    const dispatch = sinon.stub(store, 'dispatch');
-    dispatch.withArgs(new Authenticate('jean.dupond@gmail.com', 'D#az78&é')).returns(throwError(new Error()));
-
-    // when change form
-    const component: AuthLoginComponent = fixture.componentInstance;
-    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-    component.authenticateForm.get('password').setValue('D#az78&é');
-
-    fixture.detectChanges();
-
-    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
-
-    fixture.detectChanges();
-
-    // Then check message
-    expect(component.login).to.throw();
-
-  });
 
   [
     { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'input', expectedMessage: 'Username is required' },

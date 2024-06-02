@@ -10,6 +10,8 @@ import { LoginService } from '../../login/shared/login.service';
 import { Account } from './account';
 import { CreateAccount, GetAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
+import { PublishMessage } from 'src/app/shared/message/message.action';
+import { Navigate } from '@ngxs/router-plugin';
 
 @State<Account>({
   name: 'account'
@@ -35,6 +37,9 @@ export class AccountState {
           id: accountId
         };
         return this.loginService.createLogin(login).pipe(tap(() => {
+          this.store.dispatch(new PublishMessage(
+            { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
+          this.store.dispatch(new Navigate(['/login']));
           ctx.setState(account);
           ctx.patchState({ id: accountId });
         }));
@@ -67,7 +72,11 @@ export class AccountState {
           operation = this.loginService.updateLogin(login, previousLogin).pipe(
             mergeMap(() => ctx.dispatch(new Logout())));
         }
-        return operation.pipe(tap(() => ctx.setState(account)));
+        return operation.pipe(tap(() => {
+          this.store.dispatch(new PublishMessage(
+            { severity: 'success', summary: 'Success', detail: 'Account update successfull' }));
+          ctx.setState(account);
+        }));
       }));
   }
 
@@ -80,7 +89,11 @@ export class AccountState {
         account.id = action.id;
         return account;
       }),
-      tap(account => ctx.setState(account)));
+      mergeMap(account => {
+        ctx.setState(account);
+        const id = account.id;
+        return this.store.dispatch(new Navigate(['/account'], { id }));
+      }));
   }
 
   @Action(GetAccountByUsername)

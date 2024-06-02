@@ -2,12 +2,14 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
 import { LoginService } from '../../login/shared/login.service';
 import { CreateAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
 import { AccountState } from './account.state';
-
+import { PublishMessage } from 'src/app/shared/message/message.action';
+import { Navigate } from '@ngxs/router-plugin';
 
 describe('AccountState', () => {
 
@@ -43,6 +45,8 @@ describe('AccountState', () => {
     it('create account success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
+        const dispatch = sinon.spy(store, 'dispatch');
+
         // when dispatch
         store.dispatch(new CreateAccount(
           {
@@ -72,6 +76,12 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
 
+        // And check dispatch
+        sinon.assert.calledWith(dispatch, new PublishMessage(
+          { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
+        sinon.assert.calledWith(dispatch, new Navigate(['/login']));
+
+
       })));
 
   });
@@ -80,6 +90,8 @@ describe('AccountState', () => {
 
     it('update account success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
+
+        const dispatch = sinon.spy(store, 'dispatch');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -112,10 +124,16 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('1976-07-12');
 
+        // And check dispatch
+        expect(dispatch.calledWith(new PublishMessage(
+          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+
       })));
 
     it('update email success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
+
+        const dispatch = sinon.spy(store, 'dispatch');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -153,6 +171,10 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.email)).is.be.eq('jean.dupond@gmail.com');
 
+        // And check dispatch
+        expect(dispatch.calledWith(new PublishMessage(
+          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+
       })));
 
   });
@@ -161,6 +183,8 @@ describe('AccountState', () => {
 
     it('get account success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
+
+        const dispatch = sinon.spy(store, 'dispatch');
 
         // when dispatch
         store.dispatch(new GetAccountByUsername('jean.dupond@gmail.com'));
@@ -180,6 +204,8 @@ describe('AccountState', () => {
         expect(store.selectSnapshot(state => state.account.firstname)).is.be.eq('john');
         expect(store.selectSnapshot(state => state.account.lastname)).is.be.eq('doe');
 
+        // And check dispatch
+        sinon.assert.calledWith(dispatch, new Navigate(['/account'], { id: 99 }));
       })));
 
   });

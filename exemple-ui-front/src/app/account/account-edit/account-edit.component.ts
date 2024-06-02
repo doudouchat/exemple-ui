@@ -60,11 +60,9 @@ export class AccountEditComponent implements OnInit {
   save() {
 
     const account = { ...this.accountForm.value };
-    this.store.dispatch(new UpdateAccount(account, this.account)).subscribe(() => {
-      this.store.dispatch(new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Account update successfull' }));
-      this.account = this.accountForm.value;
-    });
+    this.store.dispatch(new UpdateAccount(account, this.account)).subscribe(() =>
+      this.account = this.accountForm.value
+    );
   }
 
   cancel() {

@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { Navigate } from '@ngxs/router-plugin';
 import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CreateAccount } from '../shared/account.action';
-import { PublishMessage } from '../../shared/message/message.action';
 import { LoginValidator } from '../../login/shared/login.validator';
 import { notBlank } from '../../shared/validator/not-blank.validator';
 
@@ -53,12 +51,7 @@ export class AccountCreateComponent implements OnInit {
   save() {
     const account = { ...this.accountForm.value };
     delete account.password;
-    this.store.dispatch(new CreateAccount(account, this.accountForm.value.password)).subscribe(() => {
-      this.store.dispatch(new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
-      this.store.dispatch(new Navigate(['/login']));
-    });
-
+    this.store.dispatch(new CreateAccount(account, this.accountForm.value.password));
   }
 
   cancel() {

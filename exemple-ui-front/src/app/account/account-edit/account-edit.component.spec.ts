@@ -6,7 +6,6 @@ import { expect } from 'chai';
 import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
-import { PublishMessage } from '../../shared/message/message.action';
 import { UpdateAccount } from '../shared/account.action';
 import { AccountEditComponent } from './account-edit.component';
 
@@ -65,33 +64,7 @@ describe('AccountEditComponent', () => {
 
       // setup mock store
       const dispatch = sinon.stub(store, 'dispatch');
-      dispatch.withArgs(
-        new UpdateAccount(
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/07/1977',
-            creation_date: null,
-            update_date: null
-          },
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1976'
-          }
-        )).returns(of(
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/07/1977'
-          }
-        ));
+      dispatch.withArgs(sinon.match.instanceOf(UpdateAccount)).returns(of({id: '99'}));
 
       // when change form
       const component: AccountEditComponent = fixture.componentInstance;
@@ -109,8 +82,24 @@ describe('AccountEditComponent', () => {
       expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/07/1977');
 
       // And check dispatch
-      expect(dispatch.calledWith(new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+      sinon.assert.calledWith(dispatch, new UpdateAccount(
+        {
+          id: '99',
+          email: 'john.doe@gmail.com',
+          firstname: 'john',
+          lastname: 'doe',
+          birthday: '12/07/1977',
+          creation_date: null,
+          update_date: null
+        },
+        {
+          id: '99',
+          email: 'john.doe@gmail.com',
+          firstname: 'john',
+          lastname: 'doe',
+          birthday: '12/06/1976'
+        }
+      ));
 
     })));
 
@@ -119,33 +108,7 @@ describe('AccountEditComponent', () => {
 
       // setup mock store
       const dispatch = sinon.stub(store, 'dispatch');
-      dispatch.withArgs(
-        new UpdateAccount(
-          {
-            id: '99',
-            email: 'jean.dupond@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1976',
-            creation_date: null,
-            update_date: null
-          },
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1976'
-          }
-        )).returns(of(
-          {
-            id: '99',
-            email: 'jean.dupond@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1976'
-          }
-        ));
+      dispatch.withArgs(sinon.match.instanceOf(UpdateAccount)).returns(of({id: '99'}));
 
       // When change email
       const component: AccountEditComponent = fixture.componentInstance;
@@ -170,8 +133,24 @@ describe('AccountEditComponent', () => {
       expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.equal('jean.dupond@gmail.com');
 
       // And check dispatch
-      expect(dispatch.calledWith(new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+      sinon.assert.calledWith(dispatch, new UpdateAccount(
+        {
+          id: '99',
+          email: 'jean.dupond@gmail.com',
+          firstname: 'john',
+          lastname: 'doe',
+          birthday: '12/06/1976',
+          creation_date: null,
+          update_date: null
+        },
+        {
+          id: '99',
+          email: 'john.doe@gmail.com',
+          firstname: 'john',
+          lastname: 'doe',
+          birthday: '12/06/1976'
+        }
+      ));
 
     })));
 
