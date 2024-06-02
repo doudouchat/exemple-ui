@@ -12,89 +12,89 @@ import { CreateAccount, GetAccount, GetAccountByUsername, UpdateAccount } from '
 import { AccountService } from './account.service';
 
 @State<Account>({
-    name: 'account'
+  name: 'account'
 })
 @Injectable()
 export class AccountState {
 
-    constructor(
-        private readonly accountService: AccountService,
-        private readonly loginService: LoginService,
-        private readonly store: Store) { }
+  constructor(
+    private readonly accountService: AccountService,
+    private readonly loginService: LoginService,
+    private readonly store: Store) { }
 
-    @Action(CreateAccount)
-    createAccount(ctx: StateContext<Account>, action: CreateAccount) {
+  @Action(CreateAccount)
+  createAccount(ctx: StateContext<Account>, action: CreateAccount) {
 
-        const account = action.account;
-        account.birthday = this.toDate(account.birthday);
-        return this.accountService.createAccount(account).pipe(
-            mergeMap((accountId: string) => {
-                const login: Login = {
-                    username: account.email,
-                    password: action.password,
-                    id: accountId
-                };
-                return this.loginService.createLogin(login).pipe(tap(() => {
-                    ctx.setState(account);
-                    ctx.patchState({ id: accountId });
-                }));
-            }));
-    }
+    const account = action.account;
+    account.birthday = this.toDate(account.birthday);
+    return this.accountService.createAccount(account).pipe(
+      mergeMap((accountId: string) => {
+        const login: Login = {
+          username: account.email,
+          password: action.password,
+          id: accountId
+        };
+        return this.loginService.createLogin(login).pipe(tap(() => {
+          ctx.setState(account);
+          ctx.patchState({ id: accountId });
+        }));
+      }));
+  }
 
-    @Action(UpdateAccount)
-    updateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
+  @Action(UpdateAccount)
+  updateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
 
-        const account = action.account;
-        account.birthday = this.toDate(account.birthday);
+    const account = action.account;
+    account.birthday = this.toDate(account.birthday);
 
-        const previousAccount = action.previousAccount;
-        const previous = {...previousAccount};
-        previous.birthday = this.toDate(previous.birthday);
-        previous.update_date = account.update_date;
+    const previousAccount = action.previousAccount;
+    const previous = { ...previousAccount };
+    previous.birthday = this.toDate(previous.birthday);
+    previous.update_date = account.update_date;
 
-        return this.accountService.updateAccount(account, previous).pipe(
-            mergeMap(() => {
-                let operation: Observable<Account | void> = of(account);
-                if (account.email !== previous.email) {
-                    const login: Login = {
-                        username: account.email,
-                        id: account.id
-                    };
-                    const previousLogin: Login = {
-                        username: previous.email,
-                        id: account.id
-                    };
-                    operation = this.loginService.updateLogin(login, previousLogin).pipe(
-                        mergeMap(() => ctx.dispatch(new Logout())));
-                }
-                return operation.pipe(tap(() => ctx.setState(account)));
-            }));
-    }
+    return this.accountService.updateAccount(account, previous).pipe(
+      mergeMap(() => {
+        let operation: Observable<Account | void> = of(account);
+        if (account.email !== previous.email) {
+          const login: Login = {
+            username: account.email,
+            id: account.id
+          };
+          const previousLogin: Login = {
+            username: previous.email,
+            id: account.id
+          };
+          operation = this.loginService.updateLogin(login, previousLogin).pipe(
+            mergeMap(() => ctx.dispatch(new Logout())));
+        }
+        return operation.pipe(tap(() => ctx.setState(account)));
+      }));
+  }
 
-    @Action(GetAccount)
-    getAccount(ctx: StateContext<Account>, action: GetAccount) {
+  @Action(GetAccount)
+  getAccount(ctx: StateContext<Account>, action: GetAccount) {
 
-        return this.accountService.getAccount(action.id).pipe(
-            map(account => {
-                account.birthday = this.fromDate(account.birthday);
-                account.id = action.id;
-                return account;
-            }),
-            tap(account => ctx.setState(account)));
-    }
+    return this.accountService.getAccount(action.id).pipe(
+      map(account => {
+        account.birthday = this.fromDate(account.birthday);
+        account.id = action.id;
+        return account;
+      }),
+      tap(account => ctx.setState(account)));
+  }
 
-    @Action(GetAccountByUsername)
-    getAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
+  @Action(GetAccountByUsername)
+  getAccountByUsername(ctx: StateContext<Account>, action: GetAccountByUsername) {
 
-        return this.loginService.getLogin(action.username).pipe(
-            mergeMap((id: string) => this.store.dispatch(new GetAccount(id))));
-    }
+    return this.loginService.getLogin(action.username).pipe(
+      mergeMap((id: string) => this.store.dispatch(new GetAccount(id))));
+  }
 
-    private toDate(date: moment.Moment | string) {
-        return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    }
+  private toDate(date: moment.Moment | string) {
+    return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  }
 
-    private fromDate(date: moment.Moment | string) {
-        return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
-    }
+  private fromDate(date: moment.Moment | string) {
+    return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+  }
 }
