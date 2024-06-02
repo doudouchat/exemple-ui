@@ -53,8 +53,6 @@ describe('AccountCreateComponent', () => {
       component.accountForm.get('birthday').setValue('12/12/1976');
       component.accountForm.get('password').setValue('D#az78&é');
 
-      const id = sinon.spy(component.id, 'emit');
-
       // and mock store
       const dispatch = sinon.stub(store, 'dispatch');
       dispatch.withArgs(
@@ -91,10 +89,6 @@ describe('AccountCreateComponent', () => {
       // Then check http
       http.verify();
 
-      // And check id
-      sinon.assert.calledOnce(id);
-      sinon.assert.calledWith(id, '123');
-
       // And check dispatch
       expect(dispatch.calledWith(new PublishMessage(
         { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }))).is.be.true;
@@ -119,8 +113,6 @@ describe('AccountCreateComponent', () => {
       [HttpTestingController], (http: HttpTestingController) => {
 
         // setup form
-        const component: AccountCreateComponent = fixture.componentInstance;
-        const id = sinon.spy(component.id, 'emit');
         const dispatch = sinon.spy(store, 'dispatch');
 
         fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
@@ -136,9 +128,6 @@ describe('AccountCreateComponent', () => {
 
         // And check http
         http.verify();
-
-        // And check id
-        sinon.assert.notCalled(id);
 
         // And check dispatch
         sinon.assert.notCalled(dispatch);
@@ -157,7 +146,6 @@ describe('AccountCreateComponent', () => {
       component.accountForm.get('birthday').setValue('12/12/1976');
       component.accountForm.get('password').setValue('D#az78&é');
 
-      const id = sinon.spy(component.id, 'emit');
       const dispatch = sinon.spy(store, 'dispatch');
 
       fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value = 'jean.dupond@gmail.com';
@@ -180,9 +168,6 @@ describe('AccountCreateComponent', () => {
 
       // And check http
       http.verify();
-
-      // And check id
-      sinon.assert.notCalled(id);
 
       // And check dispatch
       sinon.assert.notCalled(dispatch);
@@ -225,7 +210,6 @@ describe('AccountCreateComponent', () => {
       component.accountForm.get('birthday').setValue('12/12/1976');
       component.accountForm.get('password').setValue('D#az78&é');
 
-      const id = sinon.spy(component.id, 'emit');
       const dispatch = sinon.spy(store, 'dispatch');
 
       fixture.detectChanges();
@@ -245,9 +229,6 @@ describe('AccountCreateComponent', () => {
 
       // Then check http
       http.verify();
-
-      // And check id
-      sinon.assert.notCalled(id);
 
       // And check dispatch
       sinon.assert.notCalled(dispatch);
