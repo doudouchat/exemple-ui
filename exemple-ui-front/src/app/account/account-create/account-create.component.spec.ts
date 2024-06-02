@@ -1,13 +1,10 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
-import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
-import { PublishMessage } from '../../shared/message/message.action';
 import { CreateAccount } from '../shared/account.action';
 import { AccountCreateComponent } from './account-create.component';
 
@@ -55,23 +52,6 @@ describe('AccountCreateComponent', () => {
 
       // and mock store
       const dispatch = sinon.stub(store, 'dispatch');
-      dispatch.withArgs(
-        new CreateAccount({
-          email: 'jean.dupond@gmail.com',
-          lastname: 'dupond',
-          firstname: 'jean',
-          birthday: '12/12/1976'
-        },
-          'D#az78&é'))
-        .returns(of({
-          account: {
-            email: 'jean.dupond@gmail.com',
-            lastname: 'dupond',
-            firstname: 'jean',
-            birthday: '12/12/1976',
-            id: '123'
-          }
-        }));
 
       // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -90,11 +70,12 @@ describe('AccountCreateComponent', () => {
       http.verify();
 
       // And check dispatch
-      expect(dispatch.calledWith(new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }))).is.be.true;
-
-      // And check dispatch
-      expect(dispatch.calledWith(new Navigate(['/login']))).is.be.true;
+      sinon.assert.calledWith(dispatch, new CreateAccount({
+        email: 'jean.dupond@gmail.com',
+        lastname: 'dupond',
+        firstname: 'jean',
+        birthday: '12/12/1976'
+      }, 'D#az78&é'));
 
     })));
 

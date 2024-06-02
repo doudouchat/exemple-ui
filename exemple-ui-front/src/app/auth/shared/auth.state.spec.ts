@@ -4,9 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
 import { Authenticate } from './auth.action';
 import { AuthState } from './auth.state';
+import { PublishMessage } from 'src/app/shared/message/message.action';
+import { GetAccountByUsername } from 'src/app/account/shared/account.action';
 
 describe('AuthState', () => {
 
@@ -37,6 +40,8 @@ describe('AuthState', () => {
   it('authenticate success', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
+      const dispatch = sinon.spy(store, 'dispatch');
+
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
 
@@ -61,10 +66,16 @@ describe('AuthState', () => {
       expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('jean.dupond@gmail.com');
 
+      // And check dispatch
+      sinon.assert.calledWith(dispatch, new PublishMessage(
+        { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
+      sinon.assert.calledWith(dispatch, new GetAccountByUsername('jean.dupond@gmail.com'));
     })));
 
   it('authenticate failure', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
+
+      const dispatch = sinon.spy(store, 'dispatch');
 
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -78,6 +89,10 @@ describe('AuthState', () => {
       // And check store
       expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
+
+      // And check dispatch
+      sinon.assert.calledWith(dispatch, new PublishMessage(
+        { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
 
     })));
 
