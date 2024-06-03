@@ -1,6 +1,7 @@
 import { Component, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { expect } from 'chai';
@@ -22,14 +23,9 @@ describe('HomeComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-
-      imports: [
-        DummyComponent,
-        HttpClientTestingModule,
-        RouterModule.forRoot(
-          [{ path: 'account', component: DummyComponent }])
-      ]
-
+      imports: [DummyComponent,
+        RouterModule.forRoot([{ path: 'account', component: DummyComponent }])],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(HomeComponent);
     mock = TestBed.createComponent(DummyComponent);
 

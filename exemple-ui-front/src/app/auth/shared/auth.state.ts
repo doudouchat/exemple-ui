@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
 import { catchError, mergeMap } from 'rxjs/operators';
 
 import { Authenticate, Logout } from './auth.action';
@@ -13,8 +13,10 @@ export interface AuthStateModel {
   username?: string;
 }
 
+export const AUTHENTICATE_STATE_TOKEN = new StateToken<AuthStateModel>('authenticate');
+
 @State<AuthStateModel>({
-  name: 'authenticate',
+  name: AUTHENTICATE_STATE_TOKEN,
   defaults: { authenticate: false }
 })
 @Injectable()
@@ -38,7 +40,7 @@ export class AuthState {
           return this.store.dispatch(new PublishMessage(
             { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
         } else {
-          throwError(() => error);
+          return throwError(() => error);
         }
       }));
   }

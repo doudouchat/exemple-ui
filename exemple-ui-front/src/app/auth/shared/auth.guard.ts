@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { Select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-
-import { AuthState, AuthStateModel } from './auth.state';
+import { AUTHENTICATE_STATE_TOKEN, AuthStateModel } from './auth.state';
 
 @Injectable()
 export class AuthenticatedGuard {
 
-  @Select(AuthState) authState$: Observable<AuthStateModel>;
+  authState$: Observable<AuthStateModel> = inject(Store).select(AUTHENTICATE_STATE_TOKEN);
 
   constructor(private readonly router: Router) {
   }
@@ -31,7 +30,7 @@ export class AuthenticatedGuard {
 @Injectable()
 export class AnonymousGuard {
 
-  @Select(AuthState) authState$: Observable<AuthStateModel>;
+  authState$: Observable<AuthStateModel> = inject(Store).select(AUTHENTICATE_STATE_TOKEN);
 
   canActivate(): Observable<boolean> {
     return this.authState$.pipe(

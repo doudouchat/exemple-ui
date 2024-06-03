@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
@@ -18,15 +19,14 @@ describe('AppRouting', () => {
       declarations: [
         //MockComponents(HomeComponent)
       ],
-      imports: [
-        RouterModule,
+      imports: [RouterModule,
         AppRoutingModule,
-        HttpClientTestingModule,
-        NgxsModule.forRoot([])
-      ],
+        NgxsModule.forRoot([])],
       providers: [
         MockProvider(AuthenticatedGuard),
-        MockProvider(AnonymousGuard)
+        MockProvider(AnonymousGuard),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     }).compileComponents();
 

@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 
 import { Account } from './account';
-import { AccountState } from './account.state';
+import { ACCOUNT_STATE_TOKEN } from './account.state';
 
 @Injectable({ providedIn: 'root' })
 export class AccountResolver {
 
-  @Select(AccountState) accountState$: Observable<Account>;
+  accountState$: Observable<Account> =  inject(Store).select(ACCOUNT_STATE_TOKEN);
 
   resolve(): Observable<Account> {
 

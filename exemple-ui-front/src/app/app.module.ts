@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
 import { Logout } from './auth/shared/auth.action';
 import { AnonymousGuard, AuthenticatedGuard } from './auth/shared/auth.guard';
 import { AuthService } from './auth/shared/auth.service';
-import { AuthState, AuthStateModel } from './auth/shared/auth.state';
+import { AUTHENTICATE_STATE_TOKEN, AuthState, AuthStateModel } from './auth/shared/auth.state';
 import { CoreModule } from './core/core.module';
 import { Authenticate } from './shared/app.action';
 import { AppState } from './shared/app.state';
@@ -22,13 +22,12 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppInterceptor } from './shared/app.interceptor';
 
 @NgModule({
-  imports: [
-    HttpClientModule,
-    CoreModule,
+  declarations: [AppComponent],
+  bootstrap: [AppComponent], imports: [CoreModule,
     MessageModule,
     ToastModule,
     MessagesModule,
@@ -37,51 +36,45 @@ import { AppInterceptor } from './shared/app.interceptor';
       developmentMode: !environment.production
     }),
     NgxsStoragePluginModule.forRoot({
-      key: [AuthState],
+      keys: [AuthState],
       storage: StorageOption.LocalStorage
     }),
-    NgxsRouterPluginModule.forRoot()
-  ],
-  declarations: [AppComponent],
-  bootstrap: [AppComponent],
-  providers: [
-    AuthService,
-    MessageService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (store: Store) => () => {
-        const authState: AuthStateModel = store.selectSnapshot(AuthState);
-        if (authState.username) {
-          return store.dispatch(new GetAccountByUsername(authState.username)).pipe(
-            tap(() => store.selectOnce(AccountState)),
-            catchError(() => store.dispatch(new Logout()))
-          );
-        }
-        return of(authState);
+    NgxsRouterPluginModule.forRoot()], providers: [
+      AuthService,
+      MessageService,
+      {
+        provide: APP_INITIALIZER,
+        useFactory: (store: Store) => () => {
+          const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
+          if (authState.username) {
+            return store.dispatch(new GetAccountByUsername(authState.username)).pipe(tap(() => store.selectOnce(AUTHENTICATE_STATE_TOKEN)), catchError(() => store.dispatch(new Logout())));
+          }
+          return of(authState);
+        },
+        deps: [Store],
+        multi: true
       },
-      deps: [Store],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (store: Store) => () => {
-        const authState: AuthStateModel = store.selectSnapshot(AuthState);
-        if (!authState.authenticate) {
-          return store.dispatch(new Authenticate());
-        }
-        return of(true);
+      {
+        provide: APP_INITIALIZER,
+        useFactory: (store: Store) => () => {
+          const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
+          if (!authState.authenticate) {
+            return store.dispatch(new Authenticate());
+          }
+          return of(true);
+        },
+        deps: [Store],
+        multi: true
       },
-      deps: [Store],
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AppInterceptor,
-      multi: true
-    },
-    AuthenticatedGuard,
-    AnonymousGuard
-  ]
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AppInterceptor,
+        multi: true
+      },
+      AuthenticatedGuard,
+      AnonymousGuard,
+      provideHttpClient(withInterceptorsFromDi())
+    ]
 })
 export class AppModule { }
 

@@ -1,9 +1,9 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
-import { of } from 'rxjs';
 import * as sinon from 'sinon';
 
 import { UpdateAccount } from '../shared/account.action';
@@ -18,12 +18,8 @@ describe('AccountEditComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-
-      imports: [
-        HttpClientTestingModule,
-        NgxsModule.forRoot([])
-      ]
-
+      imports: [NgxsModule.forRoot([])],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(AccountEditComponent);
 
     accountEditComponent = fixture.componentInstance;
@@ -64,7 +60,6 @@ describe('AccountEditComponent', () => {
 
       // setup mock store
       const dispatch = sinon.stub(store, 'dispatch');
-      dispatch.withArgs(sinon.match.instanceOf(UpdateAccount)).returns(of({id: '99'}));
 
       // when change form
       const component: AccountEditComponent = fixture.componentInstance;
@@ -108,7 +103,6 @@ describe('AccountEditComponent', () => {
 
       // setup mock store
       const dispatch = sinon.stub(store, 'dispatch');
-      dispatch.withArgs(sinon.match.instanceOf(UpdateAccount)).returns(of({id: '99'}));
 
       // When change email
       const component: AccountEditComponent = fixture.componentInstance;

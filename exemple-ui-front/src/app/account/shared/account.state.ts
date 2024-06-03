@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
 import moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
@@ -13,8 +13,10 @@ import { AccountService } from './account.service';
 import { PublishMessage } from 'src/app/shared/message/message.action';
 import { Navigate } from '@ngxs/router-plugin';
 
+export const ACCOUNT_STATE_TOKEN = new StateToken<Account>('account');
+
 @State<Account>({
-  name: 'account'
+  name: ACCOUNT_STATE_TOKEN
 })
 @Injectable()
 export class AccountState {

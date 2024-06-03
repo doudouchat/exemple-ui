@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -26,15 +27,10 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-
-      imports: [
-        AppModule,
-        HttpClientTestingModule,
-        RouterModule.forRoot(
-          [{ path: '', component: DummyComponent }])
-      ],
-      declarations: [DummyComponent]
-
+      declarations: [DummyComponent],
+      imports: [AppModule,
+        RouterModule.forRoot([{ path: '', component: DummyComponent }])],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(AppComponent);
 
     mock = TestBed.createComponent(DummyComponent);
