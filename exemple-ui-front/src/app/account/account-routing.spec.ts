@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -24,21 +25,20 @@ describe('AccountRouting', () => {
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
-      imports: [
-        MockComponents(AccountEditComponent, AccountCreateComponent),
+    imports: [MockComponents(AccountEditComponent, AccountCreateComponent),
         RouterModule,
-        HttpClientTestingModule,
-        NgxsModule.forRoot([])
-      ],
-      providers: [
+        NgxsModule.forRoot([])],
+    providers: [
         AuthenticatedGuard,
         AnonymousGuard,
         provideRouter(ACCOUNT_ROUTES.concat({
-          path: 'login',
-          component: MockComponent(AuthLoginComponent)
-        }), withComponentInputBinding())
-      ]
-    }).compileComponents();
+            path: 'login',
+            component: MockComponent(AuthLoginComponent)
+        }), withComponentInputBinding()),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
 
     router = TestBed.inject(Router);
     accountResolver = TestBed.inject(AccountResolver);

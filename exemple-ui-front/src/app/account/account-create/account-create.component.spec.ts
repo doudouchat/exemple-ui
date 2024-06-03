@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
@@ -16,12 +17,9 @@ describe('AccountCreateComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-
-      imports: [
-        HttpClientTestingModule,
-        NgxsModule.forRoot([])
-      ]
-    }).createComponent(AccountCreateComponent);
+    imports: [NgxsModule.forRoot([])],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).createComponent(AccountCreateComponent);
 
     store = TestBed.inject(Store);
 

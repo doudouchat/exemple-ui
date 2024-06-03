@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { MessageService } from 'primeng/api';
-
-import { MessageState } from './shared/message/message.state';
+import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +15,6 @@ export class AppComponent implements OnInit {
     private readonly messageService: MessageService) { }
 
   ngOnInit() {
-    this.store.select(MessageState).subscribe(message => this.messageService.add(message));
+    this.store.select(MESSAGE_STATE_TOKEN).subscribe(message => this.messageService.add(message));
   }
 }

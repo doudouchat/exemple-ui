@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -18,16 +19,13 @@ describe('AccountState', () => {
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
-
-      imports: [
-        HttpClientTestingModule,
-        NgxsModule.forRoot([AccountState])
-      ],
+      imports: [NgxsModule.forRoot([AccountState])],
       providers: [
         AccountService,
-        LoginService
+        LoginService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
-
     }).compileComponents();
 
     store = TestBed.inject(Store);

@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
@@ -21,15 +22,14 @@ describe('AuthRouting', () => {
       declarations: [
         MockComponents(AuthLoginComponent)
       ],
-      imports: [
-        RouterModule,
-        HttpClientTestingModule,
-        NgxsModule.forRoot([])
-      ],
+      imports: [RouterModule,
+        NgxsModule.forRoot([])],
       providers: [
         AuthenticatedGuard,
         AnonymousGuard,
-        provideRouter(AUTH_ROUTES)
+        provideRouter(AUTH_ROUTES),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     }).compileComponents();
 

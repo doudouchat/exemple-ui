@@ -9,7 +9,7 @@
 <p>execute <code>npm run-script test</code></p>
 <p>execute <code>npm run-script lint</code></p>
 
-<p>execute sonar <code>node_modules/.bin/sonar-scanner -Dsonar.login=admin -Dsonar.password=admin123</code></p>
+<p>execute sonar <code>exemple-ui-front/node_modules/.bin/sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin123</code></p>
 
 ## Docker
 
