@@ -11,9 +11,8 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist/exemple-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -34,10 +33,6 @@
               "node_modules/primeicons/primeicons.css"
             ],
             "scripts": [],
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.js",
-              "replaceDuplicatePlugins": true
-            },
             "allowedCommonJsDependencies": [
               "moment",
               "crypto-js"
@@ -54,9 +49,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -71,19 +64,30 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "exemple-ui:build"
+            "buildTarget": "exemple-ui:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
               "buildTarget": "exemple-ui:build:production"
+            },
+            "development": {
+              "buildTarget": "exemple-ui:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -92,7 +96,7 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/custom-webpack:karma",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
               "zone.js",
@@ -109,10 +113,6 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.js",
-              "replaceDuplicatePlugins": true
-            }
           }
         },
         "lint": {
