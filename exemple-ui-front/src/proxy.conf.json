@@ -1,0 +1,10 @@
+{
+  "/ExempleService": {
+    "target": "http://localhost:8086",
+    "secure": false
+  },
+  "/ExempleAuthorization": {
+    "target": "http://localhost:8086",
+    "secure": false
+  }
+}
