@@ -1,7 +1,7 @@
-ARG VERSION_NODE
-ARG VERSION_NGINX
-FROM node:$VERSION_NODE as build
-WORKDIR exemple-ui
+ARG VERSION_NODE=latest
+ARG VERSION_NGINX=latest
+FROM node:$VERSION_NODE AS build
+WORKDIR /exemple-ui
 COPY exemple-ui-front/package.json ./
 COPY exemple-ui-front/package-lock.json .
 RUN npm ci
