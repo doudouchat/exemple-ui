@@ -16,7 +16,6 @@ import { MessageModule } from 'primeng/message';
   selector: 'app-auth-login',
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.css'],
-  standalone: true,
   imports: [
     CommonModule,
     FloatLabel,

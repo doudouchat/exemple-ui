@@ -16,7 +16,6 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
   selector: 'app-account-create',
   templateUrl: './account-create.component.html',
   styleUrls: ['./account-create.component.css'],
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
