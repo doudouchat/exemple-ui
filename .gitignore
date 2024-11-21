@@ -13,6 +13,7 @@ node_modules/
 .tscache/
 node/
 sonar/
+.sonar/
 .toDelete
 npm-debug.log
 .vscode

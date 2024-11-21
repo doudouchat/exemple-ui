@@ -6,10 +6,12 @@ import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 
+// eslint-disable-next-line @angular-eslint/prefer-standalone
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
@@ -42,30 +42,22 @@ import { AppInterceptor } from './shared/app.interceptor';
     NgxsRouterPluginModule.forRoot()], providers: [
       AuthService,
       MessageService,
-      {
-        provide: APP_INITIALIZER,
-        useFactory: (store: Store) => () => {
-          const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
-          if (authState.username) {
-            return store.dispatch(new GetAccountByUsername(authState.username)).pipe(tap(() => store.selectOnce(AUTHENTICATE_STATE_TOKEN)), catchError(() => store.dispatch(new Logout())));
-          }
-          return of(authState);
-        },
-        deps: [Store],
-        multi: true
-      },
-      {
-        provide: APP_INITIALIZER,
-        useFactory: (store: Store) => () => {
-          const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
-          if (!authState.authenticate) {
-            return store.dispatch(new Authenticate());
-          }
-          return of(true);
-        },
-        deps: [Store],
-        multi: true
-      },
+      provideAppInitializer(() => {
+        const store = inject(Store);
+        const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
+        if (authState.username) {
+          return store.dispatch(new GetAccountByUsername(authState.username)).pipe(tap(() => store.selectOnce(AUTHENTICATE_STATE_TOKEN)), catchError(() => store.dispatch(new Logout())));
+        }
+        return of(authState);
+      }),
+      provideAppInitializer(() => {
+        const store = inject(Store);
+        const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);
+        if (!authState.authenticate) {
+          return store.dispatch(new Authenticate());
+        }
+        return of(true);
+      }),
       {
         provide: HTTP_INTERCEPTORS,
         useClass: AppInterceptor,
