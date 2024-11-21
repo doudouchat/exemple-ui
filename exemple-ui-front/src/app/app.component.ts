@@ -4,9 +4,10 @@ import { MessageService } from 'primeng/api';
 import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
 

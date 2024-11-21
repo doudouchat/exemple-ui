@@ -11,19 +11,18 @@ import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-auth-login',
-  templateUrl: './auth-login.component.html',
-  styleUrls: ['./auth-login.component.css'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    PasswordModule,
-    ButtonModule,
-    InputTextModule,
-    RouterModule,
-    ReactiveFormsModule
-  ]
+    selector: 'app-auth-login',
+    templateUrl: './auth-login.component.html',
+    styleUrls: ['./auth-login.component.css'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        PasswordModule,
+        ButtonModule,
+        InputTextModule,
+        RouterModule,
+        ReactiveFormsModule
+    ]
 })
 export class AuthLoginComponent implements OnInit {
 

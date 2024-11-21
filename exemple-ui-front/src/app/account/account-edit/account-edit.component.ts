@@ -13,18 +13,17 @@ import { Account } from '../shared/account';
 import { UpdateAccount } from '../shared/account.action';
 
 @Component({
-  selector: 'app-account-edit',
-  templateUrl: './account-edit.component.html',
-  styleUrls: ['./account-edit.component.css'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputMaskModule,
-    InputTextModule
-  ]
+    selector: 'app-account-edit',
+    templateUrl: './account-edit.component.html',
+    styleUrls: ['./account-edit.component.css'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputMaskModule,
+        InputTextModule
+    ]
 })
 export class AccountEditComponent implements OnInit {
 

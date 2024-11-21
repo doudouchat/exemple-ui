@@ -11,18 +11,17 @@ import { LoginValidator } from '../../login/shared/login.validator';
 import { notBlank } from '../../shared/validator/not-blank.validator';
 
 @Component({
-  selector: 'app-account-create',
-  templateUrl: './account-create.component.html',
-  styleUrls: ['./account-create.component.css'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputMaskModule,
-    InputTextModule
-  ]
+    selector: 'app-account-create',
+    templateUrl: './account-create.component.html',
+    styleUrls: ['./account-create.component.css'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputMaskModule,
+        InputTextModule
+    ]
 })
 export class AccountCreateComponent implements OnInit {
 
