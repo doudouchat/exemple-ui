@@ -7,12 +7,11 @@ import { Info } from './shared/info';
 import { InfoService } from './shared/info.service';
 
 @Component({
-  templateUrl: './info.component.html',
-  selector: 'app-info',
-  standalone: true,
-  imports: [
-    CommonModule
-  ]
+    templateUrl: './info.component.html',
+    selector: 'app-info',
+    imports: [
+        CommonModule
+    ]
 })
 
 export class InfoComponent implements OnInit {

@@ -12,7 +12,8 @@ import { AppModule } from './app.module';
 import { PublishMessage } from './shared/message/message.action';
 
 @Component({
-  template: '<h6>dummy</h6>'
+    template: '<h6>dummy</h6>',
+    standalone: false
 })
 class DummyComponent { }
 

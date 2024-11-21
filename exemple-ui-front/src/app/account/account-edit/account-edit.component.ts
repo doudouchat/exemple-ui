@@ -18,7 +18,6 @@ import { UpdateAccount } from '../shared/account.action';
   selector: 'app-account-edit',
   templateUrl: './account-edit.component.html',
   styleUrls: ['./account-edit.component.css'],
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
