@@ -4,7 +4,7 @@ FROM node:$VERSION_NODE AS build
 WORKDIR /exemple-ui
 COPY exemple-ui-front/package.json ./
 COPY exemple-ui-front/package-lock.json .
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY exemple-ui-front/src ./src
 COPY exemple-ui-front/*.json ./
 COPY exemple-ui-front/*.js ./
