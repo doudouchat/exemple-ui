@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -18,6 +19,7 @@ describe('AuthLoginComponent', () => {
     fixture = TestBed.configureTestingModule({
 
       imports: [
+        NoopAnimationsModule,
         RouterModule.forRoot([]),
         NgxsModule.forRoot([])
       ]
@@ -75,7 +77,7 @@ describe('AuthLoginComponent', () => {
       fixture.detectChanges();
 
       // Then check message
-      expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
+      expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
 
       // And check save login
       expect(fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.disabled).to.be.true;

@@ -1,6 +1,6 @@
-import { Message } from 'primeng/api';
+import { ToastMessageOptions } from 'primeng/api';
 
 export class PublishMessage {
     static readonly type = '[Message] Publish';
-    constructor(public message: Message) { }
+    constructor(public message: ToastMessageOptions) { }
 }

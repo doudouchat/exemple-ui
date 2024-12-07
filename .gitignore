@@ -12,6 +12,7 @@ videos
 node_modules/
 .tscache/
 node/
+sonar/
 .toDelete
 npm-debug.log
 .vscode

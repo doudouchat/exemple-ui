@@ -1,6 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -17,7 +18,10 @@ describe('AccountCreateComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-    imports: [NgxsModule.forRoot([])],
+    imports: [
+      NoopAnimationsModule,
+      NgxsModule.forRoot([])
+    ],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).createComponent(AccountCreateComponent);
 
@@ -100,7 +104,7 @@ describe('AccountCreateComponent', () => {
         fixture.detectChanges();
 
         // Then check message
-        expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains(test.expectedMessage);
+        expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
 
         // And check save button
         expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
@@ -140,7 +144,7 @@ describe('AccountCreateComponent', () => {
       fixture.detectChanges();
 
       // Then check message
-      expect(fixture.debugElement.query(By.css('div.p-invalid')).nativeElement.innerHTML).contains('Email already exists');
+      expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains('Email already exists');
 
       // And check save button
       expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;

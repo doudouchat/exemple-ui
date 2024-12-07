@@ -1,35 +1,31 @@
 <form [formGroup]="authenticateForm" (ngSubmit)="login()">
-    <div class="p-field">
-        <span class="p-float-label">
-            <input pInputText id="username" formControlName="username" />
-            <label for="username">Username</label>
-        </span>
-        <div *ngIf="authenticateForm.controls['username'].invalid && (authenticateForm.controls['username'].dirty || authenticateForm.controls['username'].touched)"
-            class="p-invalid">
-            <small *ngIf="authenticateForm.controls['username'].errors.notBlank">
-                Username is required.
-            </small>
-        </div>
-    </div>
-    <div class="p-field">
-        <span class="p-float-label">
-            <input type="password" pInputText id="password" formControlName="password" />
-            <label for="password">Password</label>
-        </span>
-        <div *ngIf="authenticateForm.controls['password'].invalid && (authenticateForm.controls['password'].dirty || authenticateForm.controls['password'].touched)"
-            class="p-invalid">
-            <small *ngIf="authenticateForm.controls['password'].errors.notBlank">
-                Password is required.
-            </small>
-        </div>
-    </div>
-    <div class="flex flex-column md:flex-row">
-        <div class="mb-2 mr-2">
-            <button type="submit" pButton icon="pi pi-check" label="Login" [disabled]="!authenticateForm.valid"></button>
-        </div>
-    </div>
+  <div class="p-field">
+      <p-floatlabel>
+          <input pInputText id="username" formControlName="username" />
+          <label for="username">Username</label>
+      </p-floatlabel>
+      <p-message *ngIf="authenticateForm.controls['username'].invalid && (authenticateForm.controls['username'].dirty || authenticateForm.controls['username'].touched)"
+          severity="error" variant="simple" size="small">
+          <span *ngIf="authenticateForm.controls['username'].errors.notBlank">Username is required.</span>
+      </p-message>
+  </div>
+  <div class="p-field">
+      <p-floatlabel>
+          <input type="password" pInputText id="password" formControlName="password" />
+          <label for="password">Password</label>
+      </p-floatlabel>
+      <p-message *ngIf="authenticateForm.controls['password'].invalid && (authenticateForm.controls['password'].dirty || authenticateForm.controls['password'].touched)"
+          severity="error" variant="simple" size="small">
+          <span *ngIf="authenticateForm.controls['password'].errors.notBlank">Password is required.</span>
+      </p-message>
+  </div>
+  <div class="flex flex-column md:flex-row">
+      <div class="mb-2 mr-2">
+          <button type="submit" pButton icon="pi pi-check" label="Login" [disabled]="!authenticateForm.valid"></button>
+      </div>
+  </div>
 </form>
 
 <nav>
-    <a routerLink="/account/create">Créer votre compte</a>
+  <a routerLink="/account/create">Créer votre compte</a>
 </nav>

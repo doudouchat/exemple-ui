@@ -1,4 +1,4 @@
-import { Before, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 Given('Delete username {string}', (username: string) => {
     cy.task('deleteLogin', username);
@@ -63,5 +63,5 @@ Then('I am creation page', () => {
 });
 
 Then('Error is {string}', (message: string) => {
-    cy.get('div.p-invalid').contains(message);
+    cy.get('p-message').contains(message);
 });
