@@ -1,3 +1,4 @@
+import { FloatLabel } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -9,6 +10,7 @@ import { Authenticate } from '../shared/auth.action';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-auth-login',
@@ -17,10 +19,12 @@ import { InputTextModule } from 'primeng/inputtext';
   standalone: true,
   imports: [
     CommonModule,
+    FloatLabel,
     FormsModule,
     PasswordModule,
     ButtonModule,
     InputTextModule,
+    MessageModule,
     RouterModule,
     ReactiveFormsModule
   ]

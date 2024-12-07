@@ -5,6 +5,8 @@ import { Store } from '@ngxs/store';
 import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { MessageModule } from 'primeng/message';
 
 import { CreateAccount } from '../shared/account.action';
 import { LoginValidator } from '../../login/shared/login.validator';
@@ -21,7 +23,9 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
     ReactiveFormsModule,
     ButtonModule,
     InputMaskModule,
-    InputTextModule
+    InputTextModule,
+    FloatLabelModule,
+    MessageModule
   ]
 })
 export class AccountCreateComponent implements OnInit {
