@@ -29,10 +29,10 @@ jobs:
            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
            restore-keys: |
             ${{ runner.os }}-node-
-      -  name: Use Node.js 20.14.0
+      -  name: Use Node.js 22.13.0
          uses: actions/setup-node@v4
          with:
-            node-version: 20.14.0
+            node-version: 22.13.0
       -  name: install
          working-directory: exemple-ui-front
          run: npm ci
