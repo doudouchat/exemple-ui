@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress';
 import * as wm from '@cypress/webpack-preprocessor';
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
 import * as cassandra from 'cassandra-driver';
-
+import { forkJoin } from 'rxjs';
 
 const client = new cassandra.Client({
   contactPoints: ['127.0.0.1:9042'],
@@ -59,11 +59,14 @@ async function setupNodeEvents(
       return client.execute('insert into test_authorization.login (username) values (?)', [username]);
     },
     deleteAccountUsername(username: string) {
-      return client.execute('select id from test_service.account where email = ?', [username]).then(rows => {
+      return client.execute('select id from test_service.account_username where username = ? and field = ?', [username, 'email']).then(rows => {
         const row = rows.first();
         if (row) {
           const id = row['id'];
-          return client.execute('delete from test_service.account where id = ?', [id]);
+          return forkJoin(
+            client.execute('delete from test_service.account_username where username = ? and field = ?', [username, 'email']),
+            client.execute('delete from test_service.account where id = ?', [id])
+          );
         } else {
           return null;
         }
