@@ -4,32 +4,45 @@
       <input pInputText id="email" formControlName="email" />
       <label for="email">Email</label>
     </p-floatlabel>
-    <p-message *ngIf="accountForm.controls['email'].invalid && (accountForm.controls['email'].dirty || accountForm.controls['email'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="accountForm.controls['email'].errors.required">Email is required.</span>
-      <span *ngIf="accountForm.controls['email'].errors.uniqueUsername">Email already exists.</span>
-      <span *ngIf="accountForm.controls['email'].errors.email">Email is incorrect.</span>
+    @if (accountForm.controls['email'].invalid && (accountForm.controls['email'].dirty || accountForm.controls['email'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (accountForm.controls['email'].errors.required) {
+      <span>Email is required.</span>
+      }
+      @if (accountForm.controls['email'].errors.uniqueUsername) {
+      <span>Email already exists.</span>
+      }
+      @if (accountForm.controls['email'].errors.email) {
+      <span>Email is incorrect.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="p-field">
     <p-floatlabel>
       <input pInputText id="lastname" formControlName="lastname" />
       <label for="lastname">Lastname</label>
     </p-floatlabel>
-    <p-message *ngIf="accountForm.controls['lastname'].invalid && (accountForm.controls['lastname'].dirty || accountForm.controls['lastname'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="accountForm.controls['lastname'].errors.notBlank">Lastname is required.</span>
+    @if (accountForm.controls['lastname'].invalid && (accountForm.controls['lastname'].dirty || accountForm.controls['lastname'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (accountForm.controls['lastname'].errors.notBlank) {
+      <span>Lastname is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="p-field">
     <p-floatlabel>
       <input pInputText id="firstname" formControlName="firstname" />
       <label for="firstname">Firstname</label>
     </p-floatlabel>
-    <p-message *ngIf="accountForm.controls['firstname'].invalid && (accountForm.controls['firstname'].dirty || accountForm.controls['firstname'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="accountForm.controls['firstname'].errors.notBlank">Firstname is required.</span>
+    @if (accountForm.controls['firstname'].invalid && (accountForm.controls['firstname'].dirty || accountForm.controls['firstname'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (accountForm.controls['firstname'].errors.notBlank) {
+      <span>Firstname is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="p-field">
     <p-floatlabel>
@@ -37,20 +50,26 @@
       </p-inputMask>
       <label for="birthday">Birthday</label>
     </p-floatlabel>
-    <p-message *ngIf="accountForm.controls['birthday'].invalid && (accountForm.controls['birthday'].dirty || accountForm.controls['birthday'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="accountForm.controls['birthday'].errors.required">Birthday is required.</span>
+    @if (accountForm.controls['birthday'].invalid && (accountForm.controls['birthday'].dirty || accountForm.controls['birthday'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (accountForm.controls['birthday'].errors.required) {
+      <span>Birthday is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="p-field">
     <p-floatlabel>
       <input type="password" pInputText id="password" formControlName="password" />
       <label for="password">Password</label>
     </p-floatlabel>
-    <p-message *ngIf="accountForm.controls['password'].invalid && (accountForm.controls['password'].dirty || accountForm.controls['password'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="accountForm.controls['password'].errors.notBlank">Password is required.</span>
+    @if (accountForm.controls['password'].invalid && (accountForm.controls['password'].dirty || accountForm.controls['password'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (accountForm.controls['password'].errors.notBlank) {
+      <span>Password is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="flex flex-column md:flex-row">
     <div class="mb-2 mr-2">

@@ -4,20 +4,26 @@
       <input pInputText id="username" formControlName="username" />
       <label for="username">Username</label>
     </p-floatlabel>
-    <p-message *ngIf="authenticateForm.controls['username'].invalid && (authenticateForm.controls['username'].dirty || authenticateForm.controls['username'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="authenticateForm.controls['username'].errors.notBlank">Username is required.</span>
+    @if (authenticateForm.controls['username'].invalid && (authenticateForm.controls['username'].dirty || authenticateForm.controls['username'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (authenticateForm.controls['username'].errors.notBlank) {
+      <span>Username is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="p-field">
     <p-floatlabel>
       <input type="password" pInputText id="password" formControlName="password" />
       <label for="password">Password</label>
     </p-floatlabel>
-    <p-message *ngIf="authenticateForm.controls['password'].invalid && (authenticateForm.controls['password'].dirty || authenticateForm.controls['password'].touched)"
-      severity="error" variant="simple" size="small">
-      <span *ngIf="authenticateForm.controls['password'].errors.notBlank">Password is required.</span>
+    @if (authenticateForm.controls['password'].invalid && (authenticateForm.controls['password'].dirty || authenticateForm.controls['password'].touched)) {
+    <p-message severity="error" variant="simple" size="small">
+      @if (authenticateForm.controls['password'].errors.notBlank) {
+      <span>Password is required.</span>
+      }
     </p-message>
+    }
   </div>
   <div class="flex flex-column md:flex-row">
     <div class="mb-2 mr-2">
