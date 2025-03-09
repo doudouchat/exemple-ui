@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { ButtonModule } from 'primeng/button';
@@ -28,9 +28,6 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
   ]
 })
 export class AccountCreateComponent implements OnInit {
-
-  @Output()
-
 
   accountForm: UntypedFormGroup;
 

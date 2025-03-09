@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { ButtonModule } from 'primeng/button';
@@ -31,7 +31,7 @@ import { UpdateAccount } from '../shared/account.action';
 })
 export class AccountEditComponent implements OnInit {
 
-  @Input() account: Account;
+  account = input.required<Account>();
 
   accountForm: UntypedFormGroup;
 
@@ -53,8 +53,8 @@ export class AccountEditComponent implements OnInit {
     });
 
     this.accountForm.markAllAsTouched();
-    this.accountForm.patchValue(this.account);
-    this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account.email));
+    this.accountForm.patchValue(this.account());
+    this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account().email));
 
     this.store.dispatch(new PublishMessage(
       { severity: 'info', summary: 'Success', detail: 'Account access successfull' }));
@@ -63,12 +63,12 @@ export class AccountEditComponent implements OnInit {
   save() {
 
     const account = { ...this.accountForm.value };
-    this.store.dispatch(new UpdateAccount(account, this.account));
+    this.store.dispatch(new UpdateAccount(account, this.account()));
   }
 
   cancel() {
     this.accountForm.reset();
-    this.accountForm.patchValue(this.account);
+    this.accountForm.patchValue(this.account());
     this.accountForm.markAllAsTouched();
   }
 

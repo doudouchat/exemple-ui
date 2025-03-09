@@ -13,7 +13,6 @@ import { AccountEditComponent } from './account-edit.component';
 describe('AccountEditComponent', () => {
 
   let fixture: ComponentFixture<AccountEditComponent>;
-  let accountEditComponent: AccountEditComponent;
   let store: Store;
 
   beforeEach(waitForAsync(() => {
@@ -26,14 +25,13 @@ describe('AccountEditComponent', () => {
       providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(AccountEditComponent);
 
-    accountEditComponent = fixture.componentInstance;
-    accountEditComponent.account = {
+    fixture.componentRef.setInput('account', {
       id: '99',
       email: 'john.doe@gmail.com',
       firstname: 'john',
       lastname: 'doe',
       birthday: '12/06/1976'
-    };
+    });
     store = TestBed.inject(Store);
 
   }));
