@@ -8,7 +8,7 @@ import { ACCOUNT_STATE_TOKEN } from './account.state';
 @Injectable({ providedIn: 'root' })
 export class AccountResolver {
 
-  accountState$: Observable<Account> =  inject(Store).select(ACCOUNT_STATE_TOKEN);
+  accountState$: Observable<Account> = inject(Store).select(ACCOUNT_STATE_TOKEN);
 
   resolve(): Observable<Account> {
 

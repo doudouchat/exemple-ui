@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, takeWhile } from 'rxjs/operators';
 
 import { Login } from './login';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class LoginService {
 
   constructor(private readonly http: HttpClient) { }

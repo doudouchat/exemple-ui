@@ -4,15 +4,15 @@ import { Observable } from 'rxjs';
 
 import { Info } from './info';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class InfoService {
 
-    constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
-    info(): Observable<Info> {
+  info(): Observable<Info> {
 
-        return this.http.get<Info>('/ExempleService/actuator/info',
-            { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
-    }
+    return this.http.get<Info>('/ExempleService/actuator/info',
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
+  }
 
 }

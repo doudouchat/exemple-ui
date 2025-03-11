@@ -1,3 +1,3 @@
 export interface Token {
-    expires_in: number;
+  expires_in: number;
 }

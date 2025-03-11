@@ -25,20 +25,20 @@ describe('AccountRouting', () => {
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
-    imports: [MockComponents(AccountEditComponent, AccountCreateComponent),
+      imports: [MockComponents(AccountEditComponent, AccountCreateComponent),
         RouterModule,
-        NgxsModule.forRoot([])],
-    providers: [
+      NgxsModule.forRoot([])],
+      providers: [
         AuthenticatedGuard,
         AnonymousGuard,
         provideRouter(ACCOUNT_ROUTES.concat({
-            path: 'login',
-            component: MockComponent(AuthLoginComponent)
+          path: 'login',
+          component: MockComponent(AuthLoginComponent)
         }), withComponentInputBinding()),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
 
     router = TestBed.inject(Router);
     accountResolver = TestBed.inject(AccountResolver);

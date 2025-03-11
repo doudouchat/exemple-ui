@@ -14,7 +14,7 @@ export class UnauthorizedError implements Error {
   readonly message: string;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
   private static readonly LOCATION_MATCHER = /.*code=([a-zA-Z0-9\-_]*)(&state=)?/g;

@@ -5,14 +5,14 @@ import { RouterModule } from '@angular/router';
 import { InfoComponent } from '../info/info.component';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css'],
-    imports: [
-        CommonModule,
-        RouterModule,
-        InfoComponent
-    ]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+  imports: [
+    CommonModule,
+    RouterModule,
+    InfoComponent
+  ]
 })
 export class HomeComponent {
 

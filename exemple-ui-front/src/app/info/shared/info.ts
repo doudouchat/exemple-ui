@@ -1,4 +1,4 @@
 export interface Info {
-    version: string;
-    buildTime: Date;
+  version: string;
+  buildTime: Date;
 }

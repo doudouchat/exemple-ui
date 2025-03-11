@@ -13,8 +13,8 @@ import { PublishMessage } from './shared/message/message.action';
 
 // eslint-disable-next-line @angular-eslint/prefer-standalone
 @Component({
-    template: '<h6>dummy</h6>',
-    standalone: false
+  template: '<h6>dummy</h6>',
+  standalone: false
 })
 class DummyComponent { }
 

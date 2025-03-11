@@ -18,12 +18,12 @@ describe('AccountCreateComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-    imports: [
-      NoopAnimationsModule,
-      NgxsModule.forRoot([])
-    ],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).createComponent(AccountCreateComponent);
+      imports: [
+        NoopAnimationsModule,
+        NgxsModule.forRoot([])
+      ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    }).createComponent(AccountCreateComponent);
 
     store = TestBed.inject(Store);
 
