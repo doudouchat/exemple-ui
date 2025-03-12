@@ -1,6 +1,8 @@
 import { defineConfig } from 'cypress';
-import * as wm from '@cypress/webpack-preprocessor';
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
+import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esbuild';
+import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
+
 import * as cassandra from 'cassandra-driver';
 import { forkJoin } from 'rxjs';
 
@@ -15,41 +17,9 @@ async function setupNodeEvents(
 ): Promise<Cypress.PluginConfigOptions> {
   await addCucumberPreprocessorPlugin(on, config);
 
-  on(
-    'file:preprocessor',
-    wm({
-      webpackOptions: {
-        resolve: {
-          extensions: ['.ts', '.js']
-        },
-        module: {
-          rules: [
-            {
-              test: /\.ts$/,
-              exclude: [/node_modules/],
-              use: [
-                {
-                  loader: 'ts-loader',
-                  options: {
-                    configFile: 'tsconfig.json'
-                  }
-                },
-              ],
-            },
-            {
-              test: /\.feature$/,
-              use: [
-                {
-                  loader: '@badeball/cypress-cucumber-preprocessor/webpack',
-                  options: config,
-                },
-              ],
-            },
-          ],
-        }
-      },
-    })
-  );
+  on('file:preprocessor', createBundler({
+    plugins: [createEsbuildPlugin(config)]
+  }));
 
   on('task', {
     deleteLogin(username: string) {
