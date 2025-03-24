@@ -1,20 +1,18 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { expect } from 'chai';
 
 import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
+import { appConfig } from './app.config';
 import { PublishMessage } from './shared/message/message.action';
 
-// eslint-disable-next-line @angular-eslint/prefer-standalone
 @Component({
-  template: '<h6>dummy</h6>',
-  standalone: false
+  template: '<h6>dummy</h6>'
 })
 class DummyComponent { }
 
@@ -29,10 +27,15 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
 
     fixture = TestBed.configureTestingModule({
-      declarations: [DummyComponent],
-      imports: [AppModule,
-        RouterModule.forRoot([{ path: '', component: DummyComponent }])],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      imports: [
+        AppComponent,
+        NoopAnimationsModule,
+        DummyComponent,
+        RouterModule.forRoot([{ path: '', component: DummyComponent }])
+      ],
+      providers: appConfig.providers.concat([
+        provideHttpClientTesting()]
+      )
     }).createComponent(AppComponent);
 
     mock = TestBed.createComponent(DummyComponent);

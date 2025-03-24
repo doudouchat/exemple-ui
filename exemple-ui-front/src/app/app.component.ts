@@ -1,17 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { definePreset } from '@primeng/themes';
+import { ToastModule } from 'primeng/toast';
 import Material from '@primeng/themes/material';
 import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 
-// eslint-disable-next-line @angular-eslint/prefer-standalone
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: false
+  imports: [
+    RouterModule,
+    ToastModule
+  ],
+  providers: [
+    MessageService
+  ]
 })
 export class AppComponent implements OnInit {
 
