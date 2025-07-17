@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { LoginService } from './login.service';
 @Injectable({ providedIn: 'root' })
 export class LoginValidator {
 
-  constructor(private readonly loginService: LoginService) { }
+  private readonly loginService = inject(LoginService);
 
   usernameValidator(usernameExclude?: string): AsyncValidatorFn {
     return (ctrl: AbstractControl): Observable<ValidationErrors | null> => {

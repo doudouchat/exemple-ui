@@ -1,4 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
@@ -17,7 +18,6 @@ import { Authenticate } from './shared/app.action';
 import { AppState } from './shared/app.state';
 import { MessageState } from './shared/message/message.state';
 import { MessageModule } from 'primeng/message';
-import { MessagesModule } from 'primeng/messages';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppInterceptor } from './shared/app.interceptor';
 
@@ -25,7 +25,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
       MessageModule,
-      MessagesModule,
       AppRoutingModule,
       NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState], {
         developmentMode: !environment.production
@@ -44,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       }
       return of(authState);
     }),
+    provideAnimations(),
     provideAppInitializer(() => {
       const store = inject(Store);
       const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);

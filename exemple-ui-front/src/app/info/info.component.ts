@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
@@ -16,9 +16,9 @@ import { InfoService } from './shared/info.service';
 
 export class InfoComponent implements OnInit {
 
-  info: Observable<Info>;
+  private readonly infoService = inject(InfoService);
 
-  constructor(private readonly infoService: InfoService) { }
+  info: Observable<Info>;
 
   ngOnInit() {
 

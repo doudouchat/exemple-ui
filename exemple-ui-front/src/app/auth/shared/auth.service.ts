@@ -1,5 +1,5 @@
 import { HttpStatusCode, HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import sha256 from 'crypto-js/sha256';
 import Base64url from 'crypto-js/enc-base64url';
 import moment from 'moment';
@@ -17,9 +17,9 @@ export class UnauthorizedError implements Error {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private static readonly LOCATION_MATCHER = /.*code=([a-zA-Z0-9\-_]*)(&state=)?/g;
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) { }
+  private static readonly LOCATION_MATCHER = /.*code=([a-zA-Z0-9\-_]*)(&state=)?/g;
 
   authenticateApplication(): Observable<Token> {
 

@@ -9,10 +9,9 @@ import { AUTHENTICATE_STATE_TOKEN, AuthStateModel } from './auth.state';
 @Injectable()
 export class AuthenticatedGuard {
 
-  authState$: Observable<AuthStateModel> = inject(Store).select(AUTHENTICATE_STATE_TOKEN);
+  private readonly router = inject(Router);
 
-  constructor(private readonly router: Router) {
-  }
+  authState$: Observable<AuthStateModel> = inject(Store).select(AUTHENTICATE_STATE_TOKEN);
 
   canActivate(): Observable<boolean | UrlTree> {
 

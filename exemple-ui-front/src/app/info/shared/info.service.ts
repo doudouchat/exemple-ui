@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Info } from './info';
@@ -7,7 +7,7 @@ import { Info } from './info';
 @Injectable({ providedIn: 'root' })
 export class InfoService {
 
-  constructor(private readonly http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   info(): Observable<Info> {
 

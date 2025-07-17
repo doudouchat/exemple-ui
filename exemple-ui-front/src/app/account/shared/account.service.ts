@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import jsonpatch from 'fast-json-patch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Account } from './account';
 @Injectable({ providedIn: 'root' })
 export class AccountService {
 
-  constructor(private readonly http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   createAccount(account: Account): Observable<string> {
 

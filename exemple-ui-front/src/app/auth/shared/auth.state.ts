@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
 import { catchError, mergeMap } from 'rxjs/operators';
 
@@ -22,9 +22,8 @@ export const AUTHENTICATE_STATE_TOKEN = new StateToken<AuthStateModel>('authenti
 @Injectable()
 export class AuthState {
 
-  constructor(
-    private readonly store: Store,
-    private readonly authService: AuthService) { }
+  private readonly store = inject(Store);
+  private readonly authService = inject(AuthService);
 
   @Action(Authenticate)
   authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {

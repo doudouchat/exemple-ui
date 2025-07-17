@@ -4,13 +4,12 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', '@angular-devkit/build-angular'],
+    frameworks: ['mocha'],
     plugins: [
       require('karma-mocha'),
       require('karma-mocha-reporter'),
       require('karma-chrome-launcher'),
-      require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('karma-coverage')
     ],
     client: {
       mocha: {

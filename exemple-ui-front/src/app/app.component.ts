@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { definePreset } from '@primeng/themes';
@@ -22,10 +22,11 @@ import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 })
 export class AppComponent implements OnInit {
 
-  constructor(
-    private readonly store: Store,
-    private readonly messageService: MessageService,
-    private readonly config: PrimeNG) {
+  private readonly store = inject(Store);
+  private readonly messageService = inject(MessageService);
+  private readonly config = inject(PrimeNG);
+
+  constructor() {
     this.config.theme.set({
       preset: definePreset(Material, {
         semantic: {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { ButtonModule } from 'primeng/button';
@@ -31,14 +31,13 @@ import { UpdateAccount } from '../shared/account.action';
 })
 export class AccountEditComponent implements OnInit {
 
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly store = inject(Store);
+  private readonly loginValidator = inject(LoginValidator);
+
   account = input.required<Account>();
 
   accountForm: UntypedFormGroup;
-
-  constructor(
-    private readonly fb: UntypedFormBuilder,
-    private readonly store: Store,
-    private readonly loginValidator: LoginValidator) { }
 
   ngOnInit() {
 

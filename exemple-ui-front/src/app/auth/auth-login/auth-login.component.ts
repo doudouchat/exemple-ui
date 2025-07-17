@@ -1,7 +1,7 @@
 import { FloatLabel } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngxs/store';
 
@@ -30,11 +30,10 @@ import { MessageModule } from 'primeng/message';
 })
 export class AuthLoginComponent implements OnInit {
 
-  authenticateForm: UntypedFormGroup;
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly store = inject(Store);
 
-  constructor(
-    private readonly fb: UntypedFormBuilder,
-    private readonly store: Store) { }
+  authenticateForm: UntypedFormGroup;
 
   ngOnInit() {
 

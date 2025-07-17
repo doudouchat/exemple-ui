@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
 import moment from 'moment';
 import { Observable, of } from 'rxjs';
@@ -21,10 +21,9 @@ export const ACCOUNT_STATE_TOKEN = new StateToken<Account>('account');
 @Injectable()
 export class AccountState {
 
-  constructor(
-    private readonly accountService: AccountService,
-    private readonly loginService: LoginService,
-    private readonly store: Store) { }
+  private readonly accountService = inject(AccountService);
+  private readonly loginService = inject(LoginService);
+  private readonly store = inject(Store);
 
   @Action(CreateAccount)
   createAccount(ctx: StateContext<Account>, action: CreateAccount) {
