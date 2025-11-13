@@ -11,7 +11,6 @@ import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
   imports: [
     RouterModule,
     ToastModule
