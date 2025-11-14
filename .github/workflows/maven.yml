@@ -10,7 +10,7 @@ jobs:
    build:
       runs-on: ubuntu-latest
       steps:
-      -  uses: actions/checkout@v4
+      -  uses: actions/checkout@v5
       -  name: Get npm cache directory
          id: npm-cache-dir
          shell: bash
@@ -30,7 +30,7 @@ jobs:
            restore-keys: |
             ${{ runner.os }}-node-
       -  name: Use Node.js 22.17.0
-         uses: actions/setup-node@v4
+         uses: actions/setup-node@v6
          with:
             node-version: 22.17.0
       -  name: install
@@ -50,7 +50,7 @@ jobs:
          run: |
            npm audit --audit-level=none --omit=dev
            npm audit --audit-level=none
-      -  uses: codecov/codecov-action@v4
+      -  uses: codecov/codecov-action@v5
          env:
             CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       -  name: SonarCloud Scan

@@ -1,6 +1,6 @@
 import { FloatLabel } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -17,7 +17,6 @@ import { MessageModule } from 'primeng/message';
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.css'],
   imports: [
-    CommonModule,
     FloatLabel,
     FormsModule,
     PasswordModule,
@@ -26,7 +25,7 @@ import { MessageModule } from 'primeng/message';
     MessageModule,
     RouterModule,
     ReactiveFormsModule
-  ]
+]
 })
 export class AuthLoginComponent implements OnInit {
 

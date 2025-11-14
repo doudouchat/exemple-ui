@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -17,7 +17,6 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
   templateUrl: './account-create.component.html',
   styleUrls: ['./account-create.component.css'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
@@ -25,7 +24,7 @@ import { notBlank } from '../../shared/validator/not-blank.validator';
     InputTextModule,
     FloatLabelModule,
     MessageModule
-  ]
+]
 })
 export class AccountCreateComponent implements OnInit {
 

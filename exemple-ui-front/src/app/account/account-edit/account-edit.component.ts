@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, input, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -19,7 +19,6 @@ import { UpdateAccount } from '../shared/account.action';
   templateUrl: './account-edit.component.html',
   styleUrls: ['./account-edit.component.css'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
@@ -27,7 +26,7 @@ import { UpdateAccount } from '../shared/account.action';
     InputTextModule,
     FloatLabelModule,
     MessageModule
-  ]
+]
 })
 export class AccountEditComponent implements OnInit {
 
