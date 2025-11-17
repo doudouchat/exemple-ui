@@ -3,7 +3,7 @@ import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/t
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
-import { expect } from 'chai';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { InfoComponent } from './info.component';
 

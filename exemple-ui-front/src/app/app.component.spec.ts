@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { expect } from 'chai';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app.component';
 import { appConfig } from './app.config';
@@ -22,7 +22,7 @@ describe('AppComponent', () => {
   let mock: ComponentFixture<DummyComponent>;
   let store: Store;
 
-  before(() => window.localStorage.clear());
+  beforeAll(() => window.localStorage.clear());
 
   beforeEach(waitForAsync(() => {
 

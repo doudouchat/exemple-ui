@@ -4,7 +4,7 @@ import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/t
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import * as sinon from 'sinon';
 
 import { UpdateAccount } from '../shared/account.action';

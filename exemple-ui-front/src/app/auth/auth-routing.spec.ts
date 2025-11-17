@@ -3,7 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { expect } from 'chai';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
 

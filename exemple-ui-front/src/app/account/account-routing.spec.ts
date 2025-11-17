@@ -4,7 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
-import { expect } from 'chai';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MockComponents, MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 

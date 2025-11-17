@@ -3,7 +3,7 @@ import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import * as sinon from 'sinon';
 
 import { Authenticate } from './auth.action';
