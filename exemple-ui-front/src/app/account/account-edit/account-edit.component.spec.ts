@@ -182,6 +182,80 @@ describe('AccountEditComponent', () => {
 
     })));
 
+  [
+    { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'input', expectedMessage: 'Email is required' },
+    { message: 'email is incorrect', selector: 'input[formControlName=email]', value: 'jean.dupond', event: 'input', expectedMessage: 'Email is incorrect' },
+    { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'lastname is not blank', selector: 'input[formControlName=lastname]', value: '  ', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'firstname is required', selector: 'input[formControlName=firstname]', value: '', event: 'input', expectedMessage: 'Firstname is required' },
+    { message: 'firstname is not blank', selector: 'input[formControlName=firstname]', value: '  ', event: 'input', expectedMessage: 'Firstname is required' }
+  ].forEach(function (test) {
+    it('edit account failure: ' + test.message + ' with event ' + test.event, waitForAsync(inject(
+      [HttpTestingController], (http: HttpTestingController) => {
+
+        // setup form
+        const dispatch = sinon.spy(store, 'dispatch');
+
+        fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
+        fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
+
+        fixture.detectChanges();
+
+        // Then check message
+        expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
+
+        // And check save button
+        expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+
+        // And check http
+        http.verify();
+
+        // And check dispatch
+        sinon.assert.notCalled(dispatch);
+
+      })));
+  });
+
+  [
+    { message: 'email is required', selector: 'input[formControlName=email]', expectedMessage: 'Email is required' },
+    { message: 'lastname is required', selector: 'input[formControlName=lastname]', expectedMessage: 'Lastname is required' },
+    { message: 'firstname is required', selector: 'input[formControlName=firstname]', expectedMessage: 'Firstname is required' },
+    { message: 'birthday is required', selector: 'p-inputMask[formControlName=birthday]>input', expectedMessage: 'Birthday is required' }
+  ].forEach(function (test) {
+    it('edit account failure: ' + test.message + ' with backspace keydown', inject(
+      [HttpTestingController], (http: HttpTestingController) => {
+
+        // setup form
+        const dispatch = sinon.spy(store, 'dispatch');
+
+        const input = fixture.debugElement.query(By.css(test.selector)).nativeElement;
+        input.focus();
+        input.setSelectionRange(0, input.value.length);
+        input.value = '';
+        input.dispatchEvent(new KeyboardEvent('keydown', {
+          keyCode: 8,
+          bubbles: false
+        }));
+        input.dispatchEvent(new Event('input', { bubbles: false }));
+        input.dispatchEvent(new Event('blur', { bubbles: false }));
+
+        fixture.detectChanges();
+
+        // Then check message
+        expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
+
+        // And check save button
+        expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+
+        // And check http
+        http.verify();
+
+        // And check dispatch
+        sinon.assert.notCalled(dispatch);
+
+      }));
+  });
+
   it('reset account', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 

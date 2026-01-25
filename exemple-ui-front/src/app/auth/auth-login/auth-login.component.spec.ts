@@ -65,11 +65,16 @@ describe('AuthLoginComponent', () => {
 
   [
     { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'input', expectedMessage: 'Username is required' },
+    { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'blur', expectedMessage: 'Username is required' },
     { message: 'username is not blank', selector: 'input[formControlName=username]', value: '  ', event: 'input', expectedMessage: 'Username is required' },
+    { message: 'username is not blank', selector: 'input[formControlName=username]', value: '  ', event: 'blur', expectedMessage: 'Username is required' },
     { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
-    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' }
+    { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'blur', expectedMessage: 'Password is required' },
+    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' },
+    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'blur', expectedMessage: 'Password is required' }
+
   ].forEach(function (test) {
-    it('authenticate failure: ' + test.message, () => {
+    it('authenticate failure: ' + test.message + ' with event ' + test.event, () => {
 
       // setup form
       fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;

@@ -83,16 +83,24 @@ describe('AccountCreateComponent', () => {
 
   [
     { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'input', expectedMessage: 'Email is required' },
+    { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'blur', expectedMessage: 'Email is required' },
     { message: 'email is incorrect', selector: 'input[formControlName=email]', value: 'jean.dupond', event: 'input', expectedMessage: 'Email is incorrect' },
     { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'blur', expectedMessage: 'Lastname is required' },
     { message: 'lastname is not blank', selector: 'input[formControlName=lastname]', value: '  ', event: 'input', expectedMessage: 'Lastname is required' },
+    { message: 'lastname is not blank', selector: 'input[formControlName=lastname]', value: '  ', event: 'blur', expectedMessage: 'Lastname is required' },
     { message: 'firstname is required', selector: 'input[formControlName=firstname]', value: '', event: 'input', expectedMessage: 'Firstname is required' },
+    { message: 'firstname is required', selector: 'input[formControlName=firstname]', value: '', event: 'blur', expectedMessage: 'Firstname is required' },
     { message: 'firstname is not blank', selector: 'input[formControlName=firstname]', value: '  ', event: 'input', expectedMessage: 'Firstname is required' },
+    { message: 'firstname is not blank', selector: 'input[formControlName=firstname]', value: '  ', event: 'blur', expectedMessage: 'Firstname is required' },
     { message: 'birthday is required', selector: 'p-inputMask[formControlName=birthday]>input', value: '', event: 'blur', expectedMessage: 'Birthday is required' },
     { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
-    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' }
+    { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'blur', expectedMessage: 'Password is required' },
+    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' },
+    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'blur', expectedMessage: 'Password is required' }
+
   ].forEach(function (test) {
-    it('creation account failure: ' + test.message, waitForAsync(inject(
+    it('creation account failure: ' + test.message + ' with event ' + test.event, waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         // setup form
@@ -117,7 +125,6 @@ describe('AccountCreateComponent', () => {
 
       })));
   });
-
 
   it('creation account failure: email already exists', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
