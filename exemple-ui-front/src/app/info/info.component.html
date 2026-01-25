@@ -1,6 +1,6 @@
 @if ((info | async)?.version !== null) {
-<h4>version:{{(info | async)?.version}}</h4>
-<h4>buildTime:{{(info | async)?.buildTime}}</h4>
+<h4>version:{{(info | async).version}}</h4>
+<h4>buildTime:{{(info | async).buildTime}}</h4>
 } @else {
 <h4>version:unknown</h4>
 <h4>buildTime:unknown</h4>
