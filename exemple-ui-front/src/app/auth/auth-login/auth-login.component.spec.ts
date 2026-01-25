@@ -72,7 +72,6 @@ describe('AuthLoginComponent', () => {
     { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'blur', expectedMessage: 'Password is required' },
     { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' },
     { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'blur', expectedMessage: 'Password is required' }
-
   ].forEach(function (test) {
     it('authenticate failure: ' + test.message + ' with event ' + test.event, () => {
 

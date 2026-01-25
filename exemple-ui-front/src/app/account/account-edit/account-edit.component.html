@@ -52,7 +52,7 @@
     </p-floatlabel>
     @if (accountForm.controls['birthday'].invalid && (accountForm.controls['birthday'].dirty || accountForm.controls['birthday'].touched)) {
     <p-message severity="error" variant="simple" size="small">
-      @if (accountForm.controls['birthday'].errors.notBlank) {
+      @if (accountForm.controls['birthday'].errors.required) {
       <span>Birthday is required.</span>
       }
     </p-message>
