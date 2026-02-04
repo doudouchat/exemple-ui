@@ -1,58 +1,33 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngxs/store';
-import { definePreset } from '@primeng/themes';
-import { ToastModule } from 'primeng/toast';
-import Material from '@primeng/themes/material';
-import { MessageService } from 'primeng/api';
-import { PrimeNG } from 'primeng/config';
+import { filter } from 'rxjs';
+
 import { MESSAGE_STATE_TOKEN } from './shared/message/message.state';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   imports: [
-    RouterModule,
-    ToastModule
-  ],
-  providers: [
-    MessageService
+    RouterModule
   ]
 })
 export class AppComponent implements OnInit {
 
   private readonly store = inject(Store);
-  private readonly messageService = inject(MessageService);
-  private readonly config = inject(PrimeNG);
-
-  constructor() {
-    this.config.theme.set({
-      preset: definePreset(Material, {
-        semantic: {
-          primary: {
-            50: '{blue.50}',
-            100: '{blue.100}',
-            200: '{blue.200}',
-            300: '{blue.300}',
-            400: '{blue.400}',
-            500: '{blue.500}',
-            600: '{blue.600}',
-            700: '{blue.700}',
-            800: '{blue.800}',
-            900: '{blue.900}',
-            950: '{blue.950}'
-          }
-        }
-      }),
-      options: {
-        prefix: 'p',
-        darkModeSelector: 'system',
-        cssLayer: false
-      }
-    });
-  }
+  private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit() {
-    this.store.select(MESSAGE_STATE_TOKEN).subscribe(message => this.messageService.add(message));
+    this.store.select(MESSAGE_STATE_TOKEN)
+      .pipe(filter(message => !!message))
+      .pipe(filter(message => !!message.detail))
+      .subscribe(message => {
+        this.snackBar.open(message.detail, 'close', {
+          duration: 5_000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      })
   }
 }

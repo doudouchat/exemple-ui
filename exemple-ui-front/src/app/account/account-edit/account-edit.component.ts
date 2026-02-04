@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Store } from '@ngxs/store';
-import { ButtonModule } from 'primeng/button';
-import { InputMaskModule } from 'primeng/inputmask';
-import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { MessageModule } from 'primeng/message';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 import { LoginValidator } from '../../login/shared/login.validator';
 import { PublishMessage } from '../../shared/message/message.action';
@@ -22,12 +22,13 @@ import { UpdateAccount } from '../shared/account.action';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ButtonModule,
-    InputMaskModule,
-    InputTextModule,
-    FloatLabelModule,
-    MessageModule
-  ]
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    NgxMaskDirective
+  ],
+  providers: [provideNgxMask()]
 })
 export class AccountEditComponent implements OnInit {
 
@@ -41,11 +42,11 @@ export class AccountEditComponent implements OnInit {
 
   ngOnInit() {
 
-    this.accountForm = this.fb.group({
-      email: ['', Validators.compose([Validators.required, Validators.email])],
-      lastname: ['', notBlank()],
-      firstname: ['', notBlank()],
-      birthday: [null, Validators.required],
+    this.accountForm = this.fb.nonNullable.group({
+      email: [null, Validators.compose([Validators.required, Validators.email])],
+      lastname: [null, notBlank()],
+      firstname: [null, notBlank()],
+      birthday: [null, notBlank()],
       id: [],
       creation_date: [],
       update_date: []

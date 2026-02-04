@@ -1,72 +1,83 @@
 <form [formGroup]="accountForm" (ngSubmit)="save()" novalidate>
-  <div class="p-field">
-    <p-floatlabel>
-      <input pInputText id="email" formControlName="email" />
-      <label for="email">Email</label>
-    </p-floatlabel>
-    @if (accountForm.controls['email'].invalid && (accountForm.controls['email'].dirty || accountForm.controls['email'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (accountForm.controls['email'].errors.required) {
-      <span>Email is required.</span>
+  <div>
+    <mat-form-field>
+      <input matInput formControlName="email" />
+      <mat-label>Email</mat-label>
+      @if (accountForm.controls["email"].invalid) {
+        <mat-error>
+          @if (accountForm.controls["email"].errors.required) {
+            <span>Email is required.</span>
+          }
+          @if (accountForm.controls["email"].errors.uniqueUsername) {
+            <span>Email already exists.</span>
+          }
+          @if (accountForm.controls["email"].errors.email) {
+            <span>Email is incorrect.</span>
+          }
+        </mat-error>
       }
-      @if (accountForm.controls['email'].errors.uniqueUsername) {
-      <span>Email already exists.</span>
-      }
-      @if (accountForm.controls['email'].errors.email) {
-      <span>Email is incorrect.</span>
-      }
-    </p-message>
-    }
+    </mat-form-field>
   </div>
-  <div class="p-field">
-    <p-floatlabel>
-      <input pInputText id="lastname" formControlName="lastname" />
-      <label for="lastname">Lastname</label>
-    </p-floatlabel>
-    @if (accountForm.controls['lastname'].invalid && (accountForm.controls['lastname'].dirty || accountForm.controls['lastname'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (accountForm.controls['lastname'].errors.notBlank) {
-      <span>Lastname is required.</span>
+  <div>
+    <mat-form-field>
+      <input matInput formControlName="lastname" />
+      <mat-label>Lastname</mat-label>
+      @if (accountForm.controls["lastname"].invalid) {
+        <mat-error>
+          @if (accountForm.controls["lastname"].errors.notBlank) {
+            <span>Lastname is required.</span>
+          }
+        </mat-error>
       }
-    </p-message>
-    }
+    </mat-form-field>
   </div>
-  <div class="p-field">
-    <p-floatlabel>
-      <input pInputText id="firstname" formControlName="firstname" />
-      <label for="firstname">Firstname</label>
-    </p-floatlabel>
-    @if (accountForm.controls['firstname'].invalid && (accountForm.controls['firstname'].dirty || accountForm.controls['firstname'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (accountForm.controls['firstname'].errors.notBlank) {
-      <span>Firstname is required.</span>
+  <div>
+    <mat-form-field>
+      <input matInput formControlName="firstname" />
+      <mat-label>Firstname</mat-label>
+      @if (accountForm.controls["firstname"].invalid) {
+        <mat-error>
+          @if (accountForm.controls["firstname"].errors.notBlank) {
+            <span>Firstname is required.</span>
+          }
+        </mat-error>
       }
-    </p-message>
-    }
+    </mat-form-field>
   </div>
-  <div class="p-field">
-    <p-floatlabel>
-      <p-inputMask formControlName="birthday" mask="99/99/9999" slotChar="dd/mm/yyyy">
-      </p-inputMask>
-      <label for="birthday">Birthday</label>
-    </p-floatlabel>
-    @if (accountForm.controls['birthday'].invalid && (accountForm.controls['birthday'].dirty || accountForm.controls['birthday'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (accountForm.controls['birthday'].errors.required) {
-      <span>Birthday is required.</span>
+  <div>
+    <mat-form-field>
+      <input
+        matInput
+        mask="d0/M0/0000"
+        [dropSpecialCharacters]="false"
+        [clearIfNotMatch]="true"
+        formControlName="birthday"
+      />
+      <mat-label>Birthday</mat-label>
+      @if (accountForm.controls["birthday"].invalid) {
+        <mat-error>
+          @if (accountForm.controls["birthday"].errors.notBlank) {
+            <span>Birthday is required.</span>
+          }
+        </mat-error>
       }
-    </p-message>
-    }
+    </mat-form-field>
   </div>
-  <div class="flex flex-column md:flex-row">
-    <div class="mb-2 mr-2">
-      <button type="button" pButton icon="pi pi-times" (click)="cancel()" label="Cancel"></button>
+  <div class="button">
+    <div>
+      <button type="button" mat-raised-button (click)="cancel()" aria-label="cancel">
+        <mat-icon>close</mat-icon>
+        <span>Cancel</span>
+      </button>
     </div>
-    <div class="mb-2 mr-2">
-      <button type="submit" pButton icon="pi pi-check" label="Save" [disabled]="!accountForm.valid"></button>
+    <div>
+      <button type="submit" mat-raised-button [disabled]="!accountForm.valid" aria-label="save">
+        <mat-icon>check</mat-icon>
+        <span>Save</span>
+      </button>
     </div>
   </div>
-  <input type="hidden" id="creation_date" formControlName="creation_date" />
-  <input type="hidden" id="update_date" formControlName="update_date" />
-  <input type="hidden" id="id" formControlName="id" />
+  <input type="hidden" formControlName="creation_date" />
+  <input type="hidden" formControlName="update_date" />
+  <input type="hidden" formControlName="id" />
 </form>

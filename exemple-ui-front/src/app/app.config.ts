@@ -17,14 +17,12 @@ import { AUTHENTICATE_STATE_TOKEN, AuthState, AuthStateModel } from './auth/shar
 import { Authenticate } from './shared/app.action';
 import { AppState } from './shared/app.state';
 import { MessageState } from './shared/message/message.state';
-import { MessageModule } from 'primeng/message';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppInterceptor } from './shared/app.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
-      MessageModule,
       AppRoutingModule,
       NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState], {
         developmentMode: !environment.production

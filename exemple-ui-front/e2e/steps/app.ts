@@ -11,7 +11,7 @@ Then('Check version is {string}', (version: string) => {
 });
 
 Then('Message contains {string}', (message: string) => {
-  cy.get('p-toast div[data-pc-section=detail]').contains(message);
+  cy.get('div[matsnackbarlabel]').contains(message);
 });
 
 Then('I refresh page', () => {

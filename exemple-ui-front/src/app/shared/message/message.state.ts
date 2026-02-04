@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Action, State, StateContext, StateToken } from '@ngxs/store';
-import { ToastMessageOptions } from 'primeng/api';
 
+import { Message } from './message';
 import { PublishMessage } from './message.action';
 
-export const MESSAGE_STATE_TOKEN = new StateToken<ToastMessageOptions>('message');
+export const MESSAGE_STATE_TOKEN = new StateToken<Message>('message');
 
-@State<ToastMessageOptions>({
+@State<Message>({
   name: MESSAGE_STATE_TOKEN
 })
 @Injectable()
 export class MessageState {
 
   @Action(PublishMessage)
-  publish(ctx: StateContext<ToastMessageOptions>, action: PublishMessage) {
+  publish(ctx: StateContext<Message>, action: PublishMessage) {
     ctx.patchState(action.message);
   }
 }

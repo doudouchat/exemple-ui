@@ -1,33 +1,37 @@
 <form [formGroup]="authenticateForm" (ngSubmit)="login()">
-  <div class="p-field">
-    <p-floatlabel>
-      <input pInputText id="username" formControlName="username" />
-      <label for="username">Username</label>
-    </p-floatlabel>
-    @if (authenticateForm.controls['username'].invalid && (authenticateForm.controls['username'].dirty || authenticateForm.controls['username'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (authenticateForm.controls['username'].errors.notBlank) {
-      <span>Username is required.</span>
+  <div>
+    <mat-form-field>
+      <input matInput formControlName="username" />
+      <mat-label>Username</mat-label>
+      @if (authenticateForm.controls['username'].invalid) {
+      <mat-error>
+        @if (authenticateForm.controls['username'].errors.notBlank) {
+          <span>Username is required.</span>
+        }
+      </mat-error>
       }
-    </p-message>
-    }
+    </mat-form-field>
+
   </div>
-  <div class="p-field">
-    <p-floatlabel>
-      <input type="password" pInputText id="password" formControlName="password" />
-      <label for="password">Password</label>
-    </p-floatlabel>
-    @if (authenticateForm.controls['password'].invalid && (authenticateForm.controls['password'].dirty || authenticateForm.controls['password'].touched)) {
-    <p-message severity="error" variant="simple" size="small">
-      @if (authenticateForm.controls['password'].errors.notBlank) {
-      <span>Password is required.</span>
+  <div>
+    <mat-form-field>
+      <input type="password" matInput formControlName="password" />
+      <mat-label>Password</mat-label>
+      @if (authenticateForm.controls['password'].invalid) {
+      <mat-error>
+        @if (authenticateForm.controls['password'].errors.notBlank) {
+          <span>Password is required.</span>
+        }
+      </mat-error>
       }
-    </p-message>
-    }
+    </mat-form-field>
   </div>
-  <div class="flex flex-column md:flex-row">
-    <div class="mb-2 mr-2">
-      <button type="submit" pButton icon="pi pi-check" label="Login" [disabled]="!authenticateForm.valid"></button>
+  <div class="button">
+    <div>
+      <button type="submit" mat-raised-button [disabled]="!authenticateForm.valid" aria-label="connexion">
+        <mat-icon matButtonIcon>check</mat-icon>
+        <span>Login</span>
+      </button>
     </div>
   </div>
 </form>

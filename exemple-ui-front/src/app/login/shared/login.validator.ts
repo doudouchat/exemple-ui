@@ -12,7 +12,8 @@ export class LoginValidator {
 
   usernameValidator(usernameExclude?: string): AsyncValidatorFn {
     return (ctrl: AbstractControl): Observable<ValidationErrors | null> => {
-      return ctrl.value === usernameExclude ? of(null) : this.loginService.checkUsername(ctrl.value).pipe(
+
+      return ctrl.value === usernameExclude || !ctrl.value ? of(null) : this.loginService.checkUsername(ctrl.value).pipe(
         map(check => (check ? { uniqueUsername: check } : null))
       );
     };

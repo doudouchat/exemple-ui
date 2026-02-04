@@ -9,7 +9,7 @@ Given('Fill authenticate password {string}', (password: string) => {
 });
 
 When('Click button login', () => {
-  cy.get('button[label="Login"]').click();
+  cy.get('button[aria-label="connexion"]').click();
 });
 
 Then('I am connection page', () => {

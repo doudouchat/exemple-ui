@@ -1,18 +1,23 @@
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatFormFieldHarness } from '@angular/material/form-field/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
+import { RouterModule } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
 import { Authenticate } from '../shared/auth.action';
 import { AuthLoginComponent } from './auth-login.component';
-import { RouterModule } from '@angular/router';
 
 describe('AuthLoginComponent', () => {
 
   let fixture: ComponentFixture<AuthLoginComponent>;
   let store: Store;
+  let loader: HarnessLoader;
 
   beforeEach(waitForAsync(() => {
 
@@ -27,36 +32,28 @@ describe('AuthLoginComponent', () => {
     }).createComponent(AuthLoginComponent);
 
     store = TestBed.inject(Store);
+    loader = TestbedHarnessEnvironment.loader(fixture);
 
   }));
 
-  beforeEach(() => {
-
-    fixture.detectChanges();
-
-  });
-
-  afterEach(() => {
-
-    TestBed.resetTestingModule();
-
-  });
-
-  it('authenticate success', waitForAsync(() => {
+  it('authenticate success', waitForAsync(async () => {
 
     // setup mock store
     const dispatch = sinon.stub(store, 'dispatch');
 
-    // when change form
-    const component: AuthLoginComponent = fixture.componentInstance;
-    component.authenticateForm.get('username').setValue('jean.dupond@gmail.com');
-    component.authenticateForm.get('password').setValue('D#az78&é');
+    // when edit username
+    const username = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Username' }));
+    const usernameControl = await username.getControl() as MatInputHarness;
+    await usernameControl.setValue('jean.dupond@gmail.com');
 
-    fixture.detectChanges();
+    // And edit password
+    const password = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Password' }));
+    const passwordControl = await password.getControl() as MatInputHarness;
+    await passwordControl.setValue('D#az78&é');
 
-    fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.click();
-
-    fixture.detectChanges();
+    // And perform
+    const connexion = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='connexion']` }));
+    await connexion.click();
 
     // Then check dispatch
     sinon.assert.calledWith(dispatch, new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -64,27 +61,25 @@ describe('AuthLoginComponent', () => {
   }));
 
   [
-    { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'input', expectedMessage: 'Username is required' },
-    { message: 'username is required', selector: 'input[formControlName=username]', value: '', event: 'blur', expectedMessage: 'Username is required' },
-    { message: 'username is not blank', selector: 'input[formControlName=username]', value: '  ', event: 'input', expectedMessage: 'Username is required' },
-    { message: 'username is not blank', selector: 'input[formControlName=username]', value: '  ', event: 'blur', expectedMessage: 'Username is required' },
-    { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'input', expectedMessage: 'Password is required' },
-    { message: 'password is required', selector: 'input[formControlName=password]', value: '', event: 'blur', expectedMessage: 'Password is required' },
-    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'input', expectedMessage: 'Password is required' },
-    { message: 'password is not blank', selector: 'input[formControlName=password]', value: '  ', event: 'blur', expectedMessage: 'Password is required' }
+    { message: 'username is required', label: 'Username', value: '', expectedMessage: 'Username is required.' },
+    { message: 'username is not blank', label: 'Username', value: '  ', expectedMessage: 'Username is required.' },
+    { message: 'password is required', label: 'Password', value: '', expectedMessage: 'Password is required.' },
+    { message: 'password is not blank', label: 'Password', value: '  ', expectedMessage: 'Password is required.' }
   ].forEach(function (test) {
-    it('authenticate failure: ' + test.message + ' with event ' + test.event, () => {
+    it('authenticate failure: ' + test.message, async () => {
 
-      // setup form
-      fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
-      fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
-      fixture.detectChanges();
+      // When edit field
+      const formField = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: test.label }));
+      const fieldControl = await formField.getControl() as MatInputHarness;
+      await fieldControl.setValue(test.value);
 
       // Then check message
-      expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
+      const errors = await formField.getTextErrors();
+      expect(errors).contains(test.expectedMessage);
 
       // And check save login
-      expect(fixture.debugElement.query(By.css('button[label=Login]')).nativeElement.disabled).to.be.true;
+      const connexion = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='connexion']` }));
+      expect(await connexion.isDisabled()).to.be.true;
 
 
     });

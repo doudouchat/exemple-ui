@@ -7,5 +7,5 @@ export function notBlank(): ValidatorFn {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
   return (control: AbstractControl): { [key: string]: any } | null =>
-    !NOT_BLANK_REGEXP.test(control.value) ? { notBlank: { value: control.value } } : null;
+    !NOT_BLANK_REGEXP.test(control.value) || !control.value ? { notBlank: { value: control.value } } : null;
 }

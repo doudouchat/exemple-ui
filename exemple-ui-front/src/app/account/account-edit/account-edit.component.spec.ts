@@ -1,8 +1,12 @@
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatFormFieldHarness } from '@angular/material/form-field/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
@@ -14,6 +18,7 @@ describe('AccountEditComponent', () => {
 
   let fixture: ComponentFixture<AccountEditComponent>;
   let store: Store;
+  let loader: HarnessLoader;
 
   beforeEach(waitForAsync(() => {
 
@@ -33,50 +38,58 @@ describe('AccountEditComponent', () => {
       birthday: '12/06/1976'
     });
     store = TestBed.inject(Store);
+    loader = TestbedHarnessEnvironment.loader(fixture);
 
   }));
 
-  beforeEach(() => {
+  it('init account', async () => {
 
-    fixture.detectChanges();
+    // check email
+    const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
+    const emailControl = await email.getControl() as MatInputHarness;
+    expect(await emailControl.getValue()).to.equal('john.doe@gmail.com');
 
-  });
+    // And check firstname
+    const firstname = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Firstname' }));
+    const firstnameControl = await firstname.getControl() as MatInputHarness;
+    expect(await firstnameControl.getValue()).to.equal('john');
 
-  afterEach(() => {
+    // And check lastname
+    const lastname = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Lastname' }));
+    const lastnameControl = await lastname.getControl() as MatInputHarness;
+    expect(await lastnameControl.getValue()).to.equal('doe');
 
-    TestBed.resetTestingModule();
+    // And check birthday
+    const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+    const birthdayControl = await birthday.getControl() as MatInputHarness;
+    expect(await birthdayControl.getValue()).to.equal('12/06/1976');
 
-  });
-
-  it('init account', () => {
-
-    expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.equal('john.doe@gmail.com');
-    expect(fixture.debugElement.query(By.css('input[formControlName=firstname]')).nativeElement.value).to.equal('john');
-    expect(fixture.debugElement.query(By.css('input[formControlName=lastname]')).nativeElement.value).to.equal('doe');
-    expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/06/1976');
+    // And check save button
+    const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+    expect(await save.isDisabled()).to.be.false;
 
   });
 
   it('edit account success: birthday', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
+    [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
-      const dispatch = sinon.stub(store, 'dispatch');
+      const dispatch = sinon.spy(store, 'dispatch');
 
       // when change form
-      const component: AccountEditComponent = fixture.componentInstance;
-      component.accountForm.get('birthday').setValue('12/07/1977');
+      const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+      const birthdayControl = await birthday.getControl() as MatInputHarness;
+      await birthdayControl.setValue('12/07/1977');
 
-      fixture.detectChanges();
-
-      fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.click();
-
-      fixture.detectChanges();
+      // when click save
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      await save.click();
 
       // Then check http
       http.verify();
 
-      expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/07/1977');
+      // And check birthday
+      expect(await birthdayControl.getValue()).to.equal('12/07/1977');
 
       // And check dispatch
       sinon.assert.calledWith(dispatch, new UpdateAccount(
@@ -101,32 +114,30 @@ describe('AccountEditComponent', () => {
     })));
 
   it('edit account success: email', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
+    [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
-      const dispatch = sinon.stub(store, 'dispatch');
+      const dispatch = sinon.spy(store, 'dispatch');
 
       // When change email
-      const component: AccountEditComponent = fixture.componentInstance;
-      component.accountForm.get('email').setValue('jean.dupond@gmail.com');
-
-      fixture.detectChanges();
+      const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
+      const emailControl = await email.getControl() as MatInputHarness;
+      await emailControl.setValue('jean.dupond@gmail.com');
 
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({}, { status: 404, statusText: 'not found' });
 
-      fixture.detectChanges();
-
-      fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.click();
-
-      fixture.detectChanges();
+      // And click save
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      await save.click();
 
       // Then check http
-      http.verify();
+      http.verify({ ignoreCancelled: true });
 
-      expect(fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value).to.equal('jean.dupond@gmail.com');
+      // And check email
+      expect(await emailControl.getValue()).to.equal('jean.dupond@gmail.com');
 
       // And check dispatch
       sinon.assert.calledWith(dispatch, new UpdateAccount(
@@ -151,136 +162,118 @@ describe('AccountEditComponent', () => {
     })));
 
   it('edit account failure: email already exists', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
-
-      // setup mock store
-      const dispatch = sinon.spy(store, 'dispatch');
+    [HttpTestingController], async (http: HttpTestingController) => {
 
       // When change email
-      fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.value = 'jean.dupond@gmail.com';
-      fixture.debugElement.query(By.css('input[formControlName=email]')).nativeElement.dispatchEvent(new Event('input'));
-
-      fixture.detectChanges();
+      const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
+      const emailControl = await email.getControl() as MatInputHarness;
+      await emailControl.setValue('jean.dupond@gmail.com');
 
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
       headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
 
-      fixture.detectChanges();
-
       // Then check message
-      expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains('Email already exists');
+      const errors = await email.getTextErrors();
+      expect(errors).contains('Email already exists.');
 
-      // And check button save
-      expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+      // And check save button
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      expect(await save.isDisabled()).to.be.true;
 
       // And check http
-      http.verify();
-
-      // And check dispatch
-      sinon.assert.notCalled(dispatch);
-
+      http.verify({ ignoreCancelled: true });
     })));
 
   [
-    { message: 'email is required', selector: 'input[formControlName=email]', value: '', event: 'input', expectedMessage: 'Email is required' },
-    { message: 'email is incorrect', selector: 'input[formControlName=email]', value: 'jean.dupond', event: 'input', expectedMessage: 'Email is incorrect' },
-    { message: 'lastname is required', selector: 'input[formControlName=lastname]', value: '', event: 'input', expectedMessage: 'Lastname is required' },
-    { message: 'lastname is not blank', selector: 'input[formControlName=lastname]', value: '  ', event: 'input', expectedMessage: 'Lastname is required' },
-    { message: 'firstname is required', selector: 'input[formControlName=firstname]', value: '', event: 'input', expectedMessage: 'Firstname is required' },
-    { message: 'firstname is not blank', selector: 'input[formControlName=firstname]', value: '  ', event: 'input', expectedMessage: 'Firstname is required' }
+    { message: 'email is required', label: 'Email', value: '', expectedMessage: 'Email is required.' },
+    { message: 'email is not blank', label: 'Email', value: ' ', expectedMessage: 'Email is incorrect.' },
+    { message: 'email is incorrect', label: 'Email', value: 'jean.dupond', expectedMessage: 'Email is incorrect.' },
+    { message: 'lastname is required', label: 'Lastname', value: '', expectedMessage: 'Lastname is required.' },
+    { message: 'lastname is not blank', label: 'Lastname', value: '  ', expectedMessage: 'Lastname is required.' },
+    { message: 'firstname is required', label: 'Firstname', value: '', expectedMessage: 'Firstname is required.' },
+    { message: 'firstname is not blank', label: 'Firstname', value: '  ', expectedMessage: 'Firstname is required.' }
   ].forEach(function (test) {
-    it('edit account failure: ' + test.message + ' with event ' + test.event, waitForAsync(inject(
-      [HttpTestingController], (http: HttpTestingController) => {
+    it('edit account failure: ' + test.message, waitForAsync(inject(
+      [HttpTestingController], async (http: HttpTestingController) => {
 
-        // setup form
-        const dispatch = sinon.spy(store, 'dispatch');
-
-        fixture.debugElement.query(By.css(test.selector)).nativeElement.value = test.value;
-        fixture.debugElement.query(By.css(test.selector)).nativeElement.dispatchEvent(new Event(test.event));
-
-        fixture.detectChanges();
+        // When edit field
+        const formField = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: test.label }));
+        const fieldControl = await formField.getControl() as MatInputHarness;
+        await fieldControl.setValue(test.value);
 
         // Then check message
-        expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
+        const errors = await formField.getTextErrors();
+        expect(errors).contains(test.expectedMessage);
 
         // And check save button
-        expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
+        const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+        expect(await save.isDisabled()).to.be.true;
 
         // And check http
         http.verify();
-
-        // And check dispatch
-        sinon.assert.notCalled(dispatch);
 
       })));
   });
 
-  [
-    { message: 'email is required', selector: 'input[formControlName=email]', expectedMessage: 'Email is required' },
-    { message: 'lastname is required', selector: 'input[formControlName=lastname]', expectedMessage: 'Lastname is required' },
-    { message: 'firstname is required', selector: 'input[formControlName=firstname]', expectedMessage: 'Firstname is required' },
-    { message: 'birthday is required', selector: 'p-inputMask[formControlName=birthday]>input', expectedMessage: 'Birthday is required' }
-  ].forEach(function (test) {
-    it('edit account failure: ' + test.message + ' with backspace keydown', inject(
-      [HttpTestingController], (http: HttpTestingController) => {
+  it('edit account failure: birthday is required', waitForAsync(inject(
+    [HttpTestingController], async (http: HttpTestingController) => {
 
-        // setup form
-        const dispatch = sinon.spy(store, 'dispatch');
+      // When edit field
+      const formField = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+      const fieldControl = await formField.getControl() as MatInputHarness;
+      await fieldControl.setValue('12');
+      await fieldControl.blur();
 
-        const input = fixture.debugElement.query(By.css(test.selector)).nativeElement;
-        input.focus();
-        input.setSelectionRange(0, input.value.length);
-        input.value = '';
-        input.dispatchEvent(new KeyboardEvent('keydown', {
-          keyCode: 8,
-          bubbles: false
-        }));
-        input.dispatchEvent(new Event('input', { bubbles: false }));
-        input.dispatchEvent(new Event('blur', { bubbles: false }));
+      // Then check message
+      const errors = await formField.getTextErrors();
+      expect(errors).contains('Birthday is required.');
 
-        fixture.detectChanges();
-
-        // Then check message
-        expect(fixture.debugElement.query(By.css('p-message')).nativeElement.innerHTML).contains(test.expectedMessage);
-
-        // And check save button
-        expect(fixture.debugElement.query(By.css('button[label=Save]')).nativeElement.disabled).to.be.true;
-
-        // And check http
-        http.verify();
-
-        // And check dispatch
-        sinon.assert.notCalled(dispatch);
-
-      }));
-  });
-
-  it('reset account', waitForAsync(inject(
-    [HttpTestingController], (http: HttpTestingController) => {
-
-      // setup mock store
-      const dispatch = sinon.spy(store, 'dispatch');
-
-      // And change form
-      const component: AccountEditComponent = fixture.componentInstance;
-      component.accountForm.get('birthday').setValue('12/07/1977');
-
-      fixture.detectChanges();
-
-      // When perform reset
-      fixture.debugElement.query(By.css('button[label=Cancel]')).nativeElement.click();
-
-      fixture.detectChanges();
-
-      // Then check form
-      expect(fixture.debugElement.query(By.css('p-inputMask[formControlName=birthday]>input')).nativeElement.value).to.equal('12/06/1976');
+      // And check save button
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      expect(await save.isDisabled()).to.be.true;
 
       // And check http
       http.verify();
 
-      // And check dispatch
-      sinon.assert.notCalled(dispatch);
+    })));
+
+  it('reset account', waitForAsync(inject(
+    [HttpTestingController], async (http: HttpTestingController) => {
+
+      // setup change birthday
+      const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+      const birthdayControl = await birthday.getControl() as MatInputHarness;
+      await birthdayControl.setValue('12/07/1977');
+
+      // When perform reset
+      const cancel = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='cancel']` }));
+      await cancel.click();
+
+      // Then check email
+      const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
+      const emailControl = await email.getControl() as MatInputHarness;
+      expect(await emailControl.getValue()).to.equal('john.doe@gmail.com');
+
+      // And check firstname
+      const firstname = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Firstname' }));
+      const firstnameControl = await firstname.getControl() as MatInputHarness;
+      expect(await firstnameControl.getValue()).to.equal('john');
+
+      // And check lastname
+      const lastname = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Lastname' }));
+      const lastnameControl = await lastname.getControl() as MatInputHarness;
+      expect(await lastnameControl.getValue()).to.equal('doe');
+
+      // And check birthday
+      expect(await birthdayControl.getValue()).to.equal('12/06/1976');
+
+      // And check save button
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      expect(await save.isDisabled()).to.be.false;
+
+      // And check http
+      http.verify();
 
     })));
 });

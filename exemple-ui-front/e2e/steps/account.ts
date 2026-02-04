@@ -35,7 +35,7 @@ Given('Replace account firstname {string}', (firstname: string) => {
 });
 
 Given('Fill account birthday {string}', (birthday: string) => {
-  cy.get('p-inputMask[formControlName=birthday]>input').type(birthday);
+  cy.get('input[formControlName=birthday]').type(birthday);
 });
 
 Given('Fill account password {string}', (password: string) => {
@@ -47,7 +47,7 @@ When('Go to account page', () => {
 });
 
 When('Click button save', () => {
-  cy.get('button[label="Save"]').click();
+  cy.get('button[aria-label="save"]').click();
 });
 
 Then('Go to account creation page', () => {
@@ -63,5 +63,5 @@ Then('I am creation page', () => {
 });
 
 Then('Error is {string}', (message: string) => {
-  cy.get('p-message').contains(message);
+  cy.get('mat-error').contains(message);
 });

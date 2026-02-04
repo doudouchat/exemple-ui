@@ -1,16 +1,16 @@
-import { FloatLabel } from 'primeng/floatlabel';
-import { PasswordModule } from 'primeng/password';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 
 import { notBlank } from '../../shared/validator/not-blank.validator';
 import { Authenticate } from '../shared/auth.action';
-import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-auth-login',
@@ -18,14 +18,16 @@ import { MessageModule } from 'primeng/message';
   styleUrls: ['./auth-login.component.css'],
   imports: [
     CommonModule,
-    FloatLabel,
     FormsModule,
-    PasswordModule,
-    ButtonModule,
-    InputTextModule,
-    MessageModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     RouterModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
   ]
 })
 export class AuthLoginComponent implements OnInit {
@@ -37,9 +39,9 @@ export class AuthLoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.authenticateForm = this.fb.group({
-      username: ['', notBlank()],
-      password: ['', notBlank()]
+    this.authenticateForm = this.fb.nonNullable.group({
+      username: [null, notBlank()],
+      password: [null, notBlank()]
     });
 
   }

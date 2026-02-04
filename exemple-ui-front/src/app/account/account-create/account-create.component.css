@@ -1,11 +1,13 @@
 button {
-  width: 100%
+  width: 100%;
 }
 
-div.p-field:first-child {
-  margin-top: 25px;
-}
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
 
-div.p-field {
-  margin-bottom: 25px;
+  div:first-child {
+    padding-right: 10px;
+  }
 }
