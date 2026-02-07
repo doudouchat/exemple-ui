@@ -17,5 +17,5 @@ export class GetAccountByUsername {
 
 export class UpdateAccount {
   static readonly type = '[Account] Update';
-  constructor(public account: Account, public previousAccount: Account) { }
+  constructor(public account: Account) { }
 }

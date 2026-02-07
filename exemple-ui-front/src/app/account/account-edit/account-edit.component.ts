@@ -63,7 +63,7 @@ export class AccountEditComponent implements OnInit {
   save() {
 
     const account = { ...this.accountForm.value };
-    this.store.dispatch(new UpdateAccount(account, this.account()));
+    this.store.dispatch(new UpdateAccount(account));
   }
 
   cancel() {

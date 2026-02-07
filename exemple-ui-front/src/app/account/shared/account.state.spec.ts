@@ -89,6 +89,17 @@ describe('AccountState', () => {
     it('update account success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
+        // Setup store
+        store.reset({
+          account: {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1977'
+          }
+        });
+
         const dispatch = sinon.spy(store, 'dispatch');
 
         // when dispatch
@@ -100,13 +111,6 @@ describe('AccountState', () => {
             lastname: 'doe',
             birthday: '12/07/1976',
             update_date: new Date()
-          },
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1977'
           }
         ));
 
@@ -131,6 +135,17 @@ describe('AccountState', () => {
     it('update email success', waitForAsync(inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
+        // Setup store
+        store.reset({
+          account: {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1976'
+          }
+        });
+
         const dispatch = sinon.spy(store, 'dispatch');
 
         // when dispatch
@@ -142,13 +157,6 @@ describe('AccountState', () => {
             lastname: 'doe',
             birthday: '12/06/1976',
             update_date: new Date()
-          },
-          {
-            id: '99',
-            email: 'john.doe@gmail.com',
-            firstname: 'john',
-            lastname: 'doe',
-            birthday: '12/06/1976'
           }
         ));
 

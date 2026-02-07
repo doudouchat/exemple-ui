@@ -101,13 +101,6 @@ describe('AccountEditComponent', () => {
           birthday: '12/07/1977',
           creation_date: null,
           update_date: null
-        },
-        {
-          id: '99',
-          email: 'john.doe@gmail.com',
-          firstname: 'john',
-          lastname: 'doe',
-          birthday: '12/06/1976'
         }
       ));
 
@@ -149,13 +142,6 @@ describe('AccountEditComponent', () => {
           birthday: '12/06/1976',
           creation_date: null,
           update_date: null
-        },
-        {
-          id: '99',
-          email: 'john.doe@gmail.com',
-          firstname: 'john',
-          lastname: 'doe',
-          birthday: '12/06/1976'
         }
       ));
 

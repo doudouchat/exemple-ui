@@ -53,21 +53,20 @@ export class AccountState {
     const account = action.account;
     account.birthday = this.toDate(account.birthday);
 
-    const previousAccount = action.previousAccount;
-    const previous = { ...previousAccount };
-    previous.birthday = this.toDate(previous.birthday);
-    previous.update_date = account.update_date;
+    const previousAccount = { ...ctx.getState() };
+    previousAccount.birthday = this.toDate(previousAccount.birthday);
+    previousAccount.update_date = account.update_date;
 
-    return this.accountService.updateAccount(account, previous).pipe(
+    return this.accountService.updateAccount(account, previousAccount).pipe(
       mergeMap(() => {
         let operation: Observable<Account | void> = of(account);
-        if (account.email !== previous.email) {
+        if (account.email !== previousAccount.email) {
           const login: Login = {
             username: account.email,
             id: account.id
           };
           const previousLogin: Login = {
-            username: previous.email,
+            username: previousAccount.email,
             id: account.id
           };
           operation = this.loginService.updateLogin(login, previousLogin).pipe(
