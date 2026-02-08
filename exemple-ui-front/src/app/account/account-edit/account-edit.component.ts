@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, OnInit, inject } from '@angular/core';
+import { Component, effect, inject, input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Store } from '@ngxs/store';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
@@ -40,6 +40,14 @@ export class AccountEditComponent implements OnInit {
 
   accountForm: UntypedFormGroup;
 
+  constructor() {
+    effect(() => {
+      this.accountForm.markAllAsTouched();
+      this.accountForm.patchValue(this.account());
+      this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account().email));
+    });
+  }
+
   ngOnInit() {
 
     this.accountForm = this.fb.nonNullable.group({
@@ -51,10 +59,6 @@ export class AccountEditComponent implements OnInit {
       creation_date: [],
       update_date: []
     });
-
-    this.accountForm.markAllAsTouched();
-    this.accountForm.patchValue(this.account());
-    this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account().email));
 
     this.store.dispatch(new PublishMessage(
       { severity: 'info', summary: 'Success', detail: 'Account access successfull' }));
