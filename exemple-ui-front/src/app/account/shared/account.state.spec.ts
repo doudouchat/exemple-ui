@@ -124,7 +124,7 @@ describe('AccountState', () => {
         expect(accountPatch.request.body).is.be.eq(JSON.stringify(expectedAccountBody));
 
         // And check store
-        expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('1976-07-12');
+        expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('12/07/1976');
 
         // And check dispatch
         expect(dispatch.calledWith(new PublishMessage(

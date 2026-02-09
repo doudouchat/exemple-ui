@@ -38,13 +38,16 @@ export class AccountEditComponent implements OnInit {
 
   account = input.required<Account>();
 
+  private internalAccount: Account;
+
   accountForm: UntypedFormGroup;
 
   constructor() {
     effect(() => {
+      this.internalAccount = this.account();
       this.accountForm.markAllAsTouched();
-      this.accountForm.patchValue(this.account());
-      this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.account().email));
+      this.accountForm.patchValue(this.internalAccount);
+      this.accountForm.controls.email.setAsyncValidators(this.loginValidator.usernameValidator(this.internalAccount.email));
     });
   }
 
@@ -65,14 +68,14 @@ export class AccountEditComponent implements OnInit {
   }
 
   save() {
-
     const account = { ...this.accountForm.value };
+    this.internalAccount = account;
     this.store.dispatch(new UpdateAccount(account));
   }
 
   cancel() {
     this.accountForm.reset();
-    this.accountForm.patchValue(this.account());
+    this.accountForm.patchValue(this.internalAccount);
     this.accountForm.markAllAsTouched();
   }
 

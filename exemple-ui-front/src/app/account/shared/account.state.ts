@@ -28,7 +28,7 @@ export class AccountState {
   @Action(CreateAccount)
   createAccount(ctx: StateContext<Account>, action: CreateAccount) {
 
-    const account = action.account;
+    const account = {...action.account};
     account.birthday = this.toDate(account.birthday);
     return this.accountService.createAccount(account).pipe(
       mergeMap((accountId: string) => {
@@ -41,7 +41,7 @@ export class AccountState {
           this.store.dispatch(new PublishMessage(
             { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
           this.store.dispatch(new Navigate(['/login']));
-          ctx.setState(account);
+          ctx.setState(action.account);
           ctx.patchState({ id: accountId });
         }));
       }));
@@ -50,7 +50,7 @@ export class AccountState {
   @Action(UpdateAccount)
   updateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
 
-    const account = action.account;
+    const account = {...action.account};
     account.birthday = this.toDate(account.birthday);
 
     const previousAccount = { ...ctx.getState() };
@@ -75,7 +75,7 @@ export class AccountState {
         return operation.pipe(tap(() => {
           this.store.dispatch(new PublishMessage(
             { severity: 'success', summary: 'Success', detail: 'Account update successfull' }));
-          ctx.setState(account);
+          ctx.setState(action.account);
         }));
       }));
   }

@@ -262,4 +262,24 @@ describe('AccountEditComponent', () => {
       http.verify();
 
     })));
+
+  it('reset account after save',  async () => {
+
+      // setup change birthday
+      const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+      const birthdayControl = await birthday.getControl() as MatInputHarness;
+      await birthdayControl.setValue('12/07/1977');
+
+      // And save
+      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+      await save.click();
+
+      // When perform reset
+      const cancel = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='cancel']` }));
+      await cancel.click();
+
+      // Then check birthday
+      expect(await birthdayControl.getValue()).to.equal('12/07/1977');
+
+    });
 });
