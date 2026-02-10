@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import jsonpatch from 'fast-json-patch';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Account } from './account';
@@ -40,8 +40,15 @@ export class AccountService {
   }
 
   updateAccount(account: Account, previousAccount: Account): Observable<HttpResponse<void>> {
+
+    const operations = jsonpatch.compare(previousAccount, account);
+
+    if (operations.length === 0) {
+      return EMPTY;
+    }
+
     return this.http.patch<HttpResponse<void>>('/ExempleService/ws/v1/accounts/' + previousAccount.id,
-      JSON.stringify(jsonpatch.compare(previousAccount, account)), {
+      JSON.stringify(operations), {
       headers: new HttpHeaders({
         'Content-type': 'application/json',
         app: 'test',

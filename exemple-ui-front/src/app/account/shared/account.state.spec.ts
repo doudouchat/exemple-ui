@@ -1,16 +1,16 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
 import { LoginService } from '../../login/shared/login.service';
+import { PublishMessage } from '../../shared/message/message.action';
 import { CreateAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
 import { AccountState } from './account.state';
-import { PublishMessage } from 'src/app/shared/message/message.action';
-import { Navigate } from '@ngxs/router-plugin';
 
 describe('AccountState', () => {
 
@@ -180,6 +180,43 @@ describe('AccountState', () => {
         // And check dispatch
         expect(dispatch.calledWith(new PublishMessage(
           { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+
+      })));
+
+    it('shouldn\'t update account because account has not changed', waitForAsync(inject(
+      [HttpTestingController], (http: HttpTestingController) => {
+
+        // Setup store
+        store.reset({
+          account: {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1977'
+          }
+        });
+
+        const dispatch = sinon.spy(store, 'dispatch');
+
+        // when dispatch
+        store.dispatch(new UpdateAccount(
+          {
+            id: '99',
+            email: 'john.doe@gmail.com',
+            firstname: 'john',
+            lastname: 'doe',
+            birthday: '12/06/1977',
+            update_date: new Date()
+          }
+        ));
+
+        // Then check http
+        http.verify();
+
+        // And check dispatch
+        expect(dispatch.calledWith(new PublishMessage(
+          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.false;
 
       })));
 
