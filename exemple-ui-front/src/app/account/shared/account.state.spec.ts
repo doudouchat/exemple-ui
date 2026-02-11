@@ -4,10 +4,11 @@ import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import { MockProvider } from 'ng-mocks';
 import * as sinon from 'sinon';
 
 import { LoginService } from '../../login/shared/login.service';
-import { PublishMessage } from '../../shared/message/message.action';
+import { MessageService } from '../../shared/message/message.service';
 import { CreateAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
 import { AccountState } from './account.state';
@@ -15,6 +16,7 @@ import { AccountState } from './account.state';
 describe('AccountState', () => {
 
   let store: Store;
+  let messageService: MessageService;
 
   beforeEach(waitForAsync(() => {
 
@@ -24,11 +26,13 @@ describe('AccountState', () => {
         AccountService,
         LoginService,
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        MockProvider(MessageService)
       ]
     }).compileComponents();
 
     store = TestBed.inject(Store);
+    messageService = TestBed.inject(MessageService);
 
   }));
 
@@ -44,6 +48,7 @@ describe('AccountState', () => {
       [HttpTestingController], (http: HttpTestingController) => {
 
         const dispatch = sinon.spy(store, 'dispatch');
+        const publish = sinon.spy(messageService, 'success');
 
         // when dispatch
         store.dispatch(new CreateAccount(
@@ -74,9 +79,8 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
 
-        // And check dispatch
-        sinon.assert.calledWith(dispatch, new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
+        // And check dispatch & publish
+        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account creation successfull'));
         sinon.assert.calledWith(dispatch, new Navigate(['/login']));
 
 
@@ -100,7 +104,7 @@ describe('AccountState', () => {
           }
         });
 
-        const dispatch = sinon.spy(store, 'dispatch');
+        const publish = sinon.spy(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -126,9 +130,8 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('12/07/1976');
 
-        // And check dispatch
-        expect(dispatch.calledWith(new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+        // And check publish
+        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
 
       })));
 
@@ -146,7 +149,7 @@ describe('AccountState', () => {
           }
         });
 
-        const dispatch = sinon.spy(store, 'dispatch');
+        const publish = sinon.spy(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -177,9 +180,8 @@ describe('AccountState', () => {
         // And check store
         expect(store.selectSnapshot(state => state.account.email)).is.be.eq('jean.dupond@gmail.com');
 
-        // And check dispatch
-        expect(dispatch.calledWith(new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.true;
+        // And check publish
+        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
 
       })));
 
@@ -197,7 +199,7 @@ describe('AccountState', () => {
           }
         });
 
-        const dispatch = sinon.spy(store, 'dispatch');
+        const publish = sinon.spy(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -214,9 +216,8 @@ describe('AccountState', () => {
         // Then check http
         http.verify();
 
-        // And check dispatch
-        expect(dispatch.calledWith(new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Account update successfull' }))).is.be.false;
+        // And check publish
+        sinon.assert.notCalled(publish);
 
       })));
 

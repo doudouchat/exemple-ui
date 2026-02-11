@@ -3,9 +3,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
-import { of, catchError } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { GetAccountByUsername } from './account/shared/account.action';
 import { AccountState } from './account/shared/account.state';
@@ -15,16 +16,14 @@ import { AnonymousGuard, AuthenticatedGuard } from './auth/shared/auth.guard';
 import { AuthService } from './auth/shared/auth.service';
 import { AUTHENTICATE_STATE_TOKEN, AuthState, AuthStateModel } from './auth/shared/auth.state';
 import { Authenticate } from './shared/app.action';
-import { AppState } from './shared/app.state';
-import { MessageState } from './shared/message/message.state';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppInterceptor } from './shared/app.interceptor';
+import { AppState } from './shared/app.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
       AppRoutingModule,
-      NgxsModule.forRoot([AccountState, AppState, AuthState, MessageState], {
+      NgxsModule.forRoot([AccountState, AppState, AuthState], {
         developmentMode: !environment.production
       }),
       NgxsStoragePluginModule.forRoot({

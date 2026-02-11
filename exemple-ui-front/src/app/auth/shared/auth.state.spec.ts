@@ -4,25 +4,31 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
+import { MockProvider } from 'ng-mocks';
 import * as sinon from 'sinon';
 
+import { GetAccountByUsername } from '../../account/shared/account.action';
+import { MessageService } from '../../shared/message/message.service';
 import { Authenticate } from './auth.action';
 import { AuthState } from './auth.state';
-import { PublishMessage } from 'src/app/shared/message/message.action';
-import { GetAccountByUsername } from 'src/app/account/shared/account.action';
 
 describe('AuthState', () => {
 
   let store: Store;
+  let messageService: MessageService;
 
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([AuthState])],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        MockProvider(MessageService)]
     }).compileComponents();
 
     store = TestBed.inject(Store);
+    messageService = TestBed.inject(MessageService);
 
   }));
 
@@ -37,6 +43,7 @@ describe('AuthState', () => {
     [HttpTestingController], (http: HttpTestingController) => {
 
       const dispatch = sinon.spy(store, 'dispatch');
+      const publish = sinon.spy(messageService, 'success');
 
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -62,16 +69,15 @@ describe('AuthState', () => {
       expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.true;
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('jean.dupond@gmail.com');
 
-      // And check dispatch
-      sinon.assert.calledWith(dispatch, new PublishMessage(
-        { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
+      // And check dispatch & publish
+      sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Authenticate successfull'));
       sinon.assert.calledWith(dispatch, new GetAccountByUsername('jean.dupond@gmail.com'));
     })));
 
   it('authenticate failure', waitForAsync(inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
-      const dispatch = sinon.spy(store, 'dispatch');
+      const publish = sinon.spy(messageService, 'error');
 
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -86,9 +92,8 @@ describe('AuthState', () => {
       expect(store.selectSnapshot(state => state.authenticate.authenticate)).is.be.false;
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
 
-      // And check dispatch
-      sinon.assert.calledWith(dispatch, new PublishMessage(
-        { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
+      // And check publish
+      sinon.assert.calledWith(publish, sinon.match('Failure'), sinon.match('Authenticate failure'));
 
     })));
 

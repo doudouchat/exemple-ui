@@ -9,7 +9,7 @@ import { Store } from '@ngxs/store';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 import { LoginValidator } from '../../login/shared/login.validator';
-import { PublishMessage } from '../../shared/message/message.action';
+import { MessageService } from '../../shared/message/message.service';
 import { notBlank } from '../../shared/validator/not-blank.validator';
 import { Account } from '../shared/account';
 import { UpdateAccount } from '../shared/account.action';
@@ -35,6 +35,7 @@ export class AccountEditComponent implements OnInit {
   private readonly fb = inject(UntypedFormBuilder);
   private readonly store = inject(Store);
   private readonly loginValidator = inject(LoginValidator);
+  private readonly messageService = inject(MessageService);
 
   account = input.required<Account>();
 
@@ -63,8 +64,7 @@ export class AccountEditComponent implements OnInit {
       update_date: []
     });
 
-    this.store.dispatch(new PublishMessage(
-      { severity: 'info', summary: 'Success', detail: 'Account access successfull' }));
+    this.messageService.info('Success', 'Account access successfull')
   }
 
   save() {

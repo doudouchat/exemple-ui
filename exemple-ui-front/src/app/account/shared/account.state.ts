@@ -4,14 +4,14 @@ import moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 
+import { Navigate } from '@ngxs/router-plugin';
 import { Logout } from '../../auth/shared/auth.action';
 import { Login } from '../../login/shared/login';
 import { LoginService } from '../../login/shared/login.service';
+import { MessageService } from '../../shared/message/message.service';
 import { Account } from './account';
 import { CreateAccount, GetAccount, GetAccountByUsername, UpdateAccount } from './account.action';
 import { AccountService } from './account.service';
-import { PublishMessage } from 'src/app/shared/message/message.action';
-import { Navigate } from '@ngxs/router-plugin';
 
 export const ACCOUNT_STATE_TOKEN = new StateToken<Account>('account');
 
@@ -24,11 +24,12 @@ export class AccountState {
   private readonly accountService = inject(AccountService);
   private readonly loginService = inject(LoginService);
   private readonly store = inject(Store);
+  private readonly messageService = inject(MessageService);
 
   @Action(CreateAccount)
   createAccount(ctx: StateContext<Account>, action: CreateAccount) {
 
-    const account = {...action.account};
+    const account = { ...action.account };
     account.birthday = this.toDate(account.birthday);
     return this.accountService.createAccount(account).pipe(
       mergeMap((accountId: string) => {
@@ -38,8 +39,7 @@ export class AccountState {
           id: accountId
         };
         return this.loginService.createLogin(login).pipe(tap(() => {
-          this.store.dispatch(new PublishMessage(
-            { severity: 'success', summary: 'Success', detail: 'Account creation successfull' }));
+          this.messageService.success('Success', 'Account creation successfull');
           this.store.dispatch(new Navigate(['/login']));
           ctx.setState(action.account);
           ctx.patchState({ id: accountId });
@@ -50,7 +50,7 @@ export class AccountState {
   @Action(UpdateAccount)
   updateAccount(ctx: StateContext<Account>, action: UpdateAccount) {
 
-    const account = {...action.account};
+    const account = { ...action.account };
     account.birthday = this.toDate(account.birthday);
 
     const previousAccount = { ...ctx.getState() };
@@ -73,8 +73,7 @@ export class AccountState {
             mergeMap(() => ctx.dispatch(new Logout())));
         }
         return operation.pipe(tap(() => {
-          this.store.dispatch(new PublishMessage(
-            { severity: 'success', summary: 'Success', detail: 'Account update successfull' }));
+          this.messageService.success('Success', 'Account update successfull');
           ctx.setState(action.account);
         }));
       }));

@@ -8,9 +8,11 @@ import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
+import { MockProvider } from 'ng-mocks';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
+import { MessageService } from '../../shared/message/message.service';
 import { UpdateAccount } from '../shared/account.action';
 import { AccountEditComponent } from './account-edit.component';
 
@@ -27,7 +29,11 @@ describe('AccountEditComponent', () => {
         NoopAnimationsModule,
         NgxsModule.forRoot([])
       ],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        MockProvider(MessageService)
+      ]
     }).createComponent(AccountEditComponent);
 
     fixture.componentRef.setInput('account', {
@@ -263,23 +269,23 @@ describe('AccountEditComponent', () => {
 
     })));
 
-  it('reset account after save',  async () => {
+  it('reset account after save', async () => {
 
-      // setup change birthday
-      const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
-      const birthdayControl = await birthday.getControl() as MatInputHarness;
-      await birthdayControl.setValue('12/07/1977');
+    // setup change birthday
+    const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
+    const birthdayControl = await birthday.getControl() as MatInputHarness;
+    await birthdayControl.setValue('12/07/1977');
 
-      // And save
-      const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
-      await save.click();
+    // And save
+    const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
+    await save.click();
 
-      // When perform reset
-      const cancel = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='cancel']` }));
-      await cancel.click();
+    // When perform reset
+    const cancel = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='cancel']` }));
+    await cancel.click();
 
-      // Then check birthday
-      expect(await birthdayControl.getValue()).to.equal('12/07/1977');
+    // Then check birthday
+    expect(await birthdayControl.getValue()).to.equal('12/07/1977');
 
-    });
+  });
 });

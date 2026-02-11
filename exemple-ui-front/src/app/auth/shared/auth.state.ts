@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
+import { EMPTY, throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 
+import { GetAccountByUsername } from '../../account/shared/account.action';
+import { MessageService } from '../../shared/message/message.service';
 import { Authenticate, Logout } from './auth.action';
 import { AuthService, UnauthorizedError } from './auth.service';
-import { PublishMessage } from 'src/app/shared/message/message.action';
-import { GetAccountByUsername } from 'src/app/account/shared/account.action';
-import { throwError } from 'rxjs';
 
 export interface AuthStateModel {
   authenticate: boolean;
@@ -24,20 +24,20 @@ export class AuthState {
 
   private readonly store = inject(Store);
   private readonly authService = inject(AuthService);
+  private readonly messageService = inject(MessageService);
 
   @Action(Authenticate)
   authenticate(ctx: StateContext<AuthStateModel>, action: Authenticate) {
     return this.authService.authenticateUser(action.username, action.password).pipe(
       mergeMap(() => {
         ctx.setState({ authenticate: true, username: action.username });
-        this.store.dispatch(new PublishMessage(
-          { severity: 'success', summary: 'Success', detail: 'Authenticate successfull' }));
+        this.messageService.success('Success', 'Authenticate successfull');
         return this.store.dispatch(new GetAccountByUsername(action.username));
       }),
       catchError(error => {
         if (error instanceof UnauthorizedError) {
-          return this.store.dispatch(new PublishMessage(
-            { severity: 'error', summary: 'Failure', detail: 'Authenticate failure' }));
+          this.messageService.error('Failure', 'Authenticate failure');
+          return EMPTY;
         } else {
           return throwError(() => error);
         }

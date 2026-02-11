@@ -1,18 +1,14 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { MATERIAL_ANIMATIONS } from '@angular/material/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { expect } from 'chai';
-import * as sinon from 'sinon';
 
 import { AppComponent } from './app.component';
 import { appConfig } from './app.config';
-import { PublishMessage } from './shared/message/message.action';
 
 @Component({
   template: '<h6>dummy</h6>'
@@ -24,7 +20,6 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let mock: ComponentFixture<DummyComponent>;
   let store: Store;
-  let snackBar: MatSnackBar;
 
   before(() => window.localStorage.clear());
 
@@ -38,13 +33,12 @@ describe('AppComponent', () => {
         RouterModule.forRoot([{ path: '', component: DummyComponent }])
       ],
       providers: appConfig.providers.concat([
-        provideHttpClientTesting(), { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }],
+        provideHttpClientTesting()],
       )
     }).createComponent(AppComponent);
 
     mock = TestBed.createComponent(DummyComponent);
     store = TestBed.inject(Store);
-    snackBar = TestBed.inject(MatSnackBar);
     store.reset({
       authenticate: { authenticate: true, username: 'john.doe@gmail.com' }
     });
@@ -130,24 +124,6 @@ describe('AppComponent', () => {
         expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
       })));
-
-  });
-
-  describe('Display message', () => {
-
-    it('should display one message', async () => {
-
-      // setup snackBar
-      const open = sinon.spy(snackBar, 'open');
-
-      // when dispatch
-      store.dispatch(new PublishMessage({ detail: 'message detail', severity: 'info', summary: 'message summary' }));
-
-      fixture.detectChanges();
-
-      // Then check message
-      sinon.assert.calledWith(open, sinon.match('message detail'));
-    });
 
   });
 
