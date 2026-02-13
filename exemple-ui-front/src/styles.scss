@@ -1,4 +1,11 @@
+@use '@angular/material' as mat;
 @import '@angular/material/prebuilt-themes/azure-blue.css';
+
+:root {
+  @include mat.snack-bar-overrides((
+    container-color: transparent,
+  ));
+}
 
 .mdc-text-field--filled {
   border-left: 5px solid #42A948;

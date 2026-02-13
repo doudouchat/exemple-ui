@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Message } from './message';
+import { MessageComponent } from './message.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class MessageService {
   }
 
   private publish(message: Message) {
-    this.snackBar.open(message.detail, 'close', {
+    this.snackBar.openFromComponent(MessageComponent, {
+      data: message,
       duration: 5_000,
       horizontalPosition: 'right',
       verticalPosition: 'top'
