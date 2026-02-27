@@ -4,7 +4,6 @@ import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
-import { expect } from 'chai';
 
 import { MessageService } from './message.service';
 

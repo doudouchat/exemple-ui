@@ -3,9 +3,7 @@ import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
 import { MockProvider } from 'ng-mocks';
-import * as sinon from 'sinon';
 
 import { GetAccountByUsername } from '../../account/shared/account.action';
 import { MessageService } from '../../shared/message/message.service';
@@ -42,8 +40,8 @@ describe('AuthState', () => {
   it('authenticate success', inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
-      const dispatch = sinon.spy(store, 'dispatch');
-      const publish = sinon.spy(messageService, 'success');
+      const dispatch = vi.spyOn(store, 'dispatch');
+      const publish = vi.spyOn(messageService, 'success');
 
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -70,14 +68,14 @@ describe('AuthState', () => {
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.eq('jean.dupond@gmail.com');
 
       // And check dispatch & publish
-      sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Authenticate successfull'));
-      sinon.assert.calledWith(dispatch, new GetAccountByUsername('jean.dupond@gmail.com'));
+      expect(publish).toHaveBeenCalledWith('Success', 'Authenticate successfull');
+      expect(dispatch).toHaveBeenCalledWith(new GetAccountByUsername('jean.dupond@gmail.com'));
     }));
 
   it('authenticate failure', inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
-      const publish = sinon.spy(messageService, 'error');
+      const publish = vi.spyOn(messageService, 'error');
 
       // when dispatch
       store.dispatch(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
@@ -93,7 +91,7 @@ describe('AuthState', () => {
       expect(store.selectSnapshot(state => state.authenticate.username)).is.be.undefined;
 
       // And check publish
-      sinon.assert.calledWith(publish, sinon.match('Failure'), sinon.match('Authenticate failure'));
+      expect(publish).toHaveBeenCalledWith('Failure', 'Authenticate failure');
 
     }));
 

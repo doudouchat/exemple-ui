@@ -41,7 +41,9 @@ jobs:
          run: npm run-script build
       -  name: test
          working-directory: exemple-ui-front
-         run: npm run-script test
+         run: |
+           npx playwright install
+           npm run-script test
       -  name: lint
          working-directory: exemple-ui-front
          run: npm run-script lint

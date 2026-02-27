@@ -4,7 +4,6 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { expect } from 'chai';
 
 import { AppComponent } from './app.component';
 import { appConfig } from './app.config';
@@ -20,7 +19,7 @@ describe('AppComponent', () => {
   let mock: ComponentFixture<DummyComponent>;
   let store: Store;
 
-  before(() => window.localStorage.clear());
+  beforeAll(() => window.localStorage.clear());
 
   beforeEach(() => {
 

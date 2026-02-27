@@ -4,7 +4,6 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { expect } from 'chai';
 
 import { HomeComponent } from './home.component';
 

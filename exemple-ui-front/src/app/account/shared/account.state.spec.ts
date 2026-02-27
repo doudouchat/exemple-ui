@@ -3,9 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { inject, TestBed } from '@angular/core/testing';
 import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
 import { MockProvider } from 'ng-mocks';
-import * as sinon from 'sinon';
 
 import { LoginService } from '../../login/shared/login.service';
 import { MessageService } from '../../shared/message/message.service';
@@ -47,8 +45,8 @@ describe('AccountState', () => {
     it('create account success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
-        const dispatch = sinon.spy(store, 'dispatch');
-        const publish = sinon.spy(messageService, 'success');
+        const dispatch = vi.spyOn(store, 'dispatch');
+        const publish = vi.spyOn(messageService, 'success');
 
         // when dispatch
         store.dispatch(new CreateAccount(
@@ -80,8 +78,8 @@ describe('AccountState', () => {
         expect(store.selectSnapshot(state => state.account.id)).is.be.eq('123');
 
         // And check dispatch & publish
-        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account creation successfull'));
-        sinon.assert.calledWith(dispatch, new Navigate(['/login']));
+        expect(publish).toHaveBeenCalledWith('Success', 'Account creation successfull');
+        expect(dispatch).toHaveBeenCalledWith(new Navigate(['/login']));
 
 
       }));
@@ -104,7 +102,7 @@ describe('AccountState', () => {
           }
         });
 
-        const publish = sinon.spy(messageService, 'success');
+        const publish = vi.spyOn(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -131,7 +129,7 @@ describe('AccountState', () => {
         expect(store.selectSnapshot(state => state.account.birthday)).is.be.eq('12/07/1976');
 
         // And check publish
-        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
+        expect(publish).toHaveBeenCalledWith('Success', 'Account update successfull');
 
       }));
 
@@ -149,7 +147,7 @@ describe('AccountState', () => {
           }
         });
 
-        const publish = sinon.spy(messageService, 'success');
+        const publish = vi.spyOn(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -181,7 +179,7 @@ describe('AccountState', () => {
         expect(store.selectSnapshot(state => state.account.email)).is.be.eq('jean.dupond@gmail.com');
 
         // And check publish
-        sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
+        expect(publish).toHaveBeenCalledWith('Success', 'Account update successfull');
 
       }));
 
@@ -199,7 +197,7 @@ describe('AccountState', () => {
           }
         });
 
-        const publish = sinon.spy(messageService, 'success');
+        const publish = vi.spyOn(messageService, 'success');
 
         // when dispatch
         store.dispatch(new UpdateAccount(
@@ -217,7 +215,7 @@ describe('AccountState', () => {
         http.verify();
 
         // And check publish
-        sinon.assert.notCalled(publish);
+        expect(publish).not.toHaveBeenCalled();
 
       }));
 
@@ -228,7 +226,7 @@ describe('AccountState', () => {
     it('get account success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
-        const dispatch = sinon.spy(store, 'dispatch');
+        const dispatch = vi.spyOn(store, 'dispatch');
 
         // when dispatch
         store.dispatch(new GetAccountByUsername('jean.dupond@gmail.com'));
@@ -249,7 +247,7 @@ describe('AccountState', () => {
         expect(store.selectSnapshot(state => state.account.lastname)).is.be.eq('doe');
 
         // And check dispatch
-        sinon.assert.calledWith(dispatch, new Navigate(['/account'], { id: 99 }));
+        expect(dispatch).toHaveBeenCalledWith(new Navigate(['/account'], { id: 99 }));
       }));
 
   });

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
-import { expect } from 'chai';
 import { MockComponents } from 'ng-mocks';
 
 import { HOME_ROUTES } from './home-routing';

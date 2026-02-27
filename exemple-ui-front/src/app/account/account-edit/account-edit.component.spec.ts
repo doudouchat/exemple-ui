@@ -8,8 +8,6 @@ import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { MockProvider } from 'ng-mocks';
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 
 import { MessageService } from '../../shared/message/message.service';
 import { UpdateAccount } from '../shared/account.action';
@@ -78,7 +76,7 @@ describe('AccountEditComponent', () => {
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // when change form
       const birthday = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
@@ -96,7 +94,7 @@ describe('AccountEditComponent', () => {
       expect(await birthdayControl.getValue()).to.equal('12/07/1977');
 
       // And check dispatch
-      sinon.assert.calledWith(dispatch, new UpdateAccount(
+      expect(dispatch).toHaveBeenCalledWith(new UpdateAccount(
         {
           id: '99',
           email: 'john.doe@gmail.com',
@@ -114,7 +112,7 @@ describe('AccountEditComponent', () => {
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // When change email
       const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
@@ -137,7 +135,7 @@ describe('AccountEditComponent', () => {
       expect(await emailControl.getValue()).to.equal('jean.dupond@gmail.com');
 
       // And check dispatch
-      sinon.assert.calledWith(dispatch, new UpdateAccount(
+      expect(dispatch).toHaveBeenCalledWith(new UpdateAccount(
         {
           id: '99',
           email: 'jean.dupond@gmail.com',

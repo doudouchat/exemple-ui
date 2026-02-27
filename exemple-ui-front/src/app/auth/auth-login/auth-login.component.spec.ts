@@ -6,8 +6,6 @@ import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { RouterModule } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 
 import { Authenticate } from '../shared/auth.action';
 import { AuthLoginComponent } from './auth-login.component';
@@ -37,7 +35,7 @@ describe('AuthLoginComponent', () => {
   it('authenticate success', async () => {
 
     // setup mock store
-    const dispatch = sinon.stub(store, 'dispatch');
+    const dispatch = vi.spyOn(store, 'dispatch');
 
     // when edit username
     const username = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Username' }));
@@ -54,7 +52,7 @@ describe('AuthLoginComponent', () => {
     await connexion.click();
 
     // Then check dispatch
-    sinon.assert.calledWith(dispatch, new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
+    expect(dispatch).toHaveBeenCalledWith(new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
 
   });
 

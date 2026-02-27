@@ -3,7 +3,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { expect } from 'chai';
 import { MockProvider } from 'ng-mocks';
 
 import { AnonymousGuard, AuthenticatedGuard } from './auth/shared/auth.guard';

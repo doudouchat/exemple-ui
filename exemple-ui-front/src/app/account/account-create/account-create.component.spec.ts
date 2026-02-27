@@ -7,8 +7,6 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { NgxsModule, Store } from '@ngxs/store';
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 
 import { CreateAccount } from '../shared/account.action';
 import { AccountCreateComponent } from './account-create.component';
@@ -99,7 +97,7 @@ describe('AccountCreateComponent', () => {
       const passwordControl = await password.getControl() as MatInputHarness;
       await passwordControl.setValue('D#az78&é');
 
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -115,7 +113,7 @@ describe('AccountCreateComponent', () => {
       http.verify({ ignoreCancelled: true });
 
       // And check dispatch
-      sinon.assert.calledWith(dispatch, new CreateAccount({
+      expect(dispatch).toHaveBeenCalledWith(new CreateAccount({
         email: 'jean.dupond@gmail.com',
         lastname: 'dupond',
         firstname: 'jean',
@@ -140,7 +138,7 @@ describe('AccountCreateComponent', () => {
       [HttpTestingController], async (http: HttpTestingController) => {
 
         // setup form
-        const dispatch = sinon.spy(store, 'dispatch');
+        const dispatch = vi.spyOn(store, 'dispatch');
 
         // When edit field
         const formField = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: test.label }));
@@ -159,7 +157,7 @@ describe('AccountCreateComponent', () => {
         http.verify();
 
         // And check dispatch
-        sinon.assert.notCalled(dispatch);
+        expect(dispatch).not.toHaveBeenCalled();
 
       }));
   });
@@ -168,7 +166,7 @@ describe('AccountCreateComponent', () => {
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup form
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // When edit field
       const formField = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Birthday' }));
@@ -188,7 +186,7 @@ describe('AccountCreateComponent', () => {
       http.verify();
 
       // And check dispatch
-      sinon.assert.notCalled(dispatch);
+      expect(dispatch).not.toHaveBeenCalled();
 
     }));
 
@@ -215,7 +213,7 @@ describe('AccountCreateComponent', () => {
       const passwordControl = await password.getControl() as MatInputHarness;
       await passwordControl.setValue('D#az78&é');
 
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // When edit email
       const email = await loader.getHarness(MatFormFieldHarness.with({ floatingLabelText: 'Email' }));
@@ -239,11 +237,11 @@ describe('AccountCreateComponent', () => {
       http.verify({ ignoreCancelled: true });
 
       // And check dispatch
-      sinon.assert.notCalled(dispatch);
+      expect(dispatch).not.toHaveBeenCalled();
 
     }));
 
-  xit('creation account failure: request HEAD /ws/v1/logins fails', inject(
+  it.skip('creation account failure: request HEAD /ws/v1/logins fails', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // Setup edit firstname
@@ -313,7 +311,7 @@ describe('AccountCreateComponent', () => {
       const passwordControl = await password.getControl() as MatInputHarness;
       await passwordControl.setValue('D#az78&é');
 
-      const dispatch = sinon.spy(store, 'dispatch');
+      const dispatch = vi.spyOn(store, 'dispatch');
 
       // and mock http
       let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
@@ -329,7 +327,7 @@ describe('AccountCreateComponent', () => {
       http.verify({ ignoreCancelled: true });
 
       // And check dispatch
-      sinon.assert.notCalled(dispatch);
+      expect(dispatch).not.toHaveBeenCalled();
 
       // And check form
       expect(await emailControl.getValue()).to.be.empty;
