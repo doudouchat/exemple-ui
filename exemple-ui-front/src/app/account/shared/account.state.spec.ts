@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { Navigate } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -18,7 +18,7 @@ describe('AccountState', () => {
   let store: Store;
   let messageService: MessageService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([AccountState])],
@@ -34,7 +34,7 @@ describe('AccountState', () => {
     store = TestBed.inject(Store);
     messageService = TestBed.inject(MessageService);
 
-  }));
+  });
 
   afterEach(() => {
 
@@ -44,7 +44,7 @@ describe('AccountState', () => {
 
   describe('Create Account', () => {
 
-    it('create account success', waitForAsync(inject(
+    it('create account success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         const dispatch = sinon.spy(store, 'dispatch');
@@ -84,13 +84,13 @@ describe('AccountState', () => {
         sinon.assert.calledWith(dispatch, new Navigate(['/login']));
 
 
-      })));
+      }));
 
   });
 
   describe('Update Account', () => {
 
-    it('update account success', waitForAsync(inject(
+    it('update account success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         // Setup store
@@ -133,9 +133,9 @@ describe('AccountState', () => {
         // And check publish
         sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
 
-      })));
+      }));
 
-    it('update email success', waitForAsync(inject(
+    it('update email success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         // Setup store
@@ -183,9 +183,9 @@ describe('AccountState', () => {
         // And check publish
         sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Account update successfull'));
 
-      })));
+      }));
 
-    it('shouldn\'t update account because account has not changed', waitForAsync(inject(
+    it('shouldn\'t update account because account has not changed', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         // Setup store
@@ -219,13 +219,13 @@ describe('AccountState', () => {
         // And check publish
         sinon.assert.notCalled(publish);
 
-      })));
+      }));
 
   });
 
   describe('Get Account', () => {
 
-    it('get account success', waitForAsync(inject(
+    it('get account success', inject(
       [HttpTestingController], (http: HttpTestingController) => {
 
         const dispatch = sinon.spy(store, 'dispatch');
@@ -250,7 +250,7 @@ describe('AccountState', () => {
 
         // And check dispatch
         sinon.assert.calledWith(dispatch, new Navigate(['/account'], { id: 99 }));
-      })));
+      }));
 
   });
 

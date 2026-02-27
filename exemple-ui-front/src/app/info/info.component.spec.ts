@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { inject, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
@@ -12,7 +12,7 @@ describe('InfoComponent', () => {
   let fixture: ComponentFixture<InfoComponent>;
   let debugElement: DebugElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
       imports: [],
@@ -20,7 +20,7 @@ describe('InfoComponent', () => {
     }).createComponent(InfoComponent);
 
 
-  }));
+  });
 
   beforeEach(() => {
 
@@ -35,7 +35,7 @@ describe('InfoComponent', () => {
 
   });
 
-  it('display info', waitForAsync(inject(
+  it('display info', inject(
     [HttpTestingController], (http) => {
 
       const req = http.expectOne('/ExempleService/actuator/info');
@@ -53,6 +53,6 @@ describe('InfoComponent', () => {
       expect(de[0].nativeElement.innerHTML).to.equal('version:test');
       expect(de[1].nativeElement.innerHTML).to.equal('buildTime:1976-01-03');
 
-    })));
+    }));
 
 });

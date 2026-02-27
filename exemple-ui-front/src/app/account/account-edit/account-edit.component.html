@@ -45,7 +45,7 @@
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field>
+    <mat-form-field [floatLabel]="accountForm.controls['birthday'].value ? 'always': 'auto'">
       <input
         matInput
         mask="d0/M0/0000"

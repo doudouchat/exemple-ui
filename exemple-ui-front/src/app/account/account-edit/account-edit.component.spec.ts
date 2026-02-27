@@ -2,11 +2,10 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
 import { MockProvider } from 'ng-mocks';
 import { expect } from 'chai';
@@ -22,11 +21,10 @@ describe('AccountEditComponent', () => {
   let store: Store;
   let loader: HarnessLoader;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         NgxsModule.forRoot([])
       ],
       providers: [
@@ -46,7 +44,7 @@ describe('AccountEditComponent', () => {
     store = TestBed.inject(Store);
     loader = TestbedHarnessEnvironment.loader(fixture);
 
-  }));
+  });
 
   it('init account', async () => {
 
@@ -76,7 +74,7 @@ describe('AccountEditComponent', () => {
 
   });
 
-  it('edit account success: birthday', waitForAsync(inject(
+  it('edit account success: birthday', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
@@ -110,9 +108,9 @@ describe('AccountEditComponent', () => {
         }
       ));
 
-    })));
+    }));
 
-  it('edit account success: email', waitForAsync(inject(
+  it('edit account success: email', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup mock store
@@ -151,9 +149,9 @@ describe('AccountEditComponent', () => {
         }
       ));
 
-    })));
+    }));
 
-  it('edit account failure: email already exists', waitForAsync(inject(
+  it('edit account failure: email already exists', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // When change email
@@ -175,7 +173,7 @@ describe('AccountEditComponent', () => {
 
       // And check http
       http.verify({ ignoreCancelled: true });
-    })));
+    }));
 
   [
     { message: 'email is required', label: 'Email', value: '', expectedMessage: 'Email is required.' },
@@ -186,7 +184,7 @@ describe('AccountEditComponent', () => {
     { message: 'firstname is required', label: 'Firstname', value: '', expectedMessage: 'Firstname is required.' },
     { message: 'firstname is not blank', label: 'Firstname', value: '  ', expectedMessage: 'Firstname is required.' }
   ].forEach(function (test) {
-    it('edit account failure: ' + test.message, waitForAsync(inject(
+    it('edit account failure: ' + test.message, inject(
       [HttpTestingController], async (http: HttpTestingController) => {
 
         // When edit field
@@ -205,10 +203,10 @@ describe('AccountEditComponent', () => {
         // And check http
         http.verify();
 
-      })));
+      }));
   });
 
-  it('edit account failure: birthday is required', waitForAsync(inject(
+  it('edit account failure: birthday is required', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // When edit field
@@ -228,9 +226,9 @@ describe('AccountEditComponent', () => {
       // And check http
       http.verify();
 
-    })));
+    }));
 
-  it('reset account', waitForAsync(inject(
+  it('reset account', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup change birthday
@@ -267,7 +265,7 @@ describe('AccountEditComponent', () => {
       // And check http
       http.verify();
 
-    })));
+    }));
 
   it('reset account after save', async () => {
 

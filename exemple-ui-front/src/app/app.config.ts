@@ -1,12 +1,11 @@
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { catchError, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { GetAccountByUsername } from './account/shared/account.action';
 import { AccountState } from './account/shared/account.state';
@@ -40,7 +39,6 @@ export const appConfig: ApplicationConfig = {
       }
       return of(authState);
     }),
-    provideAnimations(),
     provideAppInitializer(() => {
       const store = inject(Store);
       const authState: AuthStateModel = store.selectSnapshot(AUTHENTICATE_STATE_TOKEN);

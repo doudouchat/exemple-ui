@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { expect } from 'chai';
@@ -16,7 +16,7 @@ describe('AuthRouting', () => {
   let router: Router;
   let anonymousGuard: AnonymousGuard;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     TestBed.configureTestingModule({
       declarations: [
@@ -37,7 +37,7 @@ describe('AuthRouting', () => {
     anonymousGuard = TestBed.inject(AnonymousGuard);
     Object.defineProperty(anonymousGuard, 'authState$', { writable: true });
 
-  }));
+  });
 
   describe('Forward login', () => {
 

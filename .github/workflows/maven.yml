@@ -10,7 +10,7 @@ jobs:
    build:
       runs-on: ubuntu-latest
       steps:
-      -  uses: actions/checkout@v4
+      -  uses: actions/checkout@v5
       -  name: Get npm cache directory
          id: npm-cache-dir
          shell: bash
@@ -29,10 +29,10 @@ jobs:
            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
            restore-keys: |
             ${{ runner.os }}-node-
-      -  name: Use Node.js 22.17.0
-         uses: actions/setup-node@v4
+      -  name: Use Node.js 24.13.1
+         uses: actions/setup-node@v6
          with:
-            node-version: 22.17.0
+            node-version: 24.13.1
       -  name: install
          working-directory: exemple-ui-front
          run: npm ci
@@ -50,7 +50,7 @@ jobs:
          run: |
            npm audit --audit-level=none --omit=dev
            npm audit --audit-level=none
-      -  uses: codecov/codecov-action@v4
+      -  uses: codecov/codecov-action@v5
          env:
             CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       -  name: SonarCloud Scan

@@ -1,7 +1,6 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
@@ -19,12 +18,11 @@ describe('AuthLoginComponent', () => {
   let store: Store;
   let loader: HarnessLoader;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
 
       imports: [
-        NoopAnimationsModule,
         RouterModule.forRoot([]),
         NgxsModule.forRoot([])
       ]
@@ -34,9 +32,9 @@ describe('AuthLoginComponent', () => {
     store = TestBed.inject(Store);
     loader = TestbedHarnessEnvironment.loader(fixture);
 
-  }));
+  });
 
-  it('authenticate success', waitForAsync(async () => {
+  it('authenticate success', async () => {
 
     // setup mock store
     const dispatch = sinon.stub(store, 'dispatch');
@@ -58,7 +56,7 @@ describe('AuthLoginComponent', () => {
     // Then check dispatch
     sinon.assert.calledWith(dispatch, new Authenticate('jean.dupond@gmail.com', 'D#az78&é'));
 
-  }));
+  });
 
   [
     { message: 'username is required', label: 'Username', value: '', expectedMessage: 'Username is required.' },

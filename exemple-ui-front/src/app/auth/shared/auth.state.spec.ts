@@ -1,7 +1,7 @@
 
 import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import { MockProvider } from 'ng-mocks';
@@ -17,7 +17,7 @@ describe('AuthState', () => {
   let store: Store;
   let messageService: MessageService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([AuthState])],
@@ -30,7 +30,7 @@ describe('AuthState', () => {
     store = TestBed.inject(Store);
     messageService = TestBed.inject(MessageService);
 
-  }));
+  });
 
 
   afterEach(() => {
@@ -39,7 +39,7 @@ describe('AuthState', () => {
 
   });
 
-  it('authenticate success', waitForAsync(inject(
+  it('authenticate success', inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
       const dispatch = sinon.spy(store, 'dispatch');
@@ -72,9 +72,9 @@ describe('AuthState', () => {
       // And check dispatch & publish
       sinon.assert.calledWith(publish, sinon.match('Success'), sinon.match('Authenticate successfull'));
       sinon.assert.calledWith(dispatch, new GetAccountByUsername('jean.dupond@gmail.com'));
-    })));
+    }));
 
-  it('authenticate failure', waitForAsync(inject(
+  it('authenticate failure', inject(
     [HttpTestingController], (http: HttpTestingController) => {
 
       const publish = sinon.spy(messageService, 'error');
@@ -95,7 +95,7 @@ describe('AuthState', () => {
       // And check publish
       sinon.assert.calledWith(publish, sinon.match('Failure'), sinon.match('Authenticate failure'));
 
-    })));
+    }));
 
   it('authenticate exception', inject(
     [HttpTestingController], (http: HttpTestingController) => {

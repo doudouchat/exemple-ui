@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
@@ -22,7 +22,7 @@ describe('AccountRouting', () => {
   let authenticatedGuard: AuthenticatedGuard;
   let anonymousGuard: AnonymousGuard;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     TestBed.configureTestingModule({
       imports: [MockComponents(AccountEditComponent, AccountCreateComponent),
@@ -48,7 +48,7 @@ describe('AccountRouting', () => {
     anonymousGuard = TestBed.inject(AnonymousGuard);
     Object.defineProperty(anonymousGuard, 'authState$', { writable: true });
 
-  }));
+  });
 
   describe('Forward edit account', () => {
 

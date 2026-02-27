@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
 import { expect } from 'chai';
 import { MockComponents } from 'ng-mocks';
@@ -10,7 +10,7 @@ describe('HomeRouting', () => {
 
   let router: Router;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     TestBed.configureTestingModule({
       declarations: [
@@ -26,7 +26,7 @@ describe('HomeRouting', () => {
 
     router = TestBed.inject(Router);
 
-  }));
+  });
 
   it('forward to home', async () => {
 

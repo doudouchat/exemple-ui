@@ -1,8 +1,7 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { expect } from 'chai';
@@ -23,12 +22,11 @@ describe('AppComponent', () => {
 
   before(() => window.localStorage.clear());
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
       imports: [
         AppComponent,
-        NoopAnimationsModule,
         DummyComponent,
         RouterModule.forRoot([{ path: '', component: DummyComponent }])
       ],
@@ -43,11 +41,11 @@ describe('AppComponent', () => {
       authenticate: { authenticate: true, username: 'john.doe@gmail.com' }
     });
 
-  }));
+  });
 
   describe('Forward to any template', () => {
 
-    it('routing should have as template dummy', waitForAsync(inject(
+    it('routing should have as template dummy', inject(
       [HttpTestingController], (http) => {
 
         // Setup authenticate
@@ -69,9 +67,9 @@ describe('AppComponent', () => {
         const de: DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
         expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
-      })));
+      }));
 
-    it('routing should have as template dummy refresh', waitForAsync(inject(
+    it('routing should have as template dummy refresh', inject(
       [HttpTestingController], (http) => {
 
         // Setup authenticate
@@ -98,9 +96,9 @@ describe('AppComponent', () => {
         const de: DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
         expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
-      })));
+      }));
 
-    it('routing should have as template dummy refresh exception', waitForAsync(inject(
+    it('routing should have as template dummy refresh exception', inject(
       [HttpTestingController], (http) => {
 
         // Setup authenticate
@@ -123,7 +121,7 @@ describe('AppComponent', () => {
         const de: DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
         expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
-      })));
+      }));
 
   });
 

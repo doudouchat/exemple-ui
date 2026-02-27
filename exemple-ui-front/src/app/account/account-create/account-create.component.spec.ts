@@ -2,11 +2,10 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
@@ -20,11 +19,10 @@ describe('AccountCreateComponent', () => {
   let store: Store;
   let loader: HarnessLoader;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         NgxsModule.forRoot([])
       ],
       providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
@@ -33,7 +31,7 @@ describe('AccountCreateComponent', () => {
     store = TestBed.inject(Store);
     loader = TestbedHarnessEnvironment.loader(fixture);
 
-  }));
+  });
 
   it('init account', async () => {
 
@@ -73,7 +71,7 @@ describe('AccountCreateComponent', () => {
 
   });
 
-  it('create account success', waitForAsync(inject(
+  it('create account success', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // Setup edit email
@@ -124,7 +122,7 @@ describe('AccountCreateComponent', () => {
         birthday: '12/12/1976'
       }, 'D#az78&é'));
 
-    })));
+    }));
 
   [
     { message: 'email is required', label: 'Email', value: '', expectedMessage: 'Email is required.' },
@@ -138,7 +136,7 @@ describe('AccountCreateComponent', () => {
     { message: 'password is not blank', label: 'Password', value: '  ', expectedMessage: 'Password is required.' },
 
   ].forEach(function (test) {
-    it('creation account failure: ' + test.message, waitForAsync(inject(
+    it('creation account failure: ' + test.message, inject(
       [HttpTestingController], async (http: HttpTestingController) => {
 
         // setup form
@@ -163,10 +161,10 @@ describe('AccountCreateComponent', () => {
         // And check dispatch
         sinon.assert.notCalled(dispatch);
 
-      })));
+      }));
   });
 
-  it('creation account failure: birthday is required', waitForAsync(inject(
+  it('creation account failure: birthday is required', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // setup form
@@ -192,9 +190,9 @@ describe('AccountCreateComponent', () => {
       // And check dispatch
       sinon.assert.notCalled(dispatch);
 
-    })));
+    }));
 
-  it('creation account failure: email already exists', waitForAsync(inject(
+  it('creation account failure: email already exists', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // Setup edit firstname
@@ -243,7 +241,7 @@ describe('AccountCreateComponent', () => {
       // And check dispatch
       sinon.assert.notCalled(dispatch);
 
-    })));
+    }));
 
   xit('creation account failure: request HEAD /ws/v1/logins fails', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
@@ -287,7 +285,7 @@ describe('AccountCreateComponent', () => {
 
     }));
 
-  it('reset account success', waitForAsync(inject(
+  it('reset account success', inject(
     [HttpTestingController], async (http: HttpTestingController) => {
 
       // Setup edit email
@@ -344,6 +342,6 @@ describe('AccountCreateComponent', () => {
       const save = await loader.getHarness(MatButtonHarness.with({ selector: `[aria-label='save']` }));
       expect(await save.isDisabled()).to.be.true;
 
-    })));
+    }));
 
 });

@@ -1,5 +1,5 @@
 import { Component, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let mock: ComponentFixture<DummyComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
       imports: [DummyComponent,
@@ -29,7 +29,7 @@ describe('HomeComponent', () => {
     }).createComponent(HomeComponent);
     mock = TestBed.createComponent(DummyComponent);
 
-  }));
+  });
 
   afterEach(() => {
 
@@ -37,7 +37,7 @@ describe('HomeComponent', () => {
 
   });
 
-  it('home should have as title "exemple-ui"', waitForAsync(() => {
+  it('home should have as title "exemple-ui"', () => {
 
     fixture.detectChanges();
 
@@ -45,9 +45,9 @@ describe('HomeComponent', () => {
 
     expect(de[0].nativeElement.innerHTML).to.equal(' Welcome to exemple-ui! ');
 
-  }));
+  });
 
-  it('home have link to account', waitForAsync(() => {
+  it('home have link to account', () => {
 
     fixture.detectChanges();
 
@@ -59,6 +59,6 @@ describe('HomeComponent', () => {
     const de: DebugElement[] = mock.debugElement.queryAll(By.css('h6'));
     expect(de[0].nativeElement.innerHTML).to.equal('dummy');
 
-  }));
+  });
 
 });
