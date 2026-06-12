@@ -157,9 +157,9 @@ describe('AccountEditComponent', () => {
       const emailControl = await email.getControl() as MatInputHarness;
       await emailControl.setValue('jean.dupond@gmail.com');
 
-      let headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
+      const headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleService/ws/v1/logins/jean.dupond@gmail.com' });
       headLogin.flush({ status: 200, statusText: 'found' });
-      headLogin = http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
+      http.expectOne({ method: 'HEAD', url: '/ExempleAuthorization/ws/v1/logins/jean.dupond@gmail.com' });
 
       // Then check message
       const errors = await email.getTextErrors();

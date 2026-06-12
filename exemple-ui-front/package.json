@@ -21,12 +21,12 @@
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/localize": "^21.2.0",
-    "@angular/material": "^21.2.0",
+    "@angular/forms": "^21.2.17",
+    "@angular/localize": "^21.2.17",
+    "@angular/material": "^21.2.14",
     "@angular/platform-browser": "^21.0.0",
-    "@angular/platform-browser-dynamic": "^21.2.0",
-    "@angular/router": "^21.2.0",
+    "@angular/platform-browser-dynamic": "^21.2.17",
+    "@angular/router": "^21.2.17",
     "@ngxs/router-plugin": "^21.0.0",
     "@ngxs/storage-plugin": "^21.0.0",
     "@ngxs/store": "^21.0.0",
@@ -38,27 +38,28 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.0",
-    "@angular/cli": "^21.2.0",
+    "@angular/build": "^21.2.15",
+    "@angular/cli": "^21.2.15",
     "@angular/compiler-cli": "^21.0.0",
-    "@angular/language-service": "^21.2.0",
+    "@angular/language-service": "^21.2.17",
     "@badeball/cypress-cucumber-preprocessor": "^24.0.1",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@cypress/schematic": "^5.0.0",
-    "@types/node": "^24.10.15",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.2",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "@vitest/browser-playwright": "^4.0.18",
-    "@vitest/coverage-v8": "^4.0.18",
-    "angular-eslint": "^21.2.0",
-    "cassandra-driver": "^4.8.0",
-    "cypress": "^15.11.0",
-    "eslint": "^9.39.3",
-    "jsdom": "^27.4.0",
-    "ng-mocks": "^14.15.1",
-    "sonarqube-scanner": "^4.3.4",
+    "@vitest/coverage-v8": "^4.1.2",
+    "angular-eslint": "^21.4.0",
+    "cassandra-driver": "^4.9.0",
+    "cypress": "~15.16.0",
+    "eslint": "^10.5.0",
+    "jsdom": "^29.1.1",
+    "ng-mocks": "^14.15.3",
+    "sonarqube-scanner": "^4.3.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
+    "typescript-eslint": "^8.61.0",
     "vitest": "^4.0.18"
   },
   "cypress-cucumber-preprocessor": {
@@ -66,14 +67,5 @@
     "stepDefinitions": [
       "e2e/steps/*.ts"
     ]
-  },
-  "overrides": {
-    "ng-mocks": {
-      "@angular/core": "$@angular/core",
-      "@angular/common": "$@angular/common",
-      "@angular/forms": "$@angular/forms",
-      "@angular/router": "$@angular/router",
-      "@angular/platform-browser": "$@angular/platform-browser"
-    }
   }
 }
