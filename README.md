@@ -8,8 +8,15 @@
 <p>execute <code>npm run-script build</code></p>
 <p>execute <code>npm run-script test</code></p>
 <p>execute <code>npm run-script lint</code></p>
+<p>execute <code>npm run-script e2e:stub</code></p>
 
 <p>execute sonar <code>exemple-ui-front/node_modules/.bin/sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN</code></p>
+
+# exemple-ui-stub
+
+<p>execute <code>npm ci</code></p>
+<p>execute <code>npm run-script build</code></p>
+<p>execute <code>env PORT=8086 npm run-script start</code></p>
 
 ## Docker
 

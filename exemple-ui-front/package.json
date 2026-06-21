@@ -10,6 +10,7 @@
     "test:dev": "ng test --watch --progress",
     "lint": "ng lint exemple-ui",
     "e2e": "ng e2e",
+    "e2e:stub": "ng e2e --configuration=stub",
     "e2e:dev": "ng e2e --watch=false --headless=false --configuration=dev",
     "e2e:docker": "ng e2e --configuration=docker",
     "cypress:open": "cypress open",

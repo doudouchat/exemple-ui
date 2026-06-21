@@ -1,3 +1,5 @@
+import axios from 'axios';
+import crypto from 'crypto';
 import { defineConfig } from 'cypress';
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
 import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esbuild';
@@ -16,19 +18,37 @@ async function setupNodeEvents(
   config: Cypress.PluginConfigOptions
 ): Promise<Cypress.PluginConfigOptions> {
   await addCucumberPreprocessorPlugin(on, config);
-
+  const isStub = !!config.env.stub;
+  if (isStub) {
+    console.log('back is a stub!');
+  }
   on('file:preprocessor', createBundler({
     plugins: [createEsbuildPlugin(config)]
   }));
 
   on('task', {
-    deleteLogin(username: string) {
+    deleteAuth(username: string) {
+      if (isStub) {
+        return axios
+          .delete('http://localhost:8086/ExempleAuthorization/ws/v1/logins/' + username)
+          .then(res => { return res.data; });
+      }
       return client.execute('delete from test_authorization.login where username = ?', [username]);
     },
-    insertLogin(username: string) {
-      return client.execute('insert into test_authorization.login (username) values (?)', [username]);
+    createUsername(username: string) {
+      if (isStub) {
+        return axios
+          .post('http://localhost:8086/ExempleService/ws/v1/logins', { 'username': username })
+          .then(res => { return res.data; });
+      }
+      return client.execute('insert into test_service.account_username (id, username, field) values (?, ?, ?)', [crypto.randomUUID(), username, 'email']);
     },
-    deleteAccountUsername(username: string) {
+    deleteAccount(username: string) {
+      if (isStub) {
+        return axios
+          .delete('http://localhost:8086/ExempleService/ws/v1/accounts/' + username)
+          .then(res => { return res.data; });
+      }
       return client.execute('select id from test_service.account_username where username = ? and field = ?', [username, 'email']).then(rows => {
         const row = rows.first();
         if (row) {
@@ -42,11 +62,19 @@ async function setupNodeEvents(
         }
       });
     },
-    insertPassword(username: string) {
+    createAuth(username: string) {
+      if (isStub) {
+        return axios
+          .put('http://localhost:8086/ExempleAuthorization/ws/v1/logins/' + username, { 'password': '123' })
+          .then(res => { return res.data; });
+      }
       return client.execute('insert into test_authorization.login (username, password) values (?, ?)', [username,
         '{bcrypt}$2a$10$Kd7BZwLmFIfoYDttqaJ6V.Lsp4xe31Qc9ha/gBYFGYgnAMvY758vm']);
     },
     shutdown() {
+      if (isStub) {
+        return null;
+      }
       return client.shutdown().then(() => { return null; });
     }
   });

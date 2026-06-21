@@ -159,6 +159,11 @@
             },
             "docker": {
               "devServerTarget": ""
+            },
+            "stub": {
+              "env": {
+                "stub": true
+              }
             }
           }
         }

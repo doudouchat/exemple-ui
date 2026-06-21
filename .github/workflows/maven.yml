@@ -52,6 +52,14 @@ jobs:
          run: |
            npm audit --audit-level=none --omit=dev
            npm audit --audit-level=none
+      -  name: test e2e
+         run: |
+           cd ${{ github.workspace }}/exemple-ui-stub
+           npm ci
+           npm run-script build
+           env PORT=8086 npm run-script start &
+           cd ${{ github.workspace }}/exemple-ui-front
+           npm run-script e2e:stub
       -  uses: codecov/codecov-action@v6
          env:
             CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

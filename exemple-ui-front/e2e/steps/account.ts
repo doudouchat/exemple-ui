@@ -1,15 +1,15 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 Given('Delete username {string}', (username: string) => {
-  cy.task('deleteLogin', username);
-  cy.task('deleteAccountUsername', username);
+  cy.task('deleteAuth', username);
+  cy.task('deleteAccount', username);
 });
 
 Given('Create username {string}', (username: string) => {
-  cy.task('deleteLogin', username);
-  cy.task('deleteAccountUsername', username);
-  cy.task('insertLogin', username);
-  cy.task('insertPassword', username);
+  cy.task('deleteAuth', username);
+  cy.task('deleteAccount', username);
+  cy.task('createAuth', username);
+  cy.task('createUsername', username);
 });
 
 Given('Fill account email {string}', (email: string) => {
