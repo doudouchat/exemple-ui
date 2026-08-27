@@ -1,7 +1,6 @@
 import { HttpStatusCode, HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import sha256 from 'crypto-js/sha256';
-import Base64url from 'crypto-js/enc-base64url';
+import forge from 'node-forge';
 import moment from 'moment';
 import { Observable } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
@@ -108,7 +107,15 @@ export class AuthService {
   }
 
   private generateCodeChallenge(codeVerifier: string): string {
-    return Base64url.stringify(sha256(codeVerifier));
+    const sha256 = forge.md.sha256.create();
+    sha256.update(codeVerifier, 'utf8');
+
+    const base64 = forge.util.encode64(sha256.digest().getBytes());
+
+    return base64
+      .replaceAll('+', '-')
+      .replaceAll('/', '_')
+      .replace(/=+$/, '');
   }
 
   private generateCodeVerifier(): string {
