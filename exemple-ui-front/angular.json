@@ -161,7 +161,7 @@
               "devServerTarget": ""
             },
             "stub": {
-              "env": {
+              "expose": {
                 "stub": true
               }
             }

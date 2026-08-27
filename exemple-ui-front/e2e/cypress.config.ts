@@ -18,7 +18,7 @@ async function setupNodeEvents(
   config: Cypress.PluginConfigOptions
 ): Promise<Cypress.PluginConfigOptions> {
   await addCucumberPreprocessorPlugin(on, config);
-  const isStub = !!config.env.stub;
+  const isStub = !!config.expose.stub;
   if (isStub) {
     console.log('back is a stub!');
   }
@@ -53,10 +53,10 @@ async function setupNodeEvents(
         const row = rows.first();
         if (row) {
           const id = row['id'];
-          return forkJoin(
+          return forkJoin([
             client.execute('delete from test_service.account_username where username = ? and field = ?', [username, 'email']),
             client.execute('delete from test_service.account where id = ?', [id])
-          );
+          ]);
         } else {
           return null;
         }
@@ -83,9 +83,13 @@ async function setupNodeEvents(
 }
 
 export default defineConfig({
+  expose: {
+    stub: false
+  },
   e2e: {
     specPattern: '**/*.feature',
     baseUrl: 'http://localhost:4200',
-    setupNodeEvents,
+    setupNodeEvents
   },
+  allowCypressEnv: false
 });
