@@ -90,6 +90,5 @@ export default defineConfig({
     specPattern: '**/*.feature',
     baseUrl: 'http://localhost:4200',
     setupNodeEvents
-  },
-  allowCypressEnv: false
+  }
 });
