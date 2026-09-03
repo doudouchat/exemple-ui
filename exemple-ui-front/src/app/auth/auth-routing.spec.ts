@@ -1,8 +1,8 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
+import { provideStore } from '@ngxs/store';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
 
@@ -21,13 +21,13 @@ describe('AuthRouting', () => {
       declarations: [
         MockComponents(AuthLoginComponent)
       ],
-      imports: [RouterModule,
-        NgxsModule.forRoot([])],
+      imports: [RouterModule],
       providers: [
         AuthenticatedGuard,
         AnonymousGuard,
+        provideStore(),
         provideRouter(AUTH_ROUTES),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
     }).compileComponents();

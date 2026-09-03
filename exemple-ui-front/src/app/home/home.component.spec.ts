@@ -1,6 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -24,7 +24,7 @@ describe('HomeComponent', () => {
     fixture = TestBed.configureTestingModule({
       imports: [DummyComponent,
         RouterModule.forRoot([{ path: 'account', component: DummyComponent }])],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(HomeComponent);
     mock = TestBed.createComponent(DummyComponent);
 
