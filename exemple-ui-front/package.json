@@ -46,8 +46,8 @@
     "@cypress/schematic": "^6.0.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.4",
-    "@vitest/browser-playwright": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/browser-playwright": "^5.0.0",
+    "@vitest/coverage-v8": "^5.0.0",
     "angular-eslint": "^22.5.0",
     "cassandra-driver": "^4.9.0",
     "cypress": "^16.0.0",
@@ -57,7 +57,7 @@
     "sonarqube-scanner": "^5.0.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.0"
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true,
