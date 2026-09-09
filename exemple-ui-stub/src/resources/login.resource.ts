@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Router } from 'express';
 
-import { create, exists, get, remove } from '../services/login.service';
+import { create, exists, get } from '../services/login.service';
 
 const router = Router();
 

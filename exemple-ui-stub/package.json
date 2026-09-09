@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "build:dev": "tsx watch --clear-screen=false src/app.ts",
+    "lint": "eslint src/**/*.ts",
     "start": "node dist/app.js"
   },
   "dependencies": {
@@ -12,9 +13,13 @@
     "jsonpatch": "^3.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
     "@types/node": "^24.13.2",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0",
     "tsx": "^4.23.13",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0"
   }
 }
