@@ -1,12 +1,12 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
-import { NgxsModule, Store } from '@ngxs/store';
+import { provideStore, Store } from '@ngxs/store';
 
 import { CreateAccount } from '../shared/account.action';
 import { AccountCreateComponent } from './account-create.component';
@@ -20,10 +20,7 @@ describe('AccountCreateComponent', () => {
   beforeEach(() => {
 
     fixture = TestBed.configureTestingModule({
-      imports: [
-        NgxsModule.forRoot([])
-      ],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideStore(), provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).createComponent(AccountCreateComponent);
 
     store = TestBed.inject(Store);

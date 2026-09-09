@@ -1,8 +1,8 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { Navigate } from '@ngxs/router-plugin';
-import { NgxsModule, Store } from '@ngxs/store';
+import { provideStore, Store } from '@ngxs/store';
 import { MockProvider } from 'ng-mocks';
 
 import { LoginService } from '../../login/shared/login.service';
@@ -19,11 +19,11 @@ describe('AccountState', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([AccountState])],
       providers: [
         AccountService,
         LoginService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideStore([AccountState]),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         MockProvider(MessageService)
       ]
