@@ -5,7 +5,7 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { RouterModule } from '@angular/router';
-import { NgxsModule, Store } from '@ngxs/store';
+import { provideStore, Store } from '@ngxs/store';
 
 import { Authenticate } from '../shared/auth.action';
 import { AuthLoginComponent } from './auth-login.component';
@@ -21,8 +21,10 @@ describe('AuthLoginComponent', () => {
     fixture = TestBed.configureTestingModule({
 
       imports: [
-        RouterModule.forRoot([]),
-        NgxsModule.forRoot([])
+        RouterModule.forRoot([])
+      ],
+      providers: [
+        provideStore()
       ]
 
     }).createComponent(AuthLoginComponent);

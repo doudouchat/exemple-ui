@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
@@ -15,7 +15,6 @@ import { Authenticate } from '../shared/auth.action';
   selector: 'app-auth-login',
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatButtonModule,

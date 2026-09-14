@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit } from '@angular/core';
+import { Component, effect, inject, input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +17,6 @@ import { UpdateAccount } from '../shared/account.action';
   selector: 'app-account-edit',
   templateUrl: './account-edit.component.html',
   styleUrls: ['./account-edit.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,
