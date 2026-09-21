@@ -1,16 +1,16 @@
-// @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
+import eslint from "@eslint/js";
+import angular from "angular-eslint";
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
 
-module.exports = tseslint.config(
+export default defineConfig([
   {
     files: ["**/*.ts"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
       ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended,
+      ...angular.configs.tsRecommended
     ],
     processor: angular.processInlineTemplates,
     rules: {
@@ -19,33 +19,30 @@ module.exports = tseslint.config(
         {
           type: "attribute",
           prefix: "app",
-          style: "camelCase",
-        },
+          style: "camelCase"
+        }
       ],
       "@angular-eslint/component-selector": [
         "error",
         {
           type: "element",
           prefix: "app",
-          style: "kebab-case",
-        },
-      ],
-    },
+          style: "kebab-case"
+        }
+      ]
+    }
   },
   {
     files: ["**/*.spec.ts"],
     rules: {
-      "@typescript-eslint/no-unused-expressions": "off",
-    },
+      "@typescript-eslint/no-unused-expressions": "off"
+    }
   },
   {
     files: ["**/*.html"],
     extends: [
       ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
-    rules: {
-      "@angular-eslint/template/elements-content": "off",
-    },
+      ...angular.configs.templateAccessibility
+    ]
   }
-);
+]);
