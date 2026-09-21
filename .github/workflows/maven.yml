@@ -57,6 +57,7 @@ jobs:
            cd ${{ github.workspace }}/exemple-ui-stub
            npm ci
            npm run-script build
+           npm run-script lint
            env PORT=8086 npm run-script start &
            cd ${{ github.workspace }}/exemple-ui-front
            npm run-script e2e:stub
