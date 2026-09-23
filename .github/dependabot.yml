@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/exemple-ui-front"
+      - "/exemple-ui-stub"
+    open-pull-requests-limit: 0
+    allow:
+      - dependency-type: "production"
+    schedule:
+      interval: "weekly"
