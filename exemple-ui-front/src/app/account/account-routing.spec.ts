@@ -1,9 +1,9 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router, RouterModule, provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { NgxsModule } from '@ngxs/store';
+import { provideStore } from '@ngxs/store';
 import { MockComponents, MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 
@@ -25,16 +25,16 @@ describe('AccountRouting', () => {
 
     TestBed.configureTestingModule({
       imports: [MockComponents(AccountEditComponent, AccountCreateComponent),
-        RouterModule,
-      NgxsModule.forRoot([])],
+        RouterModule],
       providers: [
         AuthenticatedGuard,
         AnonymousGuard,
+        provideStore(),
         provideRouter(ACCOUNT_ROUTES.concat({
           path: 'login',
           component: MockComponent(AuthLoginComponent)
         }), withComponentInputBinding()),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
     }).compileComponents();
@@ -70,7 +70,7 @@ describe('AccountRouting', () => {
       expect(router.url).to.equal('/');
 
       // And check account
-      expect(activatedComponent.account).to.eql({
+      expect(activatedComponent.account()).to.eql({
         id: '123'
       })
 

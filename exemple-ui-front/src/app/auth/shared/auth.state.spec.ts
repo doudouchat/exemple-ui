@@ -1,8 +1,8 @@
 
-import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpRequest, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
-import { NgxsModule, Store } from '@ngxs/store';
+import { provideStore, Store } from '@ngxs/store';
 import { MockProvider } from 'ng-mocks';
 
 import { GetAccountByUsername } from '../../account/shared/account.action';
@@ -18,9 +18,9 @@ describe('AuthState', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([AuthState])],
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideStore([AuthState]),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         MockProvider(MessageService)]
     }).compileComponents();
