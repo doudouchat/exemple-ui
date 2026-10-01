@@ -1,4 +1,4 @@
-@if ((info | async)?.version !== null) {
+@if ($safeNavigationMigration((info | async)?.version) !== null) {
 <h4>version:{{(info | async).version}}</h4>
 <h4>buildTime:{{(info | async).buildTime}}</h4>
 } @else {
