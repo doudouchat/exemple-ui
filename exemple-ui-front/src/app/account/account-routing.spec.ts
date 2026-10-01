@@ -70,7 +70,7 @@ describe('AccountRouting', () => {
       expect(router.url).to.equal('/');
 
       // And check account
-      expect(activatedComponent.account).to.eql({
+      expect(activatedComponent.account()).to.eql({
         id: '123'
       })
 

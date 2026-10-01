@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import jsonpatch from 'jsonpatch';
+import jsonpatch from 'fast-json-patch';
 
 import { create, get, remove, save } from '../services/account.service';
 import { create as createLogin, get as getLogin, remove as removeLogin } from '../services/login.service';
@@ -27,7 +27,7 @@ router.patch('/:id', (req, res) => {
     console.log('update account ' + JSON.stringify(req.body));
     const account = get(req.params.id);
     if (account) {
-        save(req.params.id, jsonpatch.apply_patch(account, req.body));
+        save(req.params.id, jsonpatch.applyPatch(account, req.body).newDocument);
         console.log('updated account ' + JSON.stringify(get(req.params.id)));
         res.status(204).send();
     } else {

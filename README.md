@@ -10,7 +10,7 @@
 <p>execute <code>npm run-script lint</code></p>
 <p>execute <code>npm run-script e2e:stub</code></p>
 
-<p>execute sonar <code>exemple-ui-front/node_modules/.bin/sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN</code></p>
+<p>execute sonar <code>exemple-ui-front/node_modules/.bin/sonar-scanner-npm -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN</code></p>
 
 # exemple-ui-stub
 
@@ -20,5 +20,5 @@
 
 ## Docker
 
-<p>build image <code>docker build . -t exemple-ui --build-arg VERSION_NODE=24.16.0 --build-arg VERSION_NGINX=1.28.2</code></p>
+<p>build image <code>docker build . -t exemple-ui --build-arg VERSION_NODE=24.21.0 --build-arg VERSION_NGINX=1.28.2</code></p>
 
