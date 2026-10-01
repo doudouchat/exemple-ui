@@ -1,12 +1,11 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
-import { NgxsModule, Store } from '@ngxs/store';
+import { withNgxsRouterPlugin } from '@ngxs/router-plugin';
+import { withNgxsStoragePlugin, LOCAL_STORAGE_ENGINE } from '@ngxs/storage-plugin';
+import { provideStore, Store } from '@ngxs/store';
 import { catchError, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { environment } from '../environments/environment';
 import { GetAccountByUsername } from './account/shared/account.action';
 import { AccountState } from './account/shared/account.state';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,16 +19,20 @@ import { AppState } from './shared/app.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideStore(
+      [AccountState, AppState, AuthState],
+      withNgxsStoragePlugin({
+        keys: [
+          {
+            key: AuthState,
+            engine: LOCAL_STORAGE_ENGINE
+          }
+        ]
+      }),
+      withNgxsRouterPlugin()
+    ),
     importProvidersFrom(
       AppRoutingModule,
-      NgxsModule.forRoot([AccountState, AppState, AuthState], {
-        developmentMode: !environment.production
-      }),
-      NgxsStoragePluginModule.forRoot({
-        keys: [AuthState],
-        storage: StorageOption.LocalStorage
-      }),
-      NgxsRouterPluginModule.forRoot(),
       AuthService),
     provideAppInitializer(() => {
       const store = inject(Store);
@@ -54,7 +57,7 @@ export const appConfig: ApplicationConfig = {
     },
     AuthenticatedGuard,
     AnonymousGuard,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withXhr(), withInterceptorsFromDi())
   ]
 };
 
