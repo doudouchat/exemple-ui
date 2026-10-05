@@ -5,7 +5,13 @@ updates:
       - "/exemple-ui-front"
       - "/exemple-ui-stub"
     open-pull-requests-limit: 0
-    allow:
-      - dependency-type: "production"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    groups:
+      security-dependencies:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "[prod]"
+      prefix-development: "[dev]"
